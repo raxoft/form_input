@@ -290,10 +290,20 @@ class FormInput
       self[ :data ] || []
     end
     
+    # Format the error report message. Default implementation includes simple pluralizer.
+    # Can be redefined to provide correctly localized error messages.
+    def format_error_message( msg, count = nil, singular = nil, plural = "#{singular}s" )
+      msg += " #{count}" if count
+      msg += " #{ count == 1 ? singular : plural }" if singular
+      msg
+    end
+    
     # Report an error concerning this parameter.
     # String %p in the message is automatically replaced with error title.
-    def report( msg )
-      form.report( name, msg.gsub( '%p', error_title ) ) if form
+    def report( msg, *args )
+      return unless form
+      msg = format_error_message( msg, *args )
+      form.report( name, msg.gsub( '%p', error_title ) )
     end
     
     # Validate this parameter. Does nothing if it was found invalid already.
@@ -329,11 +339,6 @@ class FormInput
     end
     
     private
-    
-    # Simple pluralizer.
-    def plural( n, item )
-      "#{n} #{item}#{ n == 1 ? '' : 's' }"
-    end
     
     # Validate given array.
     # Return true if the entire array validated correctly, nil or false otherwise.
@@ -406,12 +411,12 @@ class FormInput
     def validate_count( value )
 
       if limit = self[ :min_count ] and value.count < limit
-        report( "%p must have at least #{plural( limit, 'element' )}" )
+        report( "%p must have at least", limit, 'element' )
         return
       end
 
       if limit = self[ :max_count ] and value.count > limit
-        report( "%p must have at most #{plural( limit, 'element' )}" )
+        report( "%p must have at most", limit, 'element' )
         return
       end
       
@@ -436,22 +441,22 @@ class FormInput
       # Then enforce any value limits.
       
       if limit = self[ :min ] and value.to_f < limit.to_f
-        report( "%p must be at least #{limit}" )
+        report( "%p must be at least", limit )
         return
       end
 
       if limit = self[ :max ] and value.to_f > limit.to_f
-        report( "%p must be at most #{limit}" )
+        report( "%p must be at most", limit )
         return
       end
       
       if limit = self[ :inf ] and value.to_f <= limit.to_f
-        report( "%p must be greater than #{limit}" )
+        report( "%p must be greater than", limit )
         return
       end
 
       if limit = self[ :sup ] and value.to_f >= limit.to_f
-        report( "%p must be less than #{limit}" )
+        report( "%p must be less than", limit )
         return
       end
       
@@ -491,22 +496,22 @@ class FormInput
       # Enforce any size limits.
       
       if limit = self[ :min_size ] and value.size < limit
-        report( "%p must have at least #{plural( limit, 'character' )}" )
+        report( "%p must have at least", limit, 'character' )
         return
       end
 
       if limit = self[ :min_bytesize ] and value.bytesize < limit
-        report( "%p must have at least #{plural( limit, 'byte' )}" )
+        report( "%p must have at least", limit, 'byte' )
         return
       end
       
       if limit = self[ :max_size ] and value.size > limit
-        report( "%p must have at most #{plural( limit, 'character' )}" )
+        report( "%p must have at most", limit, 'character' )
         return
       end
       
       if limit = self[ :max_bytesize ] and value.bytesize > limit
-        report( "%p must have at most #{plural( limit, 'byte' )}" )
+        report( "%p must have at most", limit, 'byte' )
         return
       end
       
