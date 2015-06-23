@@ -2,19 +2,18 @@
 
 class FormInput
 
-  # Arguments applied to all step related parameters.
-  STEP_ARGS = { filter: ->{ form.steps.find{ |x| x.to_s == self } }, class: Symbol }
-
   # Turn this form into multi-step form using given steps.
   def self.define_steps( steps )
-    @steps = steps.to_hash.dup.freeze
+    @steps = steps = steps.to_hash.dup.freeze
 
     self.send( :include, StepMethods )
 
-    param :step, STEP_ARGS, type: :hidden
-    param :next, STEP_ARGS, type: :ignore
-    param :last, STEP_ARGS, type: :hidden
-    param :seen, STEP_ARGS, type: :hidden
+    opts = { filter: ->{ steps.keys.find{ |x| x.to_s == self } }, class: Symbol }
+
+    param :step, opts, type: :hidden
+    param :next, opts, type: :ignore
+    param :last, opts, type: :hidden
+    param :seen, opts, type: :hidden
   end
   
   # Get hash mapping defined steps to their names, or nil if there are none.
