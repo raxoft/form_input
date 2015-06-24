@@ -669,7 +669,7 @@ class FormInput
   def bound_params
     hash = {}
     self.class.form_params.each{ |name, param| hash[ name ] = param.dup.bind( self ) }
-    hash
+    hash.freeze
   end
   private :bound_params
   
@@ -686,11 +686,28 @@ class FormInput
     end
   end
   
+  # Initialize form clone.
+  def initialize_clone( other )
+    super
+    @params = bound_params
+    @errors &&= Hash[ @errors.map{ |k,v| [ k, v.clone ] } ]
+  end
+  
   # Initialize form copy.
-  def initialize_copy( other )
+  def initialize_dup( other )
     super
     @params = bound_params
     @errors = nil
+  end
+  
+  # Freeze the form.
+  def freeze
+    unless frozen?
+      validate?
+      @errors.each{ |k,v| v.freeze }
+      @errors.freeze
+    end
+    super
   end
   
   # Import request parameter value.

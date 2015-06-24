@@ -205,6 +205,75 @@ describe FormInput do
     ->{ TestForm.copy TestForm[ :query ] }.should.raise( ArgumentError )
   end
   
+  should 'be cloned and copied properly' do
+    f = TestForm.new
+    f.report( :password, "error" )
+    f.errors_for( :password ).should == [ "error" ]
+    f.errors_for( :text ).should == []
+    c = f.clone
+    c.should.not.equal f
+    d = f.dup
+    d.should.not.equal f
+    c.errors_for( :password ).should == [ "error" ]
+    c.errors_for( :text ).should == []
+    d.errors_for( :password ).should == []
+    d.errors_for( :text ).should == []
+    f.report( :password, "orig" )
+    c.report( :password, "clone" )
+    d.report( :password, "copy" )
+    f.report( :text, "Orig" )
+    c.report( :text, "Clone" )
+    d.report( :text, "Copy" )
+    f.errors_for( :password ).should == [ "error", "orig" ]
+    c.errors_for( :password ).should == [ "error", "clone" ]
+    d.errors_for( :password ).should == [ "copy" ]
+    f.errors_for( :text ).should == [ "Orig" ]
+    c.errors_for( :text ).should == [ "Clone" ]
+    d.errors_for( :text ).should == [ "Copy" ]
+  end
+  
+  should 'be frozen properly' do
+    f = TestForm.new
+    f.should.not.be.frozen
+    f.freeze
+    f.should.be.frozen
+    f.should.be.invalid
+    f.param( :query ).should.be.invalid
+    f.query.should.be.nil
+
+    ->{ f.query = "x" }.should.raise( RuntimeError )
+    ->{ f[ :query ] = "y" }.should.raise( RuntimeError )
+    ->{ f.set( query: "z" ) }.should.raise( RuntimeError )
+    ->{ f.report( :query, "error" ) }.should.raise( RuntimeError )
+    ->{ f.validate! }.should.raise( RuntimeError )
+    ->{ f.validate }.should.not.raise
+    ->{ f.validate? }.should.not.raise
+
+     f.clone.should.be.frozen
+     f.clone.should.be.invalid
+     
+    ->{ f.clone.query = "x" }.should.raise( RuntimeError )
+    ->{ f.clone[ :query ] = "y" }.should.raise( RuntimeError )
+    ->{ f.clone.set( query: "z" ) }.should.raise( RuntimeError )
+    ->{ f.clone.report( :query, "error" ) }.should.raise( RuntimeError )
+    ->{ f.clone.validate! }.should.raise( RuntimeError )
+    ->{ f.clone.validate }.should.not.raise
+    ->{ f.clone.validate? }.should.not.raise
+
+    f.dup.should.not.be.frozen
+    f.dup.should.be.invalid
+    
+    ->{ f.dup.query = "x" }.should.not.raise
+    ->{ f.dup[ :query ] = "y" }.should.not.raise
+    ->{ f.dup.set( query: "z" ) }.should.not.raise
+    ->{ f.dup.report( :query, "error" ) }.should.not.raise
+    ->{ f.dup.validate! }.should.not.raise
+    ->{ f.dup.validate }.should.not.raise
+    ->{ f.dup.validate? }.should.not.raise
+
+    f.query.should.be.nil
+  end
+  
   should 'support form inheritance' do
     c = Class.new( TestForm )
     c.param :extra
