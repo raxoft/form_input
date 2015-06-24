@@ -55,14 +55,19 @@ class FormInput
       untagged_params( step )
     end
     
+    # Get index of given/current step among all steps.
+    def step_index( step = self.steps )
+      steps.index( step )
+    end
+    
     # Get first step among given list of steps.
     def first_step( *steps )
-      steps.flatten.compact.min_by{ |x| steps.index( x ) }
+      steps.flatten.compact.min_by{ |x| step_index( x ) }
     end
     
     # Get last step among given list of steps.
     def last_step( *steps )
-      steps.flatten.compact.max_by{ |x| steps.index( x ) }
+      steps.flatten.compact.max_by{ |x| step_index( x ) }
     end
     
     # Get hash mapping defined steps to their names.
