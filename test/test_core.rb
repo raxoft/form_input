@@ -291,8 +291,9 @@ describe FormInput do
     c.param :float2, filter: ->{ Float( self ) rescue self }, class: Float
     c.param :date, filter: ->{ Date.parse( self ) rescue self }, format: ->{ strftime( '%m/%d/%Y' ) }, class: Date
     c.param :time, filter: ->{ Time.parse( self ) rescue self }, format: ->{ strftime( '%Y-%m-%d %H:%M:%S' ) }, class: Time
+    c.param :bool, filter: ->{ self == 'true' unless empty? }, class: [ TrueClass, FalseClass ]
     
-    f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05" ) )
+    f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05&bool=true" ) )
     f.should.be.valid
     f.to_hash.should == {
       str: "1.5",
@@ -300,6 +301,7 @@ describe FormInput do
       float: 1.5,
       date: Date.new( 2011, 12, 31 ),
       time: Time.new( 2000, 12, 31, 10, 24, 05 ),
+      bool: true,
     }
     f.url_params.should == {
       str: "1.5",
@@ -307,10 +309,11 @@ describe FormInput do
       float: "1.5",
       date: "12/31/2011",
       time: "2000-12-31 10:24:05",
+      bool: "true",
     }
-    f.url_query.should == "str=1.5&int=1&float=1.5&date=12%2F31%2F2011&time=2000-12-31+10%3A24%3A05"
+    f.url_query.should == "str=1.5&int=1&float=1.5&date=12%2F31%2F2011&time=2000-12-31+10%3A24%3A05&bool=true"
 
-    f = c.new( request( "?str=a&int=b&float=c&date=d&time=e" ) )
+    f = c.new( request( "?str=a&int=b&float=c&date=d&time=e&bool=f" ) )
     f.should.be.invalid
     names( f.invalid_params ).should == [ :date, :time ]
     f.error_messages.should == [ "date like this is not valid", "time like this is not valid" ]
@@ -320,6 +323,7 @@ describe FormInput do
       float: 0,
       date: "d",
       time: "e",
+      bool: false,
     }
     f.url_params.should == {
       str: "a",
@@ -327,8 +331,9 @@ describe FormInput do
       float: "0.0",
       date: "d",
       time: "e",
+      bool: "false",
     }
-    f.url_query.should == "str=a&int=0&float=0.0&date=d&time=e"
+    f.url_query.should == "str=a&int=0&float=0.0&date=d&time=e&bool=false"
 
     f = c.new( request( "?int=1&int2=1&float=1.5&float2=1.5" ) )
     f.should.be.valid
@@ -379,6 +384,12 @@ describe FormInput do
     p = c[ :time ]
     p.format_value( nil ).should == ""
     p.format_value( Time.at( 123456789 ) ).should == "1973-11-29 21:33:09"
+    p.format_value( "foo" ).should == "foo"
+
+    p = c[ :bool ]
+    p.format_value( nil ).should == ""
+    p.format_value( true ).should == "true"
+    p.format_value( false ).should == "false"
     p.format_value( "foo" ).should == "foo"
   end
   

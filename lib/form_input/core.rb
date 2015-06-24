@@ -430,7 +430,7 @@ class FormInput
       # First apply the type tests.
       
       if type = opts[ :class ] and type != String
-        unless value.is_a?( type )
+        unless [ *type ].any?{ |x| value.is_a?( x ) }
           report( string? ? "%p like this is not valid" : "%p contains invalid value" )
           return
         end
