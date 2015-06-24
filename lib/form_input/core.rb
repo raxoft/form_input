@@ -38,6 +38,7 @@ class FormInput
     # Additional parameter options.
     attr_reader :opts
     
+    # Initialize new parameter.
     def initialize( name, code, title, opts )
       @name = name.freeze
       @code = code.freeze
@@ -45,9 +46,16 @@ class FormInput
       @opts = opts.freeze
     end
     
-    # Bind self to given form, unless already bound.
+    # Allow copies to evaluate tags again.
+    def initialize_dup( other )
+      super
+      @tags = nil
+    end
+    
+    # Bind self to given form instance. Can be done only once.
     def bind( form )
-      @form ||= form
+      fail "parameter #{name} is already bound" if @form
+      @form = form
       self
     end
     
