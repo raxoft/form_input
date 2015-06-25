@@ -120,20 +120,64 @@ describe FormInput do
       "step=message&next=post&last=message&seen=message&email=john%40foo.com",
       "step=post&next=post&last=post&seen=message&email=john%40foo.com&message=blah",
       "step=post&next=post&last=post&seen=post&email=john%40foo.com&message=blah",
+      "step=post&next=post&last=post&seen=post&email=john%40foo.com&message=blah",
     ]
 
     t = TestStepsForm.new
-    until t.seen == :post
+    until ref.empty?
       t.url_query.should == ref.shift
-
       params = STEP_PARAMS[ t.seen ]
-
       t.next = t.next_step
       t = TestStepsForm.new( request( t.extend_url( "?#{params}" ) ) )
     end
-    
+  end
+
+  should 'allow stepping back through all steps in turn' do
+    seen = []
+    ref = [
+      "step=post&next=post&last=post&seen=post&email=john%40foo.com&message=blah",
+      "step=message&next=message&last=post&seen=post&email=john%40foo.com&message=blah",
+      "step=address&next=address&last=post&seen=post&email=john%40foo.com&message=blah",
+      "step=name&next=name&last=post&seen=post&email=john%40foo.com&message=blah",
+      "step=email&next=email&last=post&seen=post&email=john%40foo.com&message=blah",
+      "step=intro&next=intro&last=post&seen=post&email=john%40foo.com&message=blah",
+      "step=intro&next=intro&last=post&seen=post&email=john%40foo.com&message=blah",
+    ]
+
+    t = TestStepsForm.new( request( "?#{ref.first}" ) )
+    until ref.size == 1
+      t.url_query.should == ref.shift
+      seen << t.step
+      t.next = t.previous_step
+      t = TestStepsForm.new( request( t.extend_url( "?" ) ) )
+    end
+
     t.url_query.should == ref.shift
     ref.should.be.empty?
+    seen.should == t.steps.reverse
+  end
+
+  should 'refuse stepping back across invalid steps' do
+    ref = [
+      "step=post&next=intro&last=post&seen=post",
+      "step=message&next=message&last=post&seen=post",
+      "step=message&next=address&last=post&seen=post",
+      "step=address&next=address&last=post&seen=post&message=blah",
+      "step=name&next=name&last=post&seen=post&message=blah",
+      "step=email&next=email&last=post&seen=post&message=blah",
+      "step=email&next=intro&last=post&seen=post&message=blah",
+      "step=intro&next=intro&last=post&seen=post&email=john%40foo.com&message=blah",
+      "step=intro&next=intro&last=post&seen=post&email=john%40foo.com&message=blah",
+    ]
+
+    t = TestStepsForm.new.unlock_steps
+    t.step = t.last_step
+    until ref.empty?
+      t.url_query.should == ref.shift
+      params = STEP_PARAMS[ t.step ] if t.step != t.next
+      t.next = t.previous_step
+      t = TestStepsForm.new( request( t.extend_url( "?#{params}" ) ) )
+    end
   end
 
 end
