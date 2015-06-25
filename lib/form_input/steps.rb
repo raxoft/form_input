@@ -31,7 +31,7 @@ class FormInput
       self.step ||= steps.first
       self.next ||= step
       self.last ||= step
-      if valid?( current_params )
+      if valid_step?
         self.step = self.next
         self.seen = last_step( seen, previous_step( step ) )
       end
@@ -43,6 +43,11 @@ class FormInput
     def unlock_steps
       self.last = self.seen = steps.last
       self
+    end
+    
+    # Get parameters relevant for given step.
+    def step_params( step )
+      tagged_params( step )
     end
     
     # Get the parameters relevant for the current step.
@@ -120,25 +125,35 @@ class FormInput
       previous_steps( step ).last
     end
     
-    # Get steps with some parameters defined.
-    def regular_steps
-      steps.reject{ |step| tagged_params( step ).empty? }
+    # Test if the current/given step has no parameters defined.
+    def extra_step?( step = self.step )
+      step_params( step ).empty?
+    end
+    
+    # Test if the current/given step has some parameters defined.
+    def regular_step?( step = self.step )
+      not extra_step?( step )
     end
     
     # Get steps with no parameters defined.
     def extra_steps
-      steps.select{ |step| tagged_params( step ).empty? }
+      steps.select{ |step| extra_step?( step ) }
+    end
+    
+    # Get steps with some parameters defined.
+    def regular_steps
+      steps.select{ |step| regular_step?( step ) }
     end
     
     # Filter steps by testing their corresponding parameters with given block. Excludes steps without parameters.
     def filter_steps
       steps.select do |step|
-        params = tagged_params( step )
+        params = step_params( step )
         yield params unless params.empty?
       end
     end
     
-    # Get steps which have required parameters. Obviously excludes steps without parameters.
+    # Get steps which have required parameters. Excludes steps without parameters.
     def required_steps
       filter_steps{ |params| params.any?{ |p| p.required? } }
     end
@@ -148,7 +163,7 @@ class FormInput
       filter_steps{ |params| params.none?{ |p| p.required? } }
     end
     
-    # Get steps which have some data filled in. Obviously excludes steps without parameters.
+    # Get steps which have some data filled in. Excludes steps without parameters.
     def filled_steps
       filter_steps{ |params| params.any?{ |p| p.filled? } }
     end
@@ -158,12 +173,17 @@ class FormInput
       filter_steps{ |params| params.none?{ |p| p.filled? } }
     end
     
-    # Get steps which have only valid data data filled in. Excludes steps without parameters.
+    # Get steps which have all data filled in correctly. Excludes steps without parameters.
     def valid_steps
       filter_steps{ |params| valid?( params ) }
     end
     
-    # Get steps which have some invalid data filled in. Obviously excludes steps without parameters.
+    # Test if the current/given step has all data filled in correctly. Considered true for steps without parameters.
+    def valid_step?( step = self.step )
+      valid?( step_params( step ) )
+    end
+    
+    # Get steps which have some invalid data filled in. Excludes steps without parameters.
     def invalid_steps
       filter_steps{ |params| invalid?( params ) }
     end
@@ -173,24 +193,30 @@ class FormInput
       invalid_steps.first
     end
     
-    # Test if given/current step is invalid.
+    # Test if the current/given step has some invalid data filled in. False for steps without parameters.
     def invalid_step?( step = self.step )
-      invalid_steps.include?( step )
+      invalid?( step_params( step ) )
     end
     
-    # Get steps which are enabled.
+    # Get steps with some parameters enabled. Excludes steps without parameters.
     def enabled_steps
-      filter_steps{ |params| params.all?{ |p| p.enabled? } }
+      filter_steps{ |params| params.any?{ |p| p.enabled? } }
     end
     
-    # Get steps which are disabled.
+    # Test if given/current step has some parameters enabled. Considered true for steps without parameters.
+    def enabled_step?( step = self.step )
+      params = step_params( step )
+      params.empty? or params.any?{ |p| p.enabled? }
+    end
+    
+    # Get steps with all parameters disabled. Excludes steps without parameters.
     def disabled_steps
-      filter_steps{ |params| params.any?{ |p| p.disabled? } }
+      filter_steps{ |params| params.all?{ |p| p.disabled? } }
     end
     
-    # Test if given/current step is disabled.
+    # Test if given/current step has all parameters disabled. False for steps without parameters.
     def disabled_step?( step = self.step )
-      disabled_steps.include?( step )
+      not enabled_step?( step )
     end
     
     # Get unfinished steps, those we have not yet visited or visited for the first time.
