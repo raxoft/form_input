@@ -55,6 +55,26 @@ class FormInput
       untagged_params( step )
     end
     
+    # Get hash mapping defined steps to their names.
+    def form_steps
+      self.class.form_steps
+    end
+    
+    # Get allowed form steps as list of symbols.
+    def steps
+      form_steps.keys
+    end
+    
+    # Get name of current or given step, if any.
+    def step_name( step = self.step )
+      form_steps[ step ]
+    end
+    
+    # Get hash of steps along with their names, for use as sidebar.
+    def step_names
+      form_steps.reject{ |k,v| v.nil? }
+    end
+    
     # Get index of given/current step among all steps.
     def step_index( step = self.steps )
       steps.index( step )
@@ -76,26 +96,6 @@ class FormInput
       else
         args.flatten.compact.max_by{ |x| step_index( x ) }
       end
-    end
-    
-    # Get hash mapping defined steps to their names.
-    def form_steps
-      self.class.form_steps
-    end
-    
-    # Get allowed form steps as list of symbols.
-    def steps
-      form_steps.keys
-    end
-    
-    # Get name of current or given step, if any.
-    def step_name( step = self.step )
-      form_steps[ step ]
-    end
-    
-    # Get hash of steps along with their names, for use as sidebar.
-    def step_names
-      form_steps.dup.delete_if{ |k,v| v.nil? }
     end
     
     # Get steps before given/current step.
