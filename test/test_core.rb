@@ -761,10 +761,16 @@ describe FormInput do
     f.except( :email ).url_query.should == "q=x&text=foo"
     f.except( :email, :query ).url_query.should == "text=foo"
     f.except().url_query.should == "q=x&email=a%40b&text=foo"
+    f.except( [ :email ] ).url_query.should == "q=x&text=foo"
+    f.except( [ :email, :query ] ).url_query.should == "text=foo"
+    f.except( [] ).url_query.should == "q=x&email=a%40b&text=foo"
 
     f.only( :email ).url_query.should == "email=a%40b"
     f.only( :email, :query ).url_query.should == "q=x&email=a%40b"
     f.only().url_query.should == ""
+    f.only( [ :email ] ).url_query.should == "email=a%40b"
+    f.only( [ :email, :query ] ).url_query.should == "q=x&email=a%40b"
+    f.only( [] ).url_query.should == ""
 
     f = TestForm.new( { age: 2, query: "x" }, { rate: 1, query: "y" } )
     f.should.not.be.empty
@@ -803,7 +809,9 @@ describe FormInput do
 
     ->{ f.set( typo: 10 ) }.should.raise( NoMethodError )
     ->{ f.except( :typo ) }.should.raise( ArgumentError )
+    ->{ f.except( [ :typo ] ) }.should.raise( ArgumentError )
     ->{ f.only( :typo ) }.should.raise( ArgumentError )
+    ->{ f.only( [ :typo ] ) }.should.raise( ArgumentError )
     
     ->{ f.typo }.should.raise( NoMethodError )
     ->{ f.typo = 10 }.should.raise( NoMethodError )
@@ -813,11 +821,17 @@ describe FormInput do
 
     ->{ f.valid?( :typo ) }.should.raise( ArgumentError )
     ->{ f.valid?( :query, :typo ) }.should.raise( ArgumentError )
+    ->{ f.valid?( [ :typo ] ) }.should.raise( ArgumentError )
+    ->{ f.valid?( [ :query, :typo ] ) }.should.raise( ArgumentError )
     ->{ f.invalid?( :typo ) }.should.raise( ArgumentError )
     ->{ f.invalid?( :query, :typo ) }.should.raise( ArgumentError )
+    ->{ f.invalid?( [ :typo ] ) }.should.raise( ArgumentError )
+    ->{ f.invalid?( [ :query, :typo ] ) }.should.raise( ArgumentError )
     ->{ f.valid }.should.raise( ArgumentError )
     ->{ f.valid( :typo ) }.should.raise( ArgumentError )
     ->{ f.valid( :query, :typo ) }.should.raise( ArgumentError )
+    ->{ f.valid( [ :typo ] ) }.should.raise( ArgumentError )
+    ->{ f.valid( [ :query, :typo ] ) }.should.raise( ArgumentError )
   end
 
   should 'not overwrite original values via derived forms' do
@@ -949,9 +963,17 @@ describe FormInput do
     f[].should.be.valid?( :text )
     f[].should.not.be.valid?( :email )
     f[].should.not.be.valid?( :text, :email )
+    f[].should.be.valid?( [] )
+    f[].should.be.valid?( [ :text ] )
+    f[].should.not.be.valid?( [ :email ] )
+    f[].should.not.be.valid?( [ :text, :email ] )
     f[].should.not.be.invalid?( :text )
     f[].should.be.invalid?( :email )
     f[].should.be.invalid?( :text, :email )
+    f[].should.not.be.invalid?( [] )
+    f[].should.not.be.invalid?( [ :text ] )
+    f[].should.be.invalid?( [ :email ] )
+    f[].should.be.invalid?( [ :text, :email ] )
     f[].valid( :text ).should == "yy"
     f[].valid( :email ).should == nil
     f[].valid( :text, :email ).should == nil
@@ -970,9 +992,17 @@ describe FormInput do
     f[].should.be.valid?( :email )
     f[].should.not.be.valid?( :query )
     f[].should.not.be.valid?( :email, :query )
+    f[].should.be.valid?( [] )
+    f[].should.be.valid?( [ :email ] )
+    f[].should.not.be.valid?( [ :query ] )
+    f[].should.not.be.valid?( [ :email, :query ] )
     f[].should.not.be.invalid?( :email )
     f[].should.be.invalid?( :query )
     f[].should.be.invalid?( :email, :query )
+    f[].should.not.be.invalid?( [] )
+    f[].should.not.be.invalid?( [ :email ] )
+    f[].should.be.invalid?( [ :query ] )
+    f[].should.be.invalid?( [ :email, :query ] )
     f[].errors.should == { query: [ "q is required", "msg" ], password: [ "bad" ] }
     f[].error_messages.should == [ "q is required", "bad" ]
     f[].errors_for( :query ).should == [ "q is required", "msg" ]

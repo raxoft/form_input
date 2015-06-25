@@ -799,7 +799,7 @@ class FormInput
   
   # Convert parameters to names and fail if we encounter unknown one.
   def validate_names( names )
-    names.map do |name|
+    names.flatten.map do |name|
       name = name.name if name.is_a? Parameter
       fail( ArgumentError, "unknown parameter #{name}" ) unless @params[ name ]
       name

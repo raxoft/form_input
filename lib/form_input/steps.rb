@@ -31,7 +31,7 @@ class FormInput
       self.step ||= steps.first
       self.next ||= step
       self.last ||= step
-      if current_params.all?{ |p| p.valid? }
+      if valid?( current_params )
         self.step = self.next
         self.seen = last_step( seen, previous_step( step ) )
       end
