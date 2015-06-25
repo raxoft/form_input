@@ -60,14 +60,22 @@ class FormInput
       steps.index( step )
     end
     
-    # Get first step among given list of steps.
-    def first_step( *steps )
-      steps.flatten.compact.min_by{ |x| step_index( x ) }
+    # Get first step, or first step among given list of steps, if any.
+    def first_step( *args )
+      if args.empty?
+        steps.first
+      else
+        args.flatten.compact.min_by{ |x| step_index( x ) }
+      end
     end
     
-    # Get last step among given list of steps.
-    def last_step( *steps )
-      steps.flatten.compact.max_by{ |x| step_index( x ) }
+    # Get last step, or last step among given list of steps, if any.
+    def last_step( *args )
+      if args.empty?
+        steps.last
+      else
+        args.flatten.compact.max_by{ |x| step_index( x ) }
+      end
     end
     
     # Get hash mapping defined steps to their names.
