@@ -263,17 +263,17 @@ class FormInput
       @tags ||= [ *self[ :tag ], *self[ :tags ] ]
     end
 
-    # Test if the parameter is tagged with some of given tags, or any tag if the tag list is empty.
+    # Test if the parameter is tagged with some of given tags, or any tag if the argument list is empty.
     def tagged?( *tags )
       t = self.tags
       if tags.empty?
         not t.empty?
       else
-        tags.any?{ |x| t.include? x }
+        tags.flatten.any?{ |x| t.include? x }
       end
     end
   
-    # Test if the parameter is not tagged with any of given tags, or any tag if the tag list is empty.
+    # Test if the parameter is not tagged with any of given tags, or any tag if the argument list is empty.
     def untagged?( *tags )
       not tagged?( *tags )
     end

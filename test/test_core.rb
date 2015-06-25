@@ -572,6 +572,24 @@ describe FormInput do
     names( f.tagged_params( :float, :foo ) ).should == [ :rate ]
     names( f.untagged_params( :float, :foo ) ).should == [ :query, :email, :age, :text, :password, :opts, :on ]
 
+    names( f.tagged_params( [] ) ).should == []
+    names( f.untagged_params( [] ) ).should == [ :query, :email, :age, :rate, :text, :password, :opts, :on ]
+
+    names( f.tagged_params( [ :filter ] ) ).should == [ :age, :rate ]
+    names( f.untagged_params( [ :filter ] ) ).should == [ :query, :email, :text, :password, :opts, :on ]
+
+    names( f.tagged_params( [ :float ] ) ).should == [ :rate ]
+    names( f.untagged_params( [ :float ] ) ).should == [ :query, :email, :age, :text, :password, :opts, :on ]
+
+    names( f.tagged_params( [ :filter, :float ] ) ).should == [ :age, :rate ]
+    names( f.untagged_params( [ :filter, :float ] ) ).should == [ :query, :email, :text, :password, :opts, :on ]
+
+    names( f.tagged_params( [ :foo ] ) ).should == []
+    names( f.untagged_params( [ :foo ] ) ).should == [ :query, :email, :age, :rate, :text, :password, :opts, :on ]
+
+    names( f.tagged_params( [ :float, :foo ] ) ).should == [ :rate ]
+    names( f.untagged_params( [ :float, :foo ] ) ).should == [ :query, :email, :age, :text, :password, :opts, :on ]
+
     names( f.titled_params ).should == [ :email, :password ]
     names( f.untitled_params ).should == [ :query, :age, :rate, :text, :opts, :on ]
 
@@ -685,6 +703,14 @@ describe FormInput do
     p.should.not.be.untagged( :foo, :float )
     p.should.not.be.tagged( :foo )
     p.should.be.untagged( :foo )
+    p.should.not.be.tagged( [] )
+    p.should.be.untagged( [] )
+    p.should.be.tagged( [ :filter ] )
+    p.should.not.be.untagged( [ :filter ] )
+    p.should.be.tagged( [ :foo, :float ] )
+    p.should.not.be.untagged( [ :foo, :float ] )
+    p.should.not.be.tagged( [ :foo ] )
+    p.should.be.untagged( [ :foo ] )
     
     p = f.param( :opts )
     p.value.should == nil
