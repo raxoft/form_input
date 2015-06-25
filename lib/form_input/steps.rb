@@ -128,34 +128,34 @@ class FormInput
       end
     end
     
-    # Get steps which have some data filled in.
-    def filled_steps
-      filter_steps{ |params| params.any?{ |p| p.filled? } }
-    end
-    
-    # Get steps which have no data filled in.
-    def unfilled_steps
-      filter_steps{ |params| params.none?{ |p| p.filled? } }
-    end
-    
-    # Get steps which have required parameters.
+    # Get steps which have required parameters. Obviously excludes steps without parameters.
     def required_steps
       filter_steps{ |params| params.any?{ |p| p.required? } }
     end
     
-    # Get steps which have no required parameters.
+    # Get steps which have no required parameters. Excludes steps without parameters.
     def optional_steps
       filter_steps{ |params| params.none?{ |p| p.required? } }
     end
     
-    # Get steps which have valid data filled in.
-    def valid_steps
-      filter_steps{ |params| valid?( *params ) }
+    # Get steps which have some data filled in. Obviously excludes steps without parameters.
+    def filled_steps
+      filter_steps{ |params| params.any?{ |p| p.filled? } }
     end
     
-    # Get steps which have invalid data filled in.
+    # Get steps which have no data filled in. Excludes steps without parameters.
+    def unfilled_steps
+      filter_steps{ |params| params.none?{ |p| p.filled? } }
+    end
+    
+    # Get steps which have only valid data data filled in. Excludes steps without parameters.
+    def valid_steps
+      filter_steps{ |params| valid?( params ) }
+    end
+    
+    # Get steps which have some invalid data filled in. Obviously excludes steps without parameters.
     def invalid_steps
-      filter_steps{ |params| invalid?( *params ) }
+      filter_steps{ |params| invalid?( params ) }
     end
     
     # Get first step with invalid data, or nil if there is none.
@@ -208,12 +208,12 @@ class FormInput
       steps - inaccessible_steps
     end
     
-    # Get valid finished steps.
+    # Get valid finished steps. Excludes steps without parameters.
     def complete_steps
       valid_steps & finished_steps
     end
     
-    # Get invalid finished steps.
+    # Get invalid finished steps. Excludes steps without parameters.
     def incomplete_steps
       invalid_steps & finished_steps
     end
