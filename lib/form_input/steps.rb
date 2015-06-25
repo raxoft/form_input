@@ -120,7 +120,17 @@ class FormInput
       previous_steps( step ).last
     end
     
-    # Filter steps by testing their corresponding parameters with given block.
+    # Get steps with some parameters defined.
+    def regular_steps
+      steps.reject{ |step| tagged_params( step ).empty? }
+    end
+    
+    # Get steps with no parameters defined.
+    def extra_steps
+      steps.select{ |step| tagged_params( step ).empty? }
+    end
+    
+    # Filter steps by testing their corresponding parameters with given block. Excludes steps without parameters.
     def filter_steps
       steps.select do |step|
         params = tagged_params( step )
