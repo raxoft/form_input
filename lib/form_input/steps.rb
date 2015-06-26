@@ -47,6 +47,7 @@ class FormInput
     
     # Get parameters relevant for given step.
     def step_params( step )
+      fail( ArgumentError, "invalid step name #{step}" ) unless form_steps.key?( step )
       tagged_params( step )
     end
     
