@@ -31,7 +31,7 @@ class FormInput
       self.step ||= steps.first
       self.next ||= step
       self.last ||= step
-      if valid_step?
+      if correct_step?
         self.step = self.next
         self.seen = last_step( seen, previous_step( step ) )
       end
@@ -163,6 +163,16 @@ class FormInput
       filter_steps{ |params| params.none?{ |p| p.required? } }
     end
     
+    # Test if given/current has some required parameters. Considered false for steps without parameters.
+    def required_step?( step = self.step )
+      step_params( step ).any?{ |p| p.required? }
+    end
+    
+    # Test if given/current step has no required parameters. Considered true for steps without parameters.
+    def optional_step?( step = self.step )
+      not required_step?( step )
+    end
+    
     # Get steps which have some data filled in. Excludes steps without parameters.
     def filled_steps
       filter_steps{ |params| params.any?{ |p| p.filled? } }
@@ -173,28 +183,39 @@ class FormInput
       filter_steps{ |params| params.none?{ |p| p.filled? } }
     end
     
+    # Test if given/current step has some data filled in. Considered true for steps without parameters.
+    def filled_step?( step = self.step )
+      params = step_params( step )
+      params.empty? or params.any?{ |p| p.filled? }
+    end
+    
+    # Test if given/current step has no data filled in. Considered false for steps without parameters.
+    def unfilled_step?( step = self.step )
+      not filled_step?( step )
+    end
+    
     # Get steps which have all data filled in correctly. Excludes steps without parameters.
-    def valid_steps
+    def correct_steps
       filter_steps{ |params| valid?( params ) }
     end
     
-    # Test if the current/given step has all data filled in correctly. Considered true for steps without parameters.
-    def valid_step?( step = self.step )
-      valid?( step_params( step ) )
-    end
-    
     # Get steps which have some invalid data filled in. Excludes steps without parameters.
-    def invalid_steps
+    def incorrect_steps
       filter_steps{ |params| invalid?( params ) }
     end
     
     # Get first step with invalid data, or nil if there is none.
-    def invalid_step
-      invalid_steps.first
+    def incorrect_step
+      incorrect_steps.first
     end
     
-    # Test if the current/given step has some invalid data filled in. False for steps without parameters.
-    def invalid_step?( step = self.step )
+    # Test if the current/given step has all data filled in correctly. Considered true for steps without parameters.
+    def correct_step?( step = self.step )
+      valid?( step_params( step ) )
+    end
+    
+    # Test if the current/given step has some invalid data filled in. Considered false for steps without parameters.
+    def incorrect_step?( step = self.step )
       invalid?( step_params( step ) )
     end
     
@@ -203,18 +224,18 @@ class FormInput
       filter_steps{ |params| params.any?{ |p| p.enabled? } }
     end
     
+    # Get steps with all parameters disabled. Excludes steps without parameters.
+    def disabled_steps
+      filter_steps{ |params| params.all?{ |p| p.disabled? } }
+    end
+    
     # Test if given/current step has some parameters enabled. Considered true for steps without parameters.
     def enabled_step?( step = self.step )
       params = step_params( step )
       params.empty? or params.any?{ |p| p.enabled? }
     end
     
-    # Get steps with all parameters disabled. Excludes steps without parameters.
-    def disabled_steps
-      filter_steps{ |params| params.all?{ |p| p.disabled? } }
-    end
-    
-    # Test if given/current step has all parameters disabled. False for steps without parameters.
+    # Test if given/current step has all parameters disabled. Considered false for steps without parameters.
     def disabled_step?( step = self.step )
       not enabled_step?( step )
     end
@@ -229,29 +250,24 @@ class FormInput
       steps - unfinished_steps
     end
     
-    # Test if given/current step is finished.
-    def finished_step?( step = self.step )
-      finished_steps.include?( step )
-    end
-    
-    # Get inaccessible steps, excluding the last accessed step.
+    # Get yet inaccessible steps, excluding the last accessed step.
     def inaccessible_steps
       next_steps( last )
     end
     
-    # Get accessible steps, including the last accessed step.
+    # Get already accessible steps, including the last accessed step.
     def accessible_steps
       steps - inaccessible_steps
     end
     
-    # Get valid finished steps. Excludes steps without parameters.
+    # Get correct finished steps. Excludes steps without parameters.
     def complete_steps
-      valid_steps & finished_steps
+      correct_steps & finished_steps
     end
     
-    # Get invalid finished steps. Excludes steps without parameters.
+    # Get incorrect finished steps. Excludes steps without parameters.
     def incomplete_steps
-      invalid_steps & finished_steps
+      incorrect_steps & finished_steps
     end
     
     # Get steps which shell be checked off as ok in the sidebar.
