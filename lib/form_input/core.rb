@@ -238,9 +238,14 @@ class FormInput
       type == :hidden
     end
 
+    # Test if the parameter is to be ignored on output.
+    def ignored?
+      type == :ignore
+    end
+
     # Test if the parameter is visible.
     def visible?
-      not hidden?
+      not ( hidden? || ignored? )
     end
     
     # Test if this is an array parameter.
@@ -926,6 +931,12 @@ class FormInput
     params.select{ |x| x.hidden? }
   end
   alias hidden_parameters hidden_params
+  
+  # Get list of ignored parameters.
+  def ignored_params
+    params.select{ |x| x.ignored? }
+  end
+  alias ignored_parameters ignored_params
   
   # Get list of visible parameters.
   def visible_params

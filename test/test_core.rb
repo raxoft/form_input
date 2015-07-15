@@ -600,6 +600,7 @@ describe FormInput do
     names( f.enabled_params ).should == [ :query, :email, :age, :text, :password, :opts, :on ]
 
     names( f.hidden_params ).should == [ :on ]
+    names( f.ignored_params ).should == []
     names( f.visible_params ).should == [ :query, :email, :age, :rate, :text, :password, :opts ]
 
     names( f.array_params ).should == [ :opts ]
@@ -640,6 +641,7 @@ describe FormInput do
     p.should.not.be.disabled
     p.should.be.enabled
     p.should.not.be.hidden
+    p.should.not.be.ignored
     p.should.be.visible
     p.should.not.be.array
     p.should.not.be.hash
@@ -674,6 +676,7 @@ describe FormInput do
     p.should.not.be.disabled
     p.should.be.enabled
     p.should.not.be.hidden
+    p.should.not.be.ignored
     p.should.be.visible
     p.should.not.be.array
     p.should.not.be.hash
@@ -734,6 +737,7 @@ describe FormInput do
     p.should.not.be.string
     p.type.should == :hidden
     p.should.be.hidden
+    p.should.not.be.ignored
     p.should.not.be.visible
   end
   
