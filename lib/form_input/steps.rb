@@ -3,6 +3,7 @@
 class FormInput
 
   # Turn this form into multi-step form using given steps.
+  # Returns self for chaining.
   def self.define_steps( steps )
     @steps = steps = steps.to_hash.dup.freeze
 
@@ -14,6 +15,8 @@ class FormInput
     param :next, opts, type: :ignore
     param :last, opts, type: :hidden
     param :seen, opts, type: :hidden
+    
+    self
   end
   
   # Get hash mapping defined steps to their names, or nil if there are none.
@@ -82,8 +85,8 @@ class FormInput
     end
     
     # Get index of given/current step among all steps.
-    def step_index( step = self.steps )
-      steps.index( step )
+    def step_index( step = self.step )
+      steps.index( step ) or fail( ArgumentError, "invalid step name #{step}" )
     end
     
     # Get first step, or first step among given list of steps, if any.
