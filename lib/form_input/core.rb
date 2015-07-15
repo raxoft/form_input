@@ -304,19 +304,18 @@ class FormInput
     end
     
     # Format the error report message. Default implementation includes simple pluralizer.
+    # String %p in the message is automatically replaced with error title.
     # Can be redefined to provide correctly localized error messages.
     def format_error_message( msg, count = nil, singular = nil, plural = "#{singular}s" )
       msg += " #{count}" if count
       msg += " #{ count == 1 ? singular : plural }" if singular
-      msg
+      msg.gsub( '%p', error_title )
     end
     
     # Report an error concerning this parameter.
     # String %p in the message is automatically replaced with error title.
     def report( msg, *args )
-      return unless form
-      msg = format_error_message( msg, *args )
-      form.report( name, msg.gsub( '%p', error_title ) )
+      form.report( name, format_error_message( msg, *args ) ) if form
     end
     
     # Validate this parameter. Does nothing if it was found invalid already.
