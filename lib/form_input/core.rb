@@ -419,7 +419,7 @@ class FormInput
     end
       
     # Validate container limits.
-    # Return true if the entire array validated correctly, nil or false otherwise.
+    # Return true if it validated correctly, nil or false otherwise.
     def validate_count( value )
 
       if limit = self[ :min_count ] and value.count < limit
