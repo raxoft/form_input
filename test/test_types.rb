@@ -39,27 +39,37 @@ describe FormInput do
       FormInput::ZIP_CODE_RE.should.not.match s
     end
   end
+  
+  describe 'Time parsing helper' do
 
-  should 'provide Time parsing helper which raises when string is not parsed entirely' do
-    for c in ( 0..255 ).map( &:chr )
-      FormInput.parse_time( "2000", "%Y" ).year.should == 2000
-      FormInput.parse_time( "2000" + c, "%Y" + c ).year.should == 2000
+    should 'should raise when string is not parsed entirely' do
+      for c in ( 0..255 ).map( &:chr )
+        FormInput.parse_time( "2000", "%Y" ).year.should == 2000
+        FormInput.parse_time( "2000" + c, "%Y" + c ).year.should == 2000
 
-      unless c =~ /\d/
-        ->{ FormInput.parse_time( "2000" + c, "%Y" ) }.should.raise ArgumentError
+        unless c =~ /\d/
+          ->{ FormInput.parse_time( "2000" + c, "%Y" ) }.should.raise ArgumentError
+        end
+        unless c =~ /\s/
+          ->{ FormInput.parse_time( "2000", "%Y" + c ) }.should.raise ArgumentError
+        end
+
+        ->{ FormInput.parse_time( "2000", "%y" ) }.should.raise ArgumentError
+        ->{ FormInput.parse_time( "2000" + c, "%y" + c ) }.should.raise ArgumentError
+
+        ->{ FormInput.parse_time( "2000" + c, "%y" ) }.should.raise ArgumentError
+        ->{ FormInput.parse_time( "2000", "%y" + c ) }.should.raise ArgumentError
       end
-      unless c =~ /\s/
-        ->{ FormInput.parse_time( "2000", "%Y" + c ) }.should.raise ArgumentError
-      end
-
-      ->{ FormInput.parse_time( "2000", "%y" ) }.should.raise ArgumentError
-      ->{ FormInput.parse_time( "2000" + c, "%y" + c ) }.should.raise ArgumentError
-
-      ->{ FormInput.parse_time( "2000" + c, "%y" ) }.should.raise ArgumentError
-      ->{ FormInput.parse_time( "2000", "%y" + c ) }.should.raise ArgumentError
     end
-  end
     
+    should 'correctly ignore % modifiers in time format' do
+      for string, format in [ "2000 %- 2", "%Y %%- %-m", "99  3", "%y %_m", "1/12", "%-d/%m", "FEBRUARY", "%^B" ].each_slice( 2 )
+        FormInput.parse_time( string, format ).strftime( format ).should == string
+      end
+    end
+    
+  end
+
 end
 
 # EOF #

@@ -113,7 +113,7 @@ class FormInput
   }
   
   # EU date format.
-  EU_DATE_FORMAT = "%d.%m.%Y".freeze
+  EU_DATE_FORMAT = "%-d.%-m.%Y".freeze
   # EU date format example.
   EU_DATE_FORMAT_EXAMPLE = "DD.MM.YYYY".freeze
   
@@ -139,7 +139,9 @@ class FormInput
   }
   
   # Parse time like Time#strptime but raise on trailing garbage.
+  # Also ignores -, _ and ^ % modifiers, so the same format can be used for both parsing and formatting.
   def self.parse_time( string, format )
+    format = format.gsub( /%[-_^]?(.)/, '%\1' )
     # Rather than using _strptime and checking the leftover field,
     # add required trailing character to both the string and format parameters.
     suffix = ( string[ -1 ] == "\1" ? "\2" : "\1" )
