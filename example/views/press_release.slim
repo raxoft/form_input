@@ -1,20 +1,19 @@
-// Site info editing form - example of a complex multi-step form.
+// Press Release editing form - example of a complex multi-step form.
 
-- @title = "Site Info: #{@form.step_name}"
+- @title = "Press Release: #{@form.step_name}"
 
 form *form_attrs
 
   // Invisible first submit button to send users to the next page
   // when they press enter in the text field.
-  button.invisible type='submit' name='next' tabindex="-1" value=@form.next_step
+  button.invisible type='submit' name='next' tabindex='-1' value=@form.next_step
 
   .row
     .col-md-3 role="navigation"
 
       == render_partial :sidebar,
-        title: "#{@edit_mode ? 'Edit' : 'Create'} Site",
+        title: "#{@edit_mode ? 'Edit' : 'Create'} Press Release",
         items: @form.sidebar_items,
-        hints: @form.sidebar_hints,
         accessible: @form.accessible_steps,
         valid: @form.good_steps,
         invalid: @form.bad_steps,
