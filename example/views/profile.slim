@@ -1,0 +1,34 @@
+// Update user profile - example of rendering simple form page.
+//
+// Note that the controller communicates with templates via @action and @failed attributes,
+// which in this case may take the following values:
+//   actions: nil, :post, :done
+//   failed: nil, :update
+
+- @title = "Profile"
+
+.panel.panel-default
+  .panel-heading
+    = @title
+  .panel-body
+    form *form_attrs
+
+      - case @action
+      - when :done
+        .alert.alert-success.alert-block
+          Your profile was successfully updated.
+      - else
+        - if @failed == :update
+          .alert.alert-danger.alert-block
+            strong Profile update failed!
+            br
+            We apologize for such inconvenience. Please try again later.
+
+      fieldset
+        == render_snippet :form_panel,
+          params: @form.params,
+          report: @action == :post,
+          focus: @action == :post
+        button.btn.btn-default type='submit' Update Profile
+
+// EOF //

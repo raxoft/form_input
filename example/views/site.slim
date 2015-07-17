@@ -1,0 +1,65 @@
+// Site info editing form - example of a complex multi-step form.
+
+- @title = "Site Info: #{@form.step_name}"
+
+form *form_attrs
+
+  // Invisible first submit button to send users to the next page
+  // when they press enter in the text field.
+  button.invisible type='submit' name='next' tabindex="-1" value=@form.next_step
+
+  .row
+    .col-md-3 role="navigation"
+
+      == render_partial :sidebar,
+        title: "#{@edit_mode ? 'Edit' : 'Create'} Site",
+        items: @form.sidebar_items,
+        hints: @form.sidebar_hints,
+        accessible: @form.accessible_steps,
+        valid: @form.good_steps,
+        invalid: @form.bad_steps,
+        current: @form.step
+
+    .col-md-9 role="main"
+
+      .panel.panel-default
+        .panel-heading
+          = @title
+        .panel-body
+        
+          // Additional info derived from @failed or @form.step will usually go here.
+        
+          fieldset
+            == render_snippet :form_hidden,
+              params: @form.other_params
+            == render_snippet :form_panel,
+              params: @form.chunked_params( @form.current_params ),
+              report: @failed,
+              focus: true
+              
+            - unless @form.extra_step?
+              .btn-toolbar.pull-left
+                button.btn.btn-default type='submit'
+                  Update
+              
+            .btn-toolbar.pull-right
+              a.btn.btn-default href=r
+                Cancel
+              - if @form.step == :summary
+                button.btn.btn-primary type='submit' name='next' value='post'
+                  Save
+              - else
+                button.btn.btn-default type='submit' name='next' value='summary'
+                  Finish
+                - unless @edit_mode
+                  button.btn.btn-primary.pull-right type='submit' name='next' value=@form.next_step
+                    Next
+
+// These make it easy to debug the form if needed:
+//
+//      pre = @form.params.map{|x| [ x.name, x.value ] }.inspect
+//      pre = @form.errors.inspect
+//      pre = @action
+//      pre = @failed
+
+// EOF //
