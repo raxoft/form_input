@@ -115,7 +115,7 @@ class FormInput
   # EU date format.
   EU_DATE_FORMAT = "%-d.%-m.%Y".freeze
   # EU date format example.
-  EU_DATE_FORMAT_EXAMPLE = "DD.MM.YYYY".freeze
+  EU_DATE_FORMAT_EXAMPLE = "D.M.YYYY".freeze
   
   # Time in EU date format.
   EU_DATE_ARGS = {
