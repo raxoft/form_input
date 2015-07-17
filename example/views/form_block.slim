@@ -1,0 +1,27 @@
+// Render form parameters in block style.
+
+// Fetch parameters.
+
+- params = @params || []
+- focus = @focus || @focus.nil?
+- report = @report
+
+// Choose parameter to focus on if enabled.
+
+- focused = params.find{ |x| x.invalid? } || params.find{ |x| x.blank? } || params.first if focus
+
+// Render each parameter, reporting errors as necessary.
+
+- for p in params
+  - case p.type
+  - when :ignore
+  - when :hidden
+    == render_snippet :form_hidden, params: [ p ]
+  - else
+    .form-group
+      input.form-control type=p.type name=p.form_name value=p.form_value placeholder=p.form_title autofocus=(p == focused)
+      - if report and error = p.error
+        .help-block
+          span.text-danger = error
+
+// EOF //

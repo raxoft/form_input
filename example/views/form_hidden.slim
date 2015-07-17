@@ -1,0 +1,21 @@
+// Render all form parameters as hidden ones.
+
+// Fetch parameters.
+
+- params = @params || []
+
+// Render each parameter.
+
+- for p in params
+  - next if p.ignored?
+  - next unless p.filled?
+  - if p.array?
+    - for value in p.form_value
+      input type='hidden' name=p.form_name value=value
+  - elsif p.hash?
+    - for key, value in p.form_value
+      input type='hidden' name=p.form_name( key ) value=value
+  - else
+    input type='hidden' name=p.form_name value=p.form_value
+
+// EOF //
