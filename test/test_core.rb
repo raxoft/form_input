@@ -364,6 +364,7 @@ describe FormInput do
     
     f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05&bool=true" ) )
     f.should.be.valid
+    f.to_h.should == f.to_hash
     f.to_hash.should == {
       str: "1.5",
       int: 1,
@@ -386,6 +387,7 @@ describe FormInput do
     f.should.be.invalid
     names( f.invalid_params ).should == [ :date, :time ]
     f.error_messages.should == [ "date like this is not valid", "time like this is not valid" ]
+    f.to_h.should == f.to_hash
     f.to_hash.should == {
       str: "a",
       int: 0,

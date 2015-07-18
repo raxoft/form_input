@@ -800,6 +800,7 @@ class FormInput
     filled_params.each{ |x| result[ x.name ] = x.value }
     result
   end
+  alias to_h to_hash
   
   # Convert parameters to names and fail if we encounter unknown one.
   def validate_names( names )
