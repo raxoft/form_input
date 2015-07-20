@@ -777,6 +777,16 @@ class FormInput
     self
   end
   
+  # Clear all/given parameter values. Both names and parameters are accepted.
+  # Returns self for chaining.
+  def clear( *names )
+    names = names.empty? ? params_names : validate_names( names )
+    for name in names
+      self[ name ] = nil
+    end
+    self
+  end
+  
   # Get given parameter(s) value(s), hash style.
   def []( *names )
     if names.count == 1
@@ -827,7 +837,7 @@ class FormInput
     # but we want to use dup instead of new here, as the derived form can use
     # different parameters in its construction.
     result = dup
-    for name in @params.keys - validate_names( names )
+    for name in params_names - validate_names( names )
       result[ name ] = nil
     end
     result

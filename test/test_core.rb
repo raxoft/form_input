@@ -245,6 +245,8 @@ describe FormInput do
     ->{ f.query = "x" }.should.raise( RuntimeError )
     ->{ f[ :query ] = "y" }.should.raise( RuntimeError )
     ->{ f.set( query: "z" ) }.should.raise( RuntimeError )
+    ->{ f.clear }.should.raise( RuntimeError )
+    ->{ f.clear( :query ) }.should.raise( RuntimeError )
     ->{ f.report( :query, "error" ) }.should.raise( RuntimeError )
     ->{ f.validate! }.should.raise( RuntimeError )
     ->{ f.validate }.should.not.raise
@@ -256,6 +258,8 @@ describe FormInput do
     ->{ f.clone.query = "x" }.should.raise( RuntimeError )
     ->{ f.clone[ :query ] = "y" }.should.raise( RuntimeError )
     ->{ f.clone.set( query: "z" ) }.should.raise( RuntimeError )
+    ->{ f.clone.clear }.should.raise( RuntimeError )
+    ->{ f.clone.clear( :query ) }.should.raise( RuntimeError )
     ->{ f.clone.report( :query, "error" ) }.should.raise( RuntimeError )
     ->{ f.clone.validate! }.should.raise( RuntimeError )
     ->{ f.clone.validate }.should.not.raise
@@ -267,6 +271,8 @@ describe FormInput do
     ->{ f.dup.query = "x" }.should.not.raise
     ->{ f.dup[ :query ] = "y" }.should.not.raise
     ->{ f.dup.set( query: "z" ) }.should.not.raise
+    ->{ f.dup.clear }.should.not.raise
+    ->{ f.dup.clear( :query ) }.should.not.raise
     ->{ f.dup.report( :query, "error" ) }.should.not.raise
     ->{ f.dup.validate! }.should.not.raise
     ->{ f.dup.validate }.should.not.raise
@@ -779,6 +785,16 @@ describe FormInput do
     f.only( [ :email, :query ] ).url_query.should == "q=x&email=a%40b"
     f.only( [] ).url_query.should == ""
 
+    f.clear( :text )
+    f.should.not.be.empty
+    f.url_query.should == "q=x&email=a%40b"
+    f.clear( f.required_params )
+    f.should.not.be.empty
+    f.url_query.should == "email=a%40b"
+    f.clear
+    f.should.be.empty
+    f.url_query.should == ""
+
     f = TestForm.new( { age: 2, query: "x" }, { rate: 1, query: "y" } )
     f.should.not.be.empty
     f.url_query.should == "q=y&age=2&rate=1"
@@ -815,6 +831,7 @@ describe FormInput do
     f.named_params( :typo, :missing ).should == [ nil, nil ]
 
     ->{ f.set( typo: 10 ) }.should.raise( NoMethodError )
+    ->{ f.clear( :typo ) }.should.raise( ArgumentError )
     ->{ f.except( :typo ) }.should.raise( ArgumentError )
     ->{ f.except( [ :typo ] ) }.should.raise( ArgumentError )
     ->{ f.only( :typo ) }.should.raise( ArgumentError )
@@ -1057,6 +1074,20 @@ describe FormInput do
     f.validate!.should.be.invalid
 
     f[ :query ] = "x"
+    f.should.be.valid
+    f.validate?.should.be.valid
+    f.dup.validate?.should.be.valid
+    f.validate.should.be.valid
+    f.validate!.should.be.valid
+
+    f.clear.should.equal f
+    f.should.be.invalid
+    f.validate?.should.be.invalid
+    f.dup.validate?.should.be.invalid
+    f.validate.should.be.invalid
+    f.validate!.should.be.invalid
+
+    f.set( query: "x" ).should.equal f
     f.should.be.valid
     f.validate?.should.be.valid
     f.dup.validate?.should.be.valid
