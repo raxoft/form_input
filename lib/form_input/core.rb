@@ -32,17 +32,13 @@ class FormInput
     # Name of the parameter as we use it in the form fields and url queries.
     attr_reader :code
     
-    # Name of the parameter displayed to the user.
-    attr_reader :title
-
     # Additional parameter options.
     attr_reader :opts
     
     # Initialize new parameter.
-    def initialize( name, code, title, opts )
+    def initialize( name, code, opts )
       @name = name.freeze
       @code = code.freeze
-      @title = title.freeze
       @opts = opts.freeze
     end
     
@@ -166,6 +162,11 @@ class FormInput
       else
         self.value == value
       end
+    end
+    
+    # Get the name of the parameter to be displayed to the user, or nil if there is none.
+    def title
+      self[ :title ]
     end
     
     # Get the title for use in form. Fallbacks to normal title and code if no form title was specified.
@@ -591,7 +592,6 @@ class FormInput
         add( Parameter.new(
           opts[ :name ] || source.name,
           opts[ :code ] || source.code,
-          opts.fetch( :title, source.title ),
           source.opts.merge( opts )
         ) )
       when Array
@@ -624,6 +624,10 @@ class FormInput
       
       fail ArgumentError, "invalid arguments #{args}" unless args.empty?
       
+      # Set the title.
+      
+      opts[ :title ] = title.freeze if title
+      
       # Set input filter.
 
       opts[ :filter ] = block if block
@@ -645,7 +649,7 @@ class FormInput
       
       # Define parameter.
 
-      add( Parameter.new( name, code, title, opts ) )
+      add( Parameter.new( name, code, opts ) )
     end
     
     # Like param, except this defines required parameter.
