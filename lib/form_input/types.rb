@@ -82,7 +82,7 @@ class FormInput
   TIME_ARGS = {
     placeholder: TIME_FORMAT_EXAMPLE,
     filter: ->{ FormInput.parse_time( self, TIME_FORMAT ) rescue DateTime.parse( self ).to_time rescue self },
-    format: ->{ strftime( TIME_FORMAT ) },
+    format: ->{ strftime( TIME_FORMAT ) rescue self },
     class: Time,
   }
   
@@ -95,7 +95,7 @@ class FormInput
   US_DATE_ARGS = {
     placeholder: US_DATE_FORMAT_EXAMPLE,
     filter: ->{ FormInput.parse_time( self, US_DATE_FORMAT ) rescue Date.parse( self ).to_time rescue self },
-    format: ->{ strftime( US_DATE_FORMAT ) },
+    format: ->{ strftime( US_DATE_FORMAT ) rescue self },
     class: Time,
   }
   
@@ -108,7 +108,7 @@ class FormInput
   UK_DATE_ARGS = {
     placeholder: UK_DATE_FORMAT_EXAMPLE,
     filter: ->{ FormInput.parse_time( self, UK_DATE_FORMAT ) rescue Date.parse( self ).to_time rescue self },
-    format: ->{ strftime( UK_DATE_FORMAT ) },
+    format: ->{ strftime( UK_DATE_FORMAT ) rescue self },
     class: Time,
   }
   
@@ -121,7 +121,7 @@ class FormInput
   EU_DATE_ARGS = {
     placeholder: EU_DATE_FORMAT_EXAMPLE,
     filter: ->{ FormInput.parse_time( self, EU_DATE_FORMAT ) rescue Date.parse( self ).to_time rescue self },
-    format: ->{ strftime( EU_DATE_FORMAT ) },
+    format: ->{ strftime( EU_DATE_FORMAT ) rescue self },
     class: Time,
   }
   
@@ -134,7 +134,7 @@ class FormInput
   HOURS_ARGS = {
     placeholder: HOURS_FORMAT_EXAMPLE,
     filter: ->{ FormInput.parse_time( self, HOURS_FORMAT ).to_i % 86400 rescue self },
-    format: ->{ Time.at( self ).strftime( HOURS_FORMAT ) },
+    format: ->{ Time.at( self ).strftime( HOURS_FORMAT ) rescue self },
     class: Integer,
   }
   
