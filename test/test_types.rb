@@ -31,6 +31,17 @@ class TestTimeTypesForm < FormInput
 
 end
 
+class TestPrunedTypesForm < FormInput
+
+  param :str, PRUNED_ARGS
+  param :int, INTEGER_ARGS, PRUNED_ARGS
+  array :arr, PRUNED_ARGS
+  array :int_arr, INTEGER_ARGS, PRUNED_ARGS
+  hash :hsh, PRUNED_ARGS
+  hash :int_hsh, INTEGER_ARGS, PRUNED_ARGS
+
+end
+
 describe FormInput do
 
   def request( query )
@@ -193,6 +204,55 @@ describe FormInput do
       end
     end
     
+  end
+  
+  should 'provide transformation for pruning empty values from input' do
+    c = Class.new( FormInput )
+    c.copy( TestPrunedTypesForm, transform: nil )
+    
+    f = TestPrunedTypesForm.new( request( "?str=foo&int=1" ) )
+    f.to_h.should == { str: "foo", int: 1 }
+    f.url_query.should == "str=foo&int=1"
+    f = c.new( request( "?str=foo&int=1" ) )
+    f.to_h.should == { str: "foo", int: 1 }
+    f.url_query.should == "str=foo&int=1"
+
+    f = TestPrunedTypesForm.new( request( "?str=&int=" ) )
+    f.to_h.should == {}
+    f.url_query.should == ""
+    f[ :str, :int ].should == [ nil, nil ]
+    f = c.new( request( "?str=&int=" ) )
+    f.to_h.should == {}
+    f.url_query.should == ""
+    f[ :str, :int ].should == [ "", nil ]
+
+    f = TestPrunedTypesForm.new( request( "?arr[]=foo&arr[]=&arr[]=bar&arr[]=&int_arr[]=&int_arr[]=5&int_arr[]=" ) )
+    f.to_h.should == { arr: [ "foo", "bar" ], int_arr: [ 5 ] }
+    f.url_query.should == "arr[]=foo&arr[]=bar&int_arr[]=5"
+    f = c.new( request( "?arr[]=foo&arr[]=&arr[]=bar&arr[]=&int_arr[]=&int_arr[]=5&int_arr[]=" ) )
+    f.to_h.should == { arr: [ "foo", "", "bar", "" ], int_arr: [ nil, 5, nil ] }
+    f.url_query.should == "arr[]=foo&arr[]=&arr[]=bar&arr[]=&int_arr[]=&int_arr[]=5&int_arr[]="
+
+    f = TestPrunedTypesForm.new( request( "?arr[]=&int_arr[]=" ) )
+    f.to_h.should == {}
+    f.url_query.should == ""
+    f = c.new( request( "?arr[]=&int_arr[]=" ) )
+    f.to_h.should == { arr: [ "" ], int_arr: [ nil ] }
+    f.url_query.should == "arr[]=&int_arr[]="
+
+    f = TestPrunedTypesForm.new( request( "?hsh[5]=foo&hsh[8]=&hsh[10]=bar&hsh[13]=&int_hsh[3]=&int_hsh[2]=5&int_hsh[1]=" ) )
+    f.to_h.should == { hsh: { 5 => "foo", 10 => "bar" }, int_hsh: { 2 => 5 } }
+    f.url_query.should == "hsh[5]=foo&hsh[10]=bar&int_hsh[2]=5"
+    f = c.new( request( "?hsh[5]=foo&hsh[8]=&hsh[10]=bar&hsh[13]=&int_hsh[3]=&int_hsh[2]=5&int_hsh[1]=" ) )
+    f.to_h.should == { hsh: { 5 => "foo", 8 => "", 10 => "bar", 13 => "" }, int_hsh: { 3 => nil, 2 => 5, 1 => nil } }
+    f.url_query.should == "hsh[5]=foo&hsh[8]=&hsh[10]=bar&hsh[13]=&int_hsh[3]=&int_hsh[2]=5&int_hsh[1]="
+
+    f = TestPrunedTypesForm.new( request( "?hsh[8]=&int_hsh[11]=" ) )
+    f.to_h.should == {}
+    f.url_query.should == ""
+    f = c.new( request( "?hsh[8]=&int_hsh[11]=" ) )
+    f.to_h.should == { hsh: { 8 => "" }, int_hsh: { 11 => nil } }
+    f.url_query.should == "hsh[8]=&int_hsh[11]="
   end
 
 end

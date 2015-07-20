@@ -147,6 +147,22 @@ class FormInput
     suffix = ( string[ -1 ] == "\1" ? "\2" : "\1" )
     Time.strptime( string + suffix, format + suffix )
   end
+  
+  # Transformation which drops empty values from hashes and arrays and turns empty string into nil.
+  PRUNED_ARGS = {
+    transform: ->{
+      case self
+      when Array
+        reject{ |v| v.nil? or ( v.respond_to?( :empty? ) && v.empty? ) }
+      when Hash
+        reject{ |k,v| v.nil? or ( v.respond_to?( :empty? ) && v.empty? ) }
+      when String
+        self unless empty?
+      else
+        self
+      end
+    }
+  }
 
 end
 
