@@ -282,8 +282,7 @@ describe FormInput do
   end
   
   should 'support form inheritance' do
-    c = Class.new( TestForm )
-    c.param :extra
+    c = Class.new( TestForm ).param :extra
     names( c.new.params ).should == [ :query, :email, :age, :rate, :text, :password, :opts, :on, :extra ]
   end
   

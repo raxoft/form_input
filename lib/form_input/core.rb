@@ -586,6 +586,7 @@ class FormInput
     private :add
 
     # Copy given/all form parameters.
+    # Returns self for chaining.
     def copy( source, opts = {} )
       case source
       when Parameter
@@ -602,12 +603,14 @@ class FormInput
       else
         fail ArgumentError, "invalid source parameter #{source.inspect}"
       end
+      self
     end
     
     # Define form parameter with given name, code, title, maximum size, options, and filter block.
     # All fields except name are optional. In case the code is missing, name is used instead.
     # If no size limits are specified, 255 characters and bytes limits are applied by default.
     # If no filter is explicitly defined, default filter squeezing and stripping whitespace is applied.
+    # Returns self for chaining.
     def param( name, *args, &block )
     
       # Fetch arguments.
@@ -650,6 +653,7 @@ class FormInput
       # Define parameter.
 
       add( Parameter.new( name, code, opts ) )
+      self
     end
     
     # Like param, except this defines required parameter.

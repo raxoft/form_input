@@ -207,8 +207,7 @@ describe FormInput do
   end
   
   should 'provide transformation for pruning empty values from input' do
-    c = Class.new( FormInput )
-    c.copy( TestPrunedTypesForm, transform: nil )
+    c = Class.new( FormInput ).copy( TestPrunedTypesForm, transform: nil )
     
     f = TestPrunedTypesForm.new( request( "?str=foo&int=1" ) )
     f.to_h.should == { str: "foo", int: 1 }
