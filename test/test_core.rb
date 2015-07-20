@@ -150,6 +150,7 @@ describe FormInput do
     [ 'on contains invalid key', on: { "k" => 1, 2 => 3 } ],
     [ 'on contains invalid key', on: { "0b0" => 1, 2 => 3 } ],
     [ 'on contains invalid key', on: { "0x0" => 1, 2 => 3 } ],
+    [ 'on contains invalid key', on: { "foo" => 1, "bar" => 3 } ],
     [ 'on contains too small key', on: { -1 => 1, 2 => 3 } ],
     [ 'on contains too large key', on: { ( 1 << 64 ) => 1, 2 => 3 } ],
     [ 'on contains invalid value', on: { 0 => 1, 2 => { 3 => 4 } } ],
@@ -887,6 +888,13 @@ describe FormInput do
     f.url_params.should == { opts: [ "2.5", "true" ] }
     f.url_query.should == "opts[]=2.5&opts[]=true"
     names( f.incorrect_params ).should == []
+
+    f = TestForm.new( opts: { "foo" => 10, true => false } )
+    ->{ f.validate }.should.not.raise
+    f.to_hash.should == { opts: { "foo" => 10, true => false } }
+    f.url_params.should == { opts: [ '["foo", 10]', '[true, false]' ] }
+    f.url_query.should == "opts[]=%5B%22foo%22%2C+10%5D&opts[]=%5Btrue%2C+false%5D"
+    names( f.incorrect_params ).should == [ :opts]
 
     f = TestForm.new( on: 1 )
     ->{ f.validate }.should.not.raise

@@ -746,7 +746,7 @@ class FormInput
       # To reduce security issues, we restrict hash keys to integer values only.
       # The validation done later ensures that the keys are valid, within range,
       # and that only flat hashes are allowed.
-      Hash[ value.map{ |k, v| [ ( Integer( k, 10 ) rescue nil ), sanitize_value( v, filter ) ] } ]
+      Hash[ value.map{ |k, v| [ ( Integer( k, 10 ) rescue k ), sanitize_value( v, filter ) ] } ]
     else
       fail TypeError, "unexpected parameter type"
     end
