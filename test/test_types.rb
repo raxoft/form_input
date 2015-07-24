@@ -174,6 +174,13 @@ describe FormInput do
     f.to_hash.should == { time: "50 Feb", us_date: "foo", uk_date: "32 1", eu_date: "1 x", hours: "25:45" }
     f.url_params.should == { time: "50 Feb", us_date: "foo", uk_date: "32 1", eu_date: "1 x", hours: "25:45" }
     f.url_query.should == "time=50+Feb&us_date=foo&uk_date=32+1&eu_date=1+x&hours=25%3A45"
+
+    f = TestTimeTypesForm.new( request( "?time=&us_date=&uk_date=&eu_date=&hours=" ) )
+    f.should.be.valid
+    f[ :time, :us_date, :uk_date, :eu_date, :hours ].should == [ nil, nil, nil, nil, nil ]
+    f.to_hash.should == {}
+    f.url_params.should == {}
+    f.url_query.should == ""
   end
   
   describe 'Time parsing helper' do
