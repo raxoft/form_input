@@ -69,7 +69,7 @@ class FormInput
     
     # Format given value for form/URL output, applying the formatting filter as necessary.
     def format_value( value )
-      if format.nil? or value.nil? or value.is_a?( String )
+      if format.nil? or value.nil? or ( value.is_a?( String ) and type = opts[ :class ] and type != String )
         value.to_s
       else
         value.instance_exec( &format ).to_s

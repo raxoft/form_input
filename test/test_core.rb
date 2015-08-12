@@ -367,8 +367,9 @@ describe FormInput do
     c.param :date, filter: ->{ Date.parse( self ) rescue self }, format: ->{ strftime( '%m/%d/%Y' ) }, class: Date
     c.param :time, filter: ->{ Time.parse( self ) rescue self }, format: ->{ strftime( '%Y-%m-%d %H:%M:%S' ) }, class: Time
     c.param :bool, filter: ->{ self == 'true' unless empty? }, class: [ TrueClass, FalseClass ]
+    c.param :str2, filter: ->{ downcase.reverse }, format: ->{ reverse.upcase rescue self }
     
-    f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05&bool=true" ) )
+    f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05&bool=true&str2=Abc" ) )
     f.should.be.valid
     f.to_h.should == f.to_hash
     f.to_hash.should == {
@@ -378,6 +379,7 @@ describe FormInput do
       date: Date.new( 2011, 12, 31 ),
       time: Time.new( 2000, 12, 31, 10, 24, 05 ),
       bool: true,
+      str2: "cba",
     }
     f.url_params.should == {
       str: "1.5",
@@ -386,8 +388,9 @@ describe FormInput do
       date: "12/31/2011",
       time: "2000-12-31 10:24:05",
       bool: "true",
+      str2: "ABC",
     }
-    f.url_query.should == "str=1.5&int=1&float=1.5&date=12%2F31%2F2011&time=2000-12-31+10%3A24%3A05&bool=true"
+    f.url_query.should == "str=1.5&int=1&float=1.5&date=12%2F31%2F2011&time=2000-12-31+10%3A24%3A05&bool=true&str2=ABC"
 
     f = c.new( request( "?str=a&int=b&float=c&date=d&time=e&bool=f" ) )
     f.should.be.invalid
@@ -468,6 +471,22 @@ describe FormInput do
     p.format_value( true ).should == "true"
     p.format_value( false ).should == "false"
     p.format_value( "foo" ).should == "foo"
+
+    p = c[ :str ]
+    p.format_value( nil ).should == ""
+    p.format_value( true ).should == "true"
+    p.format_value( false ).should == "false"
+    p.format_value( 10 ).should == "10"
+    p.format_value( 10.0 ).should == "10.0"
+    p.format_value( "abc" ).should == "abc"
+
+    p = c[ :str2 ]
+    p.format_value( nil ).should == ""
+    p.format_value( true ).should == "true"
+    p.format_value( false ).should == "false"
+    p.format_value( 10 ).should == "10"
+    p.format_value( 10.0 ).should == "10.0"
+    p.format_value( "abc" ).should == "CBA"
   end
   
   should 'support input transformation' do
