@@ -36,7 +36,7 @@ post '/contact' do
   @form = ContactForm.new( request )
   return slim :contact_form unless @form.valid?
   text = @form.params.map{ |p| "#{p.title}: #{p.value}\n" }.join
-  sent = Email.send( settings.contact_sender, settings.contact_recipient, text )
+  sent = Email.send( settings.contact_recipient, text, reply_to: @form.email )
   slim( sent ? :contact_sent : :contact_failed )
 end
 ```
@@ -196,20 +196,20 @@ and it will be called to obtain the actual value.
 The block is called in context of the form parameter itself,
 so it can access any of its methods and its form's methods easily.
 For example, you can let the form automatically disable some fields
-based on available user permissions:
+based on available user permissions by defining `is_forbidden?` accordingly:
 
 ``` ruby
   param :avatar, "Avatar",
-    disabled: ->{ not form.can_user_use?( :avatar )  }
+    disabled: ->{ form.is_forbidden?( :avatar ) }
   param :comment, "Comment", type: :textarea,
-    disabled: ->{ not form.can_user_use?( :comment ) }
+    disabled: ->{ form.is_forbidden?( :comment ) }
 ```
 
 If you happen to use some option arguments often,
 you can factor them out and share them like this:
 
 ``` ruby
-  FEATURED_ARGS = { disabled: ->{ not form.can_user_use?( name ) } }
+  FEATURED_ARGS = { disabled: ->{ form.is_forbidden?( name ) } }
   param :avatar, "Avatar", FEATURED_ARGS
   param :comment, "Comment", FEATURED_ARGS, type: :textarea
 ```
@@ -219,9 +219,6 @@ and they all get merged together from left to right.
 This allows you to mix various presets together and then tweak them further as needed.
 
 ### Internal vs External Representation
-
-// Covers filter, class, and format. Also param.code.
-// Also transform which is a bridge to next chapter.
 
 Now when you know how to define some parameters,
 let's talk about the parameter values a bit.
@@ -311,7 +308,7 @@ Proper integer filter should thus look more like this (still not complete, thoug
 This will make sure the parameter will be marked as invalid
 if the filter fails to create an integer from the input string.
 The `:class` option can actually take an array of classes,
-so you can check even for things like `[TrueClass, FalseClass]` easily.
+so you can check even for boolean values with `[TrueClass, FalseClass]` easily.
 
 But now you may be wondering, what if the parameter is not mentioned in the input at all?
 Or if it is an empty string? Will that be an error?
@@ -372,11 +369,238 @@ The lesson learned here should be:
 
 #### Output Formats
 
+Now you know how to convert external values into their internal representation,
+but that's only half of the story.
+The internal values have to be converted to their external representation as well,
+and that's what output formatters are for.
+
+By default, the `FormInput` class will use simple `to_s` conversion to create the external value.
+But you can easily change this by providing your own `:format` filter instead:
+
+``` ruby
+  param :scientific_float, FLOAT_ARGS,
+    format: ->{ '%e' % self }
+```
+
+The provided block will be called in the context of the parameter value itself
+and its result will be passed to the `to_s` conversion to create the final external value.
+
+But the use of a formatter is more than just mere cosmetics.
+You will often use the formatter to complement your input filter.
+For example, you may want to process credit card expiration like this:
+
+``` ruby
+  EXPIRY_ARGS = {
+    placeholder: 'MM/YYYY',
+    filter: ->{ FormInput.parse_time( self, '%m/%y' ) rescue FormInput.parse_time( self, '%m/%Y' ) rescue self },
+    format: ->{ strftime( '%m/%Y' ) rescue self },
+    class: Time,
+  }
+  param :expiry, EXPIRY_ARGS
+```
+
+Note that the formatter won't be called if the parameter value is `nil`
+or if it is already a string when it should be other type
+(for example because the input filter conversion failed),
+so you don't have to worry about that.
+But it doesn't hurt to add the rescue clause like above
+just in case the parameter value is set to something unexpected,
+especially if the formatter is supposed to be reused at multiple places.
+
+The `FormInput.parse_time` is a helper method which works like `Time.strptime`,
+except that it fails if the input string contains trailing garbage.
+Without this feature, input like `01/2016` would be parsed as `01/20` by `'%m/%y'`
+and interpreted as `01/2020`, which is utterly wrong.
+So better use this helper instead if you want your input validated properly.
+An added bonus is that it can also ignore the `-_^` modifiers after the `%` sign,
+so you can use the same time format string for both parsing and formatting.
+
+To help you get started,
+the `FormInput` class comes with several time filters and formatters predefined:
+
+``` ruby
+  param :time, TIME_ARGS        # YYYY-MM-DD HH:MM:SS stored as Time.
+  param :us_date, US_DATE_ARGS  # MM/DD/YYYY stored as Time.
+  param :uk_date, UK_DATE_ARGS  # DD/MM/YYYY stored as Time.
+  param :eu_date, EU_DATE_ARGS  # D.M.YYYY stored as Time.
+  param :hours, HOURS_ARGS      # HH:MM stored as seconds since midnight.
+```
+ 
+You can use them as they are but feel free to create your own variants instead.
+
+#### Input Transform
+
+So, there are the `:filter` and `:format` options to convert parameter values
+from external to internal representation and back. So far so good.
+But the truth is that the `FormInput` class supports one additional input transformation.
+This transformation is set with the `:transform` option
+and is invoked after the `:filter` filter.
+So, what's the difference between `:filter` and `:transform`?
+
+For scalar values, like normal string or integer parameters, there is none.
+In that case the `:transform` is just an additional filter,
+and you are free to use either or both.
+But `FormInput` class supports also array and hash parameters,
+as we will learn in the very next chapter,
+and that's where it makes the difference.
+The input filter is used to convert each individual element,
+whereas the input transformation operates on the entire parameter value,
+and can thus process the entire array or hash as a whole.
+
+What you use the input transformation for is up to you. 
+The `FormInput` class however comes with a predefined `PRUNED_ARGS` transformation
+which converts an empty string value to `nil` and prunes `nil` and empty elements from arrays and hashes,
+ensuring the resulting input is free of clutter.
+This comes especially handy when used together with array parameters, which we will discuss next.
 
 ### Array and Hash Parameters
 
-Covers array and hash parameters.
-Also param.data.
+So far we have been discussing only simple scalar parameters,
+like strings or integers.
+But web requests commonly support the array and hash parameters as well
+using the `array[]=value` and `hash[key]=value` syntax, respectively,
+and thus so does the `FormInput` class.
+
+To declare an array parameter, use either the `array` or `array!` method:
+
+``` ruby
+  array :keywords, "Keywords"
+```
+
+Similarly to `param!`, the `array!` method creates a required array parameter,
+which means that the array must be present and may not be empty.
+The `array` method on the other hand creates an optional array parameter,
+which doesn't have to be filled in at all.
+Note that like in case of scalar parameters,
+array parameters not found in the input remain set to their default `nil` value,
+rather than becoming an empty array.
+
+All the parameter options of scalar parameters can be used with array parameters as well.
+In this case, however, they apply to the individual elements of the array.
+The array parameters additionaly support the `:min_count` and `:max_count` options,
+which restrict the number of elements the array can have.
+For example, to limit the keywords both in string size and element count, you can do this:
+
+``` ruby
+  array :keywords, "Keywords", 35, max_count: 20
+```
+
+We have already discussed the input and output filters and input transformation.
+The input `:filter` and output `:format` are applied to the elements of the array,
+whereas the input `:transform` is applied to the array as a whole.
+For example, to get sorted array of integers you can do this:
+
+``` ruby
+  array :ids, INTEGER_ARGS, transform: ->{ compact.sort }
+```
+
+The `compact` method above takes care of removing any unfilled entries from the array prior sorting.
+This is often desirable,
+and if you don't need to use your own transformation,
+you can use the predefined `PRUNED_ARGS` transformation which does the same
+and discards both `nil` and empty elements:
+
+``` ruby
+  array :ids, INTEGER_ARGS, PRUNED_ARGS
+  array :keywords, "Keywords", PRUNED_ARGS
+```
+
+The hash attributes are very much like the array attributes,
+you just use the `hash` or `hash!` method to declare them:
+
+``` ruby
+  hash :users, "Users"
+```
+
+The biggest difference from arrays is that the hash parameters use keys to address the elements.
+By default, `FormInput` accepts only integer keys and automatically converts them to integers.
+Their range can be restricted by `:min_key` and `:max_key` options,
+which default to 0 and 2<sup>64</sup>-1, respectively.
+Alternatively, if you know what are you doing,
+you can allow use of non-integer string keys by using the `:match_key` option,
+which should specify a regular expression
+(or an array of regular expressions)
+which all hash keys must match.
+This may not be the wisest move, but it's your call.
+Just make sure you use the `\A` and `\z` anchors rather than `^` and `$`,
+so you don't leave yourself open to nasty suprises.
+
+While practical use of hash parameters with forms is fairly limited,
+so you will most likely only use them with URL based non-form input, if ever,
+the array parameters are pretty common.
+The examples above could be used for gathering list of input fields into single array,
+which is useful as well,
+but the most common use of array parameters is for multi-select fields.
+
+To declare a select parameter, you can set the `:type` to `:select` and 
+use the `:data` option to provide an array of values for the select menu.
+The array contains pairs of parameter values to use and the corresonding text to show to the user.
+For example, using a Sequel-like `Country` model:
+
+``` ruby
+  COUNTRIES = Country.all.map{ |c| [ c.code, c.name ] }
+  param :country, "Country", type: :select, data: COUNTRIES
+```
+
+To turn select into multi-select, basically just change `param` into `array` and that's it:
+
+``` ruby
+  array :countries, "Countries", type: :select, data: COUNTRIES
+```
+
+Note that it also makes sense to change the parameter name into a plural form, so we did that.
+
+To validate the input, you will likely want to make sure the code received is really a valid country code.
+In the first case, this can be done easily by using the `:check` callback,
+which is executed in context of the parameter itself and can do any checks it wants:
+
+``` ruby
+  check: ->{ report( "%p is not valid" ) unless Country[ value ] }
+```
+
+In both cases, it could be done by the `:test` callback,
+which is executed in context of the parameter itself as well,
+but receives the value to test as an argument:
+
+``` ruby
+  test: ->( value ){ report( "%p contain invalid code" ) unless Country[ value ] }
+```
+
+As the latter works in both cases, it is preferable to use
+if you plan to factor this into `COUNTRY_ARGS` helper which works with both types of selects.
+
+In both cases, the `report` method is used to report any problems about the parameter,
+which marks the parameter as invalid at the same time.
+More on this will follow in the chapter [Errors and Validation](#errors-and-validation).
+
+Alternatively, you may want to convert the country code into the `Country` object internally,
+which will take the care of validation as well:
+
+``` ruby
+  param! :country, "Country", type: :select,
+    data: ->{ Country.all.map{ |c| [ c, c.name ] } },
+    filter: ->{ Country[ self ] },
+    format: ->{ code },
+    class: Country
+```
+
+Either way is fine, so choose whichever suits you best.
+Just note that the data array now contains the `Country` objects themselves rather than their country codes,
+and that we have opted for creating that array dynamically instead of using a static one.
+
+Finally, a little bit of warning.
+Note that web request syntax supports arbitrarily nested hash and array attributes.
+The `FormInput` class will accept them and apply the input transformations appropriately,
+but then it will refuse to validate anything but flat arrays and hashes,
+as it is way too easy to shoot yourself in the foot with complex nested structures coming from untrusted source.
+The word of advice is just to stay away from those
+and let the `FormInput` protect you from such input automatically.
+But if you think you know what you are doing and really need such a complex input,
+you can use the input transformation
+to convert it to flat array or hash,
+or intercept the validation and handle the parameter yourself,
+which will very likely open a can of worms and leave you prone to many problems.
+You have been warned.
 
 ### Reusing Form Parameters
 
