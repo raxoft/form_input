@@ -397,7 +397,17 @@ class FormInput
     # Return true if it validated correctly, nil or false otherwise.
     def validate_key( value )
     
-      # Make sure it's an integer.
+      # If there is a key pattern specified, make sure the key matches.
+
+      if patterns = self[ :match_key ]
+        unless [ *patterns ].all?{ |x| value.to_s =~ x }
+          report( "%p contains invalid key" )
+          return
+        end
+        return true
+      end
+
+      # Otherwise make sure it's an integer.
     
       unless value.is_a? Integer
         report( "%p contains invalid key" )
@@ -751,7 +761,7 @@ class FormInput
       # Arrays are supported, but note that the validation done later only allows flat arrays.
       value.map{ |x| sanitize_value( x, filter ) }
     when Hash
-      # To reduce security issues, we restrict hash keys to integer values only.
+      # To reduce security issues, we prefer integer hash keys only.
       # The validation done later ensures that the keys are valid, within range,
       # and that only flat hashes are allowed.
       Hash[ value.map{ |k, v| [ ( Integer( k, 10 ) rescue k ), sanitize_value( v, filter ) ] } ]

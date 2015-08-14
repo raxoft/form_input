@@ -506,6 +506,64 @@ describe FormInput do
     f.a.should == [ "abc", "", "123" ]
   end
   
+  should 'support string hash keys when allowed' do
+    c = Class.new( FormInput )
+    c.hash :h
+    
+    f = c.new( request( "?h[0]=a&h[1]=b&h[2]=c" ) )
+    f.should.be.valid
+    f.h.should == { 0 => 'a', 1 => 'b', 2 => 'c' }
+    f.url_query.should == "h[0]=a&h[1]=b&h[2]=c"
+    
+    f = c.new( request( "?h[a]=a&h[b]=b&h[c]=c" ) )
+    f.should.be.invalid
+    f.error_messages.should == [ "h contains invalid key" ]
+    f.h.should == { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
+    f.url_query.should == "h[a]=a&h[b]=b&h[c]=c"
+
+    c = Class.new( FormInput )
+    c.hash :h, match_key: /\A\d+\z/
+    
+    f = c.new( request( "?h[0]=a&h[1]=b&h[2]=c" ) )
+    f.should.be.valid
+    f.h.should == { 0 => 'a', 1 => 'b', 2 => 'c' }
+    f.url_query.should == "h[0]=a&h[1]=b&h[2]=c"
+    
+    f = c.new( request( "?h[a]=a&h[b]=b&h[c]=c" ) )
+    f.should.be.invalid
+    f.error_messages.should == [ "h contains invalid key" ]
+    f.h.should == { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
+    f.url_query.should == "h[a]=a&h[b]=b&h[c]=c"
+  
+    c = Class.new( FormInput )
+    c.hash :h, match_key: /\A[a-z]\z/
+    
+    f = c.new( request( "?h[0]=a&h[1]=b&h[2]=c" ) )
+    f.should.be.invalid
+    f.error_messages.should == [ "h contains invalid key" ]
+    f.h.should == { 0 => 'a', 1 => 'b', 2 => 'c' }
+    f.url_query.should == "h[0]=a&h[1]=b&h[2]=c"
+    
+    f = c.new( request( "?h[a]=a&h[b]=b&h[c]=c" ) )
+    f.should.be.valid
+    f.h.should == { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
+    f.url_query.should == "h[a]=a&h[b]=b&h[c]=c"
+
+    c = Class.new( FormInput )
+    c.hash :h, match_key: ->{ [ /\A[a-z]+\z/i, /^[A-Z]/, /[A-Z]$/ ] }
+    
+    f = c.new( request( "?h[A]=a&h[Bar]=b&h[baZ]=c" ) )
+    f.should.be.invalid
+    f.error_messages.should == [ "h contains invalid key" ]
+    f.h.should == { 'A' => 'a', 'Bar' => 'b', 'baZ' => 'c' }
+    f.url_query.should == "h[A]=a&h[Bar]=b&h[baZ]=c"
+    
+    f = c.new( request( "?h[A]=a&h[BAR]=b&h[BaZ]=c" ) )
+    f.should.be.valid
+    f.h.should == { 'A' => 'a', 'BAR' => 'b', 'BaZ' => 'c' }
+    f.url_query.should == "h[A]=a&h[BAR]=b&h[BaZ]=c"
+  end
+  
   should 'support select parameters' do
     c = Class.new( FormInput )
     c.param :single, data: ->{ 2.times.map{ |i| [ i, ( 65 + i ).chr ] } }, class: Integer do to_i end
