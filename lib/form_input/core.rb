@@ -734,8 +734,7 @@ class FormInput
   def freeze
     unless frozen?
       validate?
-      @errors.each{ |k,v| v.freeze }
-      @errors.freeze
+      @errors.freeze.each{ |k,v| v.freeze }
     end
     super
   end
