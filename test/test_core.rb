@@ -690,7 +690,7 @@ describe FormInput do
 
     names( f.array_params ).should == [ :opts ]
     names( f.hash_params ).should == [ :on ]
-    names( f.string_params ).should == [ :query, :email, :age, :rate, :text, :password ]
+    names( f.scalar_params ).should == [ :query, :email, :age, :rate, :text, :password ]
 
     names( f.invalid_params ).should == [ :email ]
     names( f.valid_params ).should == [ :query, :age, :rate, :text, :password, :opts, :on ]
@@ -730,7 +730,7 @@ describe FormInput do
     p.should.be.visible
     p.should.not.be.array
     p.should.not.be.hash
-    p.should.be.string
+    p.should.be.scalar
     p.should.not.be.tagged
     p.should.be.untagged
     p.errors.should == []
@@ -765,7 +765,7 @@ describe FormInput do
     p.should.be.visible
     p.should.not.be.array
     p.should.not.be.hash
-    p.should.be.string
+    p.should.be.scalar
     p.should.not.be.tagged
     p.should.be.untagged
     p.errors.should == [ "email address like this is not valid" ]
@@ -808,7 +808,7 @@ describe FormInput do
     p.should.not.be.filled
     p.should.be.array
     p.should.not.be.hash
-    p.should.not.be.string
+    p.should.not.be.scalar
 
     p = f.param( :on )
     p.opts.values_at( :min_key, :max_key ).should == [ 0, 18446744073709551615 ]
@@ -819,7 +819,7 @@ describe FormInput do
     p.should.not.be.filled
     p.should.not.be.array
     p.should.be.hash
-    p.should.not.be.string
+    p.should.not.be.scalar
     p.type.should == :hidden
     p.should.be.hidden
     p.should.not.be.ignored
@@ -1198,7 +1198,7 @@ describe FormInput do
     
     f = TestForm.new
     f.chunked_params.should == f.params
-    f.chunked_params( f.string_params ).should == f.string_params
+    f.chunked_params( f.scalar_params ).should == f.scalar_params
   end
   
 end

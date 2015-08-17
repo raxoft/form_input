@@ -93,7 +93,7 @@ class FormInput
       when nil
         true
       when String
-        string?
+        scalar?
       when Array
         array?
       when Hash
@@ -259,8 +259,8 @@ class FormInput
       !! self[ :hash ]
     end
     
-    # Test if this is a string parameter.
-    def string?
+    # Test if this is a scalar parameter.
+    def scalar?
       not ( array? || hash? )
     end
     
@@ -326,7 +326,7 @@ class FormInput
       # First of all, make sure required parameters are present and not empty.
 
       if required? && empty?
-        report( string? ? "%p is required" : "%p are required" )
+        report( scalar? ? "%p is required" : "%p are required" )
         return
       end
       
@@ -454,7 +454,7 @@ class FormInput
       
       if type = opts[ :class ] and type != String
         unless [ *type ].any?{ |x| value.is_a?( x ) }
-          report( string? ? "%p like this is not valid" : "%p contains invalid value" )
+          report( scalar? ? "%p like this is not valid" : "%p contains invalid value" )
           return
         end
       else
@@ -500,7 +500,7 @@ class FormInput
       # Make sure it's a string in the first place.
     
       unless value.is_a? String
-        report( string? ? "%p is not a string" : "%p contains invalid value" )
+        report( scalar? ? "%p is not a string" : "%p contains invalid value" )
         return
       end
       
@@ -983,11 +983,11 @@ class FormInput
   end
   alias hash_parameters hash_params
   
-  # Get list of string parameters.
-  def string_params
-    params.select{ |x| x.string? }
+  # Get list of scalar parameters.
+  def scalar_params
+    params.select{ |x| x.scalar? }
   end
-  alias string_parameters string_params
+  alias scalar_parameters scalar_params
   
   # Get list of parameters tagged with given/any tags.
   def tagged_params( *tags )

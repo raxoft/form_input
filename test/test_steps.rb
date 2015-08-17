@@ -67,7 +67,7 @@ describe FormInput do
     names( f.hidden_params ).should == [ :step, :last, :seen ]
     names( f.ignored_params ).should == [ :next ]
     names( f.visible_params ).should == []
-    names( f.string_params ).should == [ :step, :next, :last, :seen ]
+    names( f.scalar_params ).should == [ :step, :next, :last, :seen ]
   end
 
   should 'accept valid step parameters' do
