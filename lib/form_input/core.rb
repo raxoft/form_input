@@ -565,7 +565,7 @@ class FormInput
   
     # Create standalone copy of form parameters in case someone inherits an existing form.
     def inherited( into )
-      into.instance_variable_set( "@params", form_params.dup )
+      into.instance_variable_set( '@params', form_params.dup )
     end
 
     # Get hash mapping parameter names to parameters themselves.
@@ -1093,7 +1093,7 @@ class FormInput
     not valid?( *names )
   end
   
-  # Return parameter(s) value(s) as long as they are valid, nil otherwise.
+  # Return parameter(s) value(s) as long as they are all valid, nil otherwise.
   def valid( name, *names )
     self[ name, *names ] if valid?( name, *names )
   end
