@@ -89,7 +89,7 @@ class FormInput
     
     # Test if given parameter has value of correct type.
     def correct?
-      case value
+      case v = value
       when nil
         true
       when String
@@ -99,7 +99,7 @@ class FormInput
       when Hash
         hash?
       else
-        false
+        scalar? and [ *self[ :class ] ].any?{ |x| v.is_a?( x ) }
       end
     end
     

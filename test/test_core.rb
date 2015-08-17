@@ -966,7 +966,7 @@ describe FormInput do
     f.to_hash.should == { query: true, age: 3, rate: 0.35, text: false }
     f.url_params.should == { q: "true", age: "3", rate: "0.35", text: "false" }
     f.url_query.should == "q=true&age=3&rate=0.35&text=false"
-    names( f.incorrect_params ).should == [ :query, :age, :rate, :text ]
+    names( f.incorrect_params ).should == [ :query, :rate, :text ]
 
     f = TestForm.new( opts: 1 )
     ->{ f.validate }.should.not.raise
@@ -987,7 +987,7 @@ describe FormInput do
     f.to_hash.should == { opts: { "foo" => 10, true => false } }
     f.url_params.should == { opts: [ '["foo", 10]', '[true, false]' ] }
     f.url_query.should == "opts[]=%5B%22foo%22%2C+10%5D&opts[]=%5Btrue%2C+false%5D"
-    names( f.incorrect_params ).should == [ :opts]
+    names( f.incorrect_params ).should == [ :opts ]
 
     f = TestForm.new( on: 1 )
     ->{ f.validate }.should.not.raise
