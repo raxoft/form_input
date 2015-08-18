@@ -7,26 +7,34 @@ class FormInput
   include R18n::Helpers
   
   class Parameter
+
     include R18n::Helpers
-    
-    # Localized version of error message formatting. See original implementation for details.
-    def format_error_message( msg, count = nil, singular = nil, *rest )
-      return super unless msg.is_a?( Symbol ) and r18n
-      if limit = count and singular
-        limit = t.form_input.units[ singular, count ].to_s
+
+    # R18n specific methods.
+    module R18nMethods
+      
+      # Localized version of error message formatting. See original implementation for details.
+      def format_error_message( msg, count = nil, singular = nil, *rest )
+        return super unless msg.is_a?( Symbol ) and r18n
+        if limit = count and singular
+          limit = t.form_input.units[ singular, count ].to_s
+        end
+        text = t.form_input.errors[ msg, *limit ]
+        super( text )
       end
-      text = t.form_input.errors[ msg, *limit ]
-      super( text )
+      
+      # Automatically attempt to translate available parameter options.
+      def []( name )
+        if form and opts[ name ].is_a?( String ) and r18n
+          text = t.forms[ form.class.translation_name ][ self.name ][ name ]
+          return text.to_s if text.translated?
+        end
+        super
+      end
+      
     end
     
-    # Automatically attempt to translate available parameter options.
-    def []( name )
-      if form and opts[ name ].is_a?( String ) and r18n
-        text = t.forms[ form.class.translation_name ][ self.name ][ name ]
-        return text.to_s if text.translated?
-      end
-      super
-    end
+    include R18nMethods
     
   end
   
