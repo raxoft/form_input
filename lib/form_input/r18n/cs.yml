@@ -1,0 +1,44 @@
+# Form input Czech messages.
+
+form_input:
+  errors:
+    required_scalar: '%p je povinný' # á,é
+    required_array: '%p jsou povinné'
+    not_array: '%p nejsou pole'
+    not_hash: '%p nejsou hash'
+    not_string: '%p není řetězec'
+    match_key: '%p obsahují neplatný klíč'
+    invalid_key: '%p obsahují neplatný klíč'
+    min_key: '%p obsahují příliš malý klíč'
+    max_key: '%p obsahují příliš velký klíč'
+    min_count: '%p musí mít nejméně %1'
+    max_count: '%p musí mít nejvíce %1'
+    value_type: '%p musí mít správný formát'
+    element_type: '%p obsahují neplatnou hodnotu'
+    min_limit: '%p musí být nejméně %1'
+    max_limit: '%p musí být nejvíce %1'
+    inf_limit: '%p musí být větší než %1'
+    sup_limit: '%p musí být menší než %1'
+    invalid_encoding: '%p musí mít platný encoding'
+    invalid_characters: '%p nesmí obsahovat zakázané znaky'
+    min_size: '%p musí mít nejméně %1'
+    max_size: '%p musí mít nejvíce %1'
+    min_bytesize: '%p musí mít nejméně %1'
+    max_bytesize: '%p musí mít nejvíce %1'
+    reject_msg: '%p jako tento není povolen'
+    match_msg: '%p jako tento není platný'
+  units:
+    byte: !!pl
+      1: '%1 byte'
+      2: '%1 byty'
+      n: '%1 bytů'
+    character: !!pl
+      1: '%1 znak'
+      2: '%1 znaky'
+      n: '%1 znaků'
+    element: !!pl
+      1: '%1 prvek'
+      2: '%1 prvky'
+      n: '%1 prvků'
+
+# EOF #
