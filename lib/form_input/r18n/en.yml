@@ -1,0 +1,41 @@
+# Form input English messages.
+
+form_input:
+  errors:
+    required_scalar: '%p is required'
+    required_array: '%p are required'
+    not_array: '%p is not an array'
+    not_hash: '%p is not a hash'
+    not_string: '%p is not a string'
+    match_key: '%p contains invalid key'
+    invalid_key: '%p contains invalid key'
+    min_key: '%p contains too small key'
+    max_key: '%p contains too large key'
+    min_count: '%p must have at least %1'
+    max_count: '%p must have at most %1'
+    value_type: '%p like this is not valid'
+    element_type: '%p contains invalid value'
+    min_limit: '%p must be at least %1'
+    max_limit: '%p must be at most %1'
+    inf_limit: '%p must be greater than %1'
+    sup_limit: '%p must be less than %1'
+    invalid_encoding: '%p uses invalid encoding'
+    invalid_characters: '%p contains invalid characters'
+    min_size: '%p must have at least %1'
+    max_size: '%p must have at most %1'
+    min_bytesize: '%p must have at least %1'
+    max_bytesize: '%p must have at most %1'
+    reject_msg: '%p like this is not allowed'
+    match_msg: '%p like this is not valid'
+  units:
+    byte: !!pl
+      1: '%1 byte'
+      n: '%1 bytes'
+    character: !!pl
+      1: '%1 character'
+      n: '%1 characters'
+    element: !!pl
+      1: '%1 element'
+      n: '%1 elements'
+
+# EOF #
