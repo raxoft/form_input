@@ -19,6 +19,35 @@ class FormInput
   
   # Encoding we convert all input request parameters into.
   DEFAULT_ENCODING = Encoding::UTF_8
+  
+  # Hash mapping error codes to default error messages.
+  DEFAULT_ERROR_MESSAGES = {
+    required_scalar: "%p is required",
+    required_array: "%p are required",
+    not_array: "%p is not an array",
+    not_hash: "%p is not a hash",
+    not_string: "%p is not a string",
+    match_key: "%p contains invalid key",
+    invalid_key: "%p contains invalid key",
+    min_key: "%p contains too small key",
+    max_key: "%p contains too large key",
+    min_count: "%p must have at least",
+    max_count: "%p must have at most",
+    value_type: "%p like this is not valid",
+    element_type: "%p contains invalid value",
+    min_limit: "%p must be at least",
+    max_limit: "%p must be at most",
+    inf_limit: "%p must be greater than",
+    sup_limit: "%p must be less than",
+    invalid_encoding: "%p uses invalid encoding",
+    invalid_characters: "%p contains invalid characters",
+    min_size: "%p must have at least",
+    max_size: "%p must have at most",
+    min_bytesize: "%p must have at least",
+    max_bytesize: "%p must have at most",
+    reject_msg: "%p like this is not allowed",
+    match_msg: "%p like this is not valid",
+  }
 
   # Form parameter.
   class Parameter
@@ -311,6 +340,7 @@ class FormInput
       # String %p in the message is automatically replaced with error title.
       # Can be redefined to provide correctly localized error messages.
       def format_error_message( msg, count = nil, singular = nil, plural = "#{singular}s" )
+        msg = DEFAULT_ERROR_MESSAGES[ msg ] || msg.to_s
         msg += " #{count}" if count
         msg += " #{ count == 1 ? singular : plural }" if singular
         msg.gsub( '%p', error_title )
@@ -335,7 +365,7 @@ class FormInput
       # First of all, make sure required parameters are present and not empty.
 
       if required? && empty?
-        report( scalar? ? "%p is required" : "%p are required" )
+        report( scalar? ? :required_scalar : :required_array )
         return
       end
       
@@ -369,7 +399,7 @@ class FormInput
       # Make sure it's an array in the first place.
 
       unless value.is_a? Array
-        report( "%p is not an array" )
+        report( :not_array )
         return
       end
       
@@ -389,7 +419,7 @@ class FormInput
       # Make sure it's a hash in the first place.
 
       unless value.is_a? Hash
-        report( "%p is not a hash" )
+        report( :not_hash )
         return
       end
       
@@ -410,7 +440,7 @@ class FormInput
 
       if patterns = self[ :match_key ]
         unless [ *patterns ].all?{ |x| value.to_s =~ x }
-          report( "%p contains invalid key" )
+          report( :match_key )
           return
         end
         return true
@@ -419,19 +449,19 @@ class FormInput
       # Otherwise make sure it's an integer.
     
       unless value.is_a? Integer
-        report( "%p contains invalid key" )
+        report( :invalid_key )
         return
       end
       
       # Make sure it is within allowed limits.
 
       if limit = self[ :min_key ] and value < limit
-        report( "%p contains too small key" )
+        report( :min_key )
         return
       end
 
       if limit = self[ :max_key ] and value > limit
-        report( "%p contains too large key" )
+        report( :max_key )
         return
       end
       
@@ -443,12 +473,12 @@ class FormInput
     def validate_count( value )
 
       if limit = self[ :min_count ] and value.count < limit
-        report( "%p must have at least", limit, 'element' )
+        report( :min_count, limit, 'element' )
         return
       end
 
       if limit = self[ :max_count ] and value.count > limit
-        report( "%p must have at most", limit, 'element' )
+        report( :max_count, limit, 'element' )
         return
       end
       
@@ -463,7 +493,7 @@ class FormInput
       
       if type = opts[ :class ] and type != String
         unless [ *type ].any?{ |x| value.is_a?( x ) }
-          report( scalar? ? "%p like this is not valid" : "%p contains invalid value" )
+          report( scalar? ? :value_type : :element_type )
           return
         end
       else
@@ -473,22 +503,22 @@ class FormInput
       # Then enforce any value limits.
       
       if limit = self[ :min ] and value.to_f < limit.to_f
-        report( "%p must be at least", limit )
+        report( :min_limit, limit )
         return
       end
 
       if limit = self[ :max ] and value.to_f > limit.to_f
-        report( "%p must be at most", limit )
+        report( :max_limit, limit )
         return
       end
       
       if limit = self[ :inf ] and value.to_f <= limit.to_f
-        report( "%p must be greater than", limit )
+        report( :inf_limit, limit )
         return
       end
 
       if limit = self[ :sup ] and value.to_f >= limit.to_f
-        report( "%p must be less than", limit )
+        report( :sup_limit, limit )
         return
       end
       
@@ -509,41 +539,41 @@ class FormInput
       # Make sure it's a string in the first place.
     
       unless value.is_a? String
-        report( scalar? ? "%p is not a string" : "%p contains invalid value" )
+        report( scalar? ? :not_string : :element_type )
         return
       end
       
       # Make sure the string contains only valid data.
       
       unless value.valid_encoding? && ( value.encoding == DEFAULT_ENCODING || value.ascii_only? )
-        report( "%p uses invalid encoding" )
+        report( :invalid_encoding )
         return
       end
       
       unless value =~ /\A(\p{Graph}|[ \t\r\n])*\z/u
-        report( "%p contains invalid characters" )
+        report( :invalid_characters )
         return
       end
       
       # Enforce any size limits.
       
       if limit = self[ :min_size ] and value.size < limit
-        report( "%p must have at least", limit, 'character' )
+        report( :min_size, limit, 'character' )
         return
       end
 
       if limit = self[ :min_bytesize ] and value.bytesize < limit
-        report( "%p must have at least", limit, 'byte' )
+        report( :min_bytesize, limit, 'byte' )
         return
       end
       
       if limit = self[ :max_size ] and value.size > limit
-        report( "%p must have at most", limit, 'character' )
+        report( :max_size, limit, 'character' )
         return
       end
       
       if limit = self[ :max_bytesize ] and value.bytesize > limit
-        report( "%p must have at most", limit, 'byte' )
+        report( :max_bytesize, limit, 'byte' )
         return
       end
       
@@ -551,14 +581,14 @@ class FormInput
       
       if patterns = self[ :reject ]
         if [ *patterns ].any?{ |x| value =~ x }
-          report( self[ :reject_msg ] || self[ :msg ] || "%p like this is not allowed" )
+          report( self[ :reject_msg ] || self[ :msg ] || :reject_msg )
           return
         end
       end
       
       if patterns = self[ :match ]
         unless [ *patterns ].all?{ |x| value =~ x }
-          report( self[ :match_msg ] || self[ :msg ] || "%p like this is not valid" )
+          report( self[ :match_msg ] || self[ :msg ] || :match_msg )
           return
         end
       end
@@ -1074,7 +1104,7 @@ class FormInput
   # Returns self for chaining.
   def report( name, msg )
     validate?
-    ( @errors[ name ] ||= [] ) << msg.dup.freeze
+    ( @errors[ name ] ||= [] ) << msg.to_s.dup.freeze
     self
   end
   
