@@ -115,32 +115,32 @@ describe FormInput do
     [ 'q may not contain invalid characters', q: "\u{0001}" ],
     [ 'q may not contain invalid characters', q: "\u{2029}" ],
     [ 'email address like this is not valid', email: 'abc' ],
-    [ 'email address must have at most 255 characters', email: 'a@' + 'a' * 254 ],
-    [ 'email address must have at most 255 bytes', email: 'á@' + 'a' * 253 ],
+    [ 'email address may have at most 255 characters', email: 'a@' + 'a' * 254 ],
+    [ 'email address may have at most 255 bytes', email: 'á@' + 'a' * 253 ],
     [ 'age like this is not valid', age: 0.9 ],
     [ 'age must be at least 1', age: 0 ],
-    [ 'age must be at most 200', age: 201 ],
+    [ 'age may be at most 200', age: 201 ],
     [ 'rate like this is not allowed', rate: '0.9e10' ],
     [ 'rate like this is not allowed', rate: '-10' ],
     [ 'rate must be greater than 0', rate: 0 ],
     [ 'rate must be less than 1', rate: 1 ],
     [ 'text must have at least 2 bytes', text: " " ],
     [ 'text must have at least 2 bytes', text: "a" ],
-    [ 'text must have at most 1000 characters', text: "a" * 1001 ],
-    [ 'text must have at most 1999 bytes', text: "á" * 1000 ],
+    [ 'text may have at most 1000 characters', text: "a" * 1001 ],
+    [ 'text may have at most 1999 bytes', text: "á" * 1000 ],
     [ 'Password must contain one lowercase and one uppercase letter and one digit', password: "abc123" ],
     [ 'Password must contain one lowercase and one uppercase letter and one digit', password: "ABC123" ],
     [ 'Password must contain one lowercase and one uppercase letter and one digit', password: "abcABC" ],
     [ 'Password must have at least 6 characters', password: "   \t\r\n" ],
     [ 'Password must have at least 6 characters', password: "Abc12" ],
-    [ 'Password must have at most 16 characters', password: "0123456789abcdefG" ],
+    [ 'Password may have at most 16 characters', password: "0123456789abcdefG" ],
     [ 'opts are not an array', opts: "" ],
     [ 'opts are not an array', opts: " " ],
     [ 'opts are not an array', opts: "x" ],
     [ 'opts are not an array', opts: { 1 => 2 } ],
     [ 'opts contain invalid value', opts: [ 1, { 0 => 1 } ] ],
     [ 'opts must have at least 2 elements', opts: [ 0 ] ],
-    [ 'opts must have at most 3 elements', opts: [ 0, 1, 0, 0 ] ],
+    [ 'opts may have at most 3 elements', opts: [ 0, 1, 0, 0 ] ],
     [ 'Only one option may be set', opts: [ 0, 1, 1 ] ],
     [ 'opts like this is not valid', opts: [ 1, 2, 3 ] ],
     [ 'on are not a hash', on: "" ],
@@ -156,7 +156,7 @@ describe FormInput do
     [ 'on contain invalid value', on: { 0 => 1, 2 => { 3 => 4 } } ],
     [ 'on contain invalid value', on: { 0 => 1, 2 => [ 3 ] } ],
     [ 'on must have at least 2 elements', on: { 1 => 1 } ],
-    [ 'on must have at most 4 elements', on: { 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5 } ],
+    [ 'on may have at most 4 elements', on: { 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5 } ],
     [ 'on like this is not valid', on: { 0 => 1, 2 => 2000 } ],
     [ 'on like this is not valid', on: { 0 => 1, 2 => "z" } ],
     [ 'on value is too large', on: { 0 => 9, 2 => 9 } ],
@@ -353,7 +353,7 @@ describe FormInput do
     f = c.new( s: "123456" )
     f.param( :s )[ :max_size ].should == 5
     f.param( :a )[ :max_count ].should == 5
-    f.error_messages.should == [ "s must have at most 5 characters" ]
+    f.error_messages.should == [ "s may have at most 5 characters" ]
   end
   
   should 'convert to/from internal value format' do
