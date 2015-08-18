@@ -1,0 +1,8 @@
+# Form input localization testing messages.
+
+forms:
+  test_r18n_form:
+    msg:
+      title: Zpráva
+
+# EOF #

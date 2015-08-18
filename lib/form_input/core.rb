@@ -84,13 +84,6 @@ class FormInput
       self
     end
     
-    # Get value of arbitrary option. Automatically resolves call blocks.
-    def []( name )
-      o = opts[ name ]
-      o = instance_exec( &o ) if o.is_a?( Proc )
-      o
-    end
-    
     # Get the value of this parameter. Always nil for unbound parameters.
     def value
       form ? form[ name ] : nil
@@ -333,9 +326,16 @@ class FormInput
       self[ :data ] || []
     end
     
-    # Localization related methods, put in separate module for easier overloading.
+    # Methods affected by localization, put in separate module for easier overloading.
     module LocaleMethods
     
+      # Get value of arbitrary option. Automatically resolves call blocks.
+      def []( name )
+        o = opts[ name ]
+        o = instance_exec( &o ) if o.is_a?( Proc )
+        o
+      end
+      
       # Format the error report message. Default implementation includes simple pluralizer.
       # String %p in the message is automatically replaced with error title.
       # Can be redefined to provide correctly localized error messages.

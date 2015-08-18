@@ -12,6 +12,7 @@ class TestR18nForm < FormInput
   hash :hh, match_key: /\A[a-z]+\z/
   param :int, INTEGER_ARGS, min: 5, max: 10
   param :float, FLOAT_ARGS, inf: 0, sup: 1
+  param :msg, "Message"
 end
 
 describe FormInput do
@@ -55,7 +56,7 @@ describe FormInput do
       defaults ||= hash
       hash = defaults.merge( hash )
       f = TestR18nForm.new( hash )
-      yield f.error_messages.join( ':' ), reference
+      yield( f.error_messages.join( ':' ), reference )
     end
   end
   
@@ -80,11 +81,25 @@ describe FormInput do
     end
   end
 
-  should 'fallback to English error messages for unsuported locales' do
+  should 'fallback to English error messages for unsupported locales' do
     set_locale( 'zz' ).locale.code.should == 'en'
     test_translations do |msg, reference|
       msg.should == reference
     end
+  end
+  
+  should 'provide scope name for automatic translations' do
+    TestR18nForm.translation_name.should == 'test_r18n_form'
+  end
+  
+  should 'automatically translate string options when possible' do
+    set_locale( 'cs' ).locale.code.should == 'cs'
+    TestR18nForm.new.param( :msg ).title.should == 'Zpráva'
+  end
+  
+  should 'use default string options for unsupported locales' do
+    set_locale( 'en' ).locale.code.should == 'en'
+    TestR18nForm.new.param( :msg ).title.should == 'Message'
   end
 
 end
