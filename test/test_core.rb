@@ -109,11 +109,11 @@ describe FormInput do
     [ 'q is required', q: "   \t\r\n " ],
     [ 'q is not a string', q: [ 10 ] ],
     [ 'q is not a string', q: { "x" => "y" } ],
-    [ 'q uses invalid encoding', q: 255.chr.force_encoding( 'UTF-8' ) ],
+    [ 'q must use valid encoding', q: 255.chr.force_encoding( 'UTF-8' ) ],
     [ 'q is required', q: "\u{0000}" ],  # Because strip strips \0 as well.
-    [ 'q contains invalid characters', q: "a\u{0000}b" ],
-    [ 'q contains invalid characters', q: "\u{0001}" ],
-    [ 'q contains invalid characters', q: "\u{2029}" ],
+    [ 'q may not contain invalid characters', q: "a\u{0000}b" ],
+    [ 'q may not contain invalid characters', q: "\u{0001}" ],
+    [ 'q may not contain invalid characters', q: "\u{2029}" ],
     [ 'email address like this is not valid', email: 'abc' ],
     [ 'email address must have at most 255 characters', email: 'a@' + 'a' * 254 ],
     [ 'email address must have at most 255 bytes', email: 'á@' + 'a' * 253 ],
@@ -134,27 +134,27 @@ describe FormInput do
     [ 'Password must have at least 6 characters', password: "   \t\r\n" ],
     [ 'Password must have at least 6 characters', password: "Abc12" ],
     [ 'Password must have at most 16 characters', password: "0123456789abcdefG" ],
-    [ 'opts is not an array', opts: "" ],
-    [ 'opts is not an array', opts: " " ],
-    [ 'opts is not an array', opts: "x" ],
-    [ 'opts is not an array', opts: { 1 => 2 } ],
-    [ 'opts contains invalid value', opts: [ 1, { 0 => 1 } ] ],
+    [ 'opts are not an array', opts: "" ],
+    [ 'opts are not an array', opts: " " ],
+    [ 'opts are not an array', opts: "x" ],
+    [ 'opts are not an array', opts: { 1 => 2 } ],
+    [ 'opts contain invalid value', opts: [ 1, { 0 => 1 } ] ],
     [ 'opts must have at least 2 elements', opts: [ 0 ] ],
     [ 'opts must have at most 3 elements', opts: [ 0, 1, 0, 0 ] ],
     [ 'Only one option may be set', opts: [ 0, 1, 1 ] ],
     [ 'opts like this is not valid', opts: [ 1, 2, 3 ] ],
-    [ 'on is not a hash', on: "" ],
-    [ 'on is not a hash', on: " " ],
-    [ 'on is not a hash', on: "x" ],
-    [ 'on is not a hash', on: [ 2 ] ],
-    [ 'on contains invalid key', on: { "k" => 1, 2 => 3 } ],
-    [ 'on contains invalid key', on: { "0b0" => 1, 2 => 3 } ],
-    [ 'on contains invalid key', on: { "0x0" => 1, 2 => 3 } ],
-    [ 'on contains invalid key', on: { "foo" => 1, "bar" => 3 } ],
-    [ 'on contains too small key', on: { -1 => 1, 2 => 3 } ],
-    [ 'on contains too large key', on: { ( 1 << 64 ) => 1, 2 => 3 } ],
-    [ 'on contains invalid value', on: { 0 => 1, 2 => { 3 => 4 } } ],
-    [ 'on contains invalid value', on: { 0 => 1, 2 => [ 3 ] } ],
+    [ 'on are not a hash', on: "" ],
+    [ 'on are not a hash', on: " " ],
+    [ 'on are not a hash', on: "x" ],
+    [ 'on are not a hash', on: [ 2 ] ],
+    [ 'on contain invalid key', on: { "k" => 1, 2 => 3 } ],
+    [ 'on contain invalid key', on: { "0b0" => 1, 2 => 3 } ],
+    [ 'on contain invalid key', on: { "0x0" => 1, 2 => 3 } ],
+    [ 'on contain invalid key', on: { "foo" => 1, "bar" => 3 } ],
+    [ 'on contain too small key', on: { -1 => 1, 2 => 3 } ],
+    [ 'on contain too large key', on: { ( 1 << 64 ) => 1, 2 => 3 } ],
+    [ 'on contain invalid value', on: { 0 => 1, 2 => { 3 => 4 } } ],
+    [ 'on contain invalid value', on: { 0 => 1, 2 => [ 3 ] } ],
     [ 'on must have at least 2 elements', on: { 1 => 1 } ],
     [ 'on must have at most 4 elements', on: { 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5 } ],
     [ 'on like this is not valid', on: { 0 => 1, 2 => 2000 } ],
@@ -517,7 +517,7 @@ describe FormInput do
     
     f = c.new( request( "?h[a]=a&h[b]=b&h[c]=c" ) )
     f.should.be.invalid
-    f.error_messages.should == [ "h contains invalid key" ]
+    f.error_messages.should == [ "h contain invalid key" ]
     f.h.should == { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     f.url_query.should == "h[a]=a&h[b]=b&h[c]=c"
 
@@ -531,7 +531,7 @@ describe FormInput do
     
     f = c.new( request( "?h[a]=a&h[b]=b&h[c]=c" ) )
     f.should.be.invalid
-    f.error_messages.should == [ "h contains invalid key" ]
+    f.error_messages.should == [ "h contain invalid key" ]
     f.h.should == { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     f.url_query.should == "h[a]=a&h[b]=b&h[c]=c"
   
@@ -540,7 +540,7 @@ describe FormInput do
     
     f = c.new( request( "?h[0]=a&h[1]=b&h[2]=c" ) )
     f.should.be.invalid
-    f.error_messages.should == [ "h contains invalid key" ]
+    f.error_messages.should == [ "h contain invalid key" ]
     f.h.should == { 0 => 'a', 1 => 'b', 2 => 'c' }
     f.url_query.should == "h[0]=a&h[1]=b&h[2]=c"
     
@@ -554,7 +554,7 @@ describe FormInput do
     
     f = c.new( request( "?h[A]=a&h[Bar]=b&h[baZ]=c" ) )
     f.should.be.invalid
-    f.error_messages.should == [ "h contains invalid key" ]
+    f.error_messages.should == [ "h contain invalid key" ]
     f.h.should == { 'A' => 'a', 'Bar' => 'b', 'baZ' => 'c' }
     f.url_query.should == "h[A]=a&h[Bar]=b&h[baZ]=c"
     
@@ -1024,7 +1024,7 @@ describe FormInput do
     f = TestForm.new( query: s )
     ->{ f.validate }.should.not.raise
     f.should.not.be.valid
-    f.error_messages.should == [ "q uses invalid encoding" ]
+    f.error_messages.should == [ "q must use valid encoding" ]
     f.param( :query ).should.not.be.blank
     f.to_hash.should == { query: s }
     f.url_params.should == { q: s }
@@ -1033,7 +1033,7 @@ describe FormInput do
     f = TestForm.new( Rack::Request.new( Rack::MockRequest.env_for( "?q=%ff" ) ) )
     ->{ f.validate }.should.not.raise
     f.should.not.be.valid
-    f.error_messages.should == [ "q uses invalid encoding" ]
+    f.error_messages.should == [ "q must use valid encoding" ]
     f.param( :query ).should.not.be.blank
     f.to_hash.should == { query: s.dup.force_encoding( 'BINARY' ) }
     f.url_params.should == { q: s.dup.force_encoding( 'BINARY' ) }
