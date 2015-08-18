@@ -304,20 +304,29 @@ class FormInput
       self[ :data ] || []
     end
     
-    # Format the error report message. Default implementation includes simple pluralizer.
-    # String %p in the message is automatically replaced with error title.
-    # Can be redefined to provide correctly localized error messages.
-    def format_error_message( msg, count = nil, singular = nil, plural = "#{singular}s" )
-      msg += " #{count}" if count
-      msg += " #{ count == 1 ? singular : plural }" if singular
-      msg.gsub( '%p', error_title )
-    end
+    # Localization related methods, put in separate module for easier overloading.
+    module LocaleMethods
     
-    # Report an error concerning this parameter.
-    # String %p in the message is automatically replaced with error title.
-    def report( msg, *args )
-      form.report( name, format_error_message( msg, *args ) ) if form
+      # Format the error report message. Default implementation includes simple pluralizer.
+      # String %p in the message is automatically replaced with error title.
+      # Can be redefined to provide correctly localized error messages.
+      def format_error_message( msg, count = nil, singular = nil, plural = "#{singular}s" )
+        msg += " #{count}" if count
+        msg += " #{ count == 1 ? singular : plural }" if singular
+        msg.gsub( '%p', error_title )
+      end
+      
+      # Report an error concerning this parameter.
+      # String %p in the message is automatically replaced with error title.
+      def report( msg, *args )
+        form.report( name, format_error_message( msg, *args ) ) if form
+      end
+      
     end
+
+    include LocaleMethods
+    
+    # Validation.
     
     # Validate this parameter. Does nothing if it was found invalid already.
     def validate
