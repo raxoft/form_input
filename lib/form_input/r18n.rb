@@ -10,7 +10,7 @@ class FormInput
     include R18n::Helpers
     
     # Localized version of error message formatting. See original implementation for details.
-    def format_error_message( msg, count = nil, singular = nil, plural = "#{singular}s" )
+    def format_error_message( msg, count = nil, singular = nil, *rest )
       return super unless msg.is_a?( Symbol ) and r18n
       if limit = count and singular
         limit = t.form_input.units[ singular, count ].to_s
