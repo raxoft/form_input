@@ -641,7 +641,7 @@ class FormInput
       when Parameter
         add( Parameter.new(
           opts[ :name ] || source.name,
-          opts[ :code ] || source.code,
+          opts[ :code ] || opts[ :name ] || source.code,
           source.opts.merge( opts )
         ) )
       when Array
