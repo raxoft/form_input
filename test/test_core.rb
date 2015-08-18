@@ -1171,6 +1171,23 @@ describe FormInput do
     f.validate!.should.be.valid
   end
   
+  should 'support some custom error messages' do
+    c = Class.new( FormInput )
+    c.param! :q, match: /A/, reject: /B/
+    c.copy c[ :q ], name: :c,
+      required_msg: '%p must be filled in',
+      match_msg: '%p must contain A',
+      reject_msg: '%p may not contain B'
+    f = c.new
+    f.error_messages.should == [ "q is required", "c must be filled in" ]
+    f = c.new( q: 'X', c: 'X' )
+    f.error_messages.should == [ "q like this is not valid", "c must contain A" ]
+    f = c.new( q: 'BA', c: 'BA' )
+    f.error_messages.should == [ "q like this is not allowed", "c may not contain B" ]
+    f = c.new( q: 'A', c: 'A' )
+    f.error_messages.should.be.empty
+  end
+  
   should 'split parameters into rows as desired' do
     c = Class.new( FormInput )
     c.param :a

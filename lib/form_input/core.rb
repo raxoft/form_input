@@ -365,7 +365,7 @@ class FormInput
       # First of all, make sure required parameters are present and not empty.
 
       if required? && empty?
-        report( scalar? ? :required_scalar : :required_array )
+        report( self[ :required_msg ] || ( scalar? ? :required_scalar : :required_array ) )
         return
       end
       
