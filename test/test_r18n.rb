@@ -51,7 +51,7 @@ describe FormInput do
   def set_locale( code )
     R18n.set( code, [ "#{__FILE__}/../r18n", FormInput.translations_path ] )
   end
-  
+
   def test_translations
     for reference, translation, hash in TESTS
       defaults ||= hash
@@ -60,7 +60,7 @@ describe FormInput do
       yield( f.error_messages.join( ':' ), reference, translation )
     end
   end
-  
+
   should 'use builtin error messages by default' do
     R18n.get.should.be.nil
     test_translations do |msg, reference|
@@ -93,11 +93,11 @@ describe FormInput do
       msg.should == reference
     end
   end
-  
+
   should 'provide scope name for automatic translations' do
     TestR18nForm.translation_name.should == 'test_r18n_form'
   end
-  
+
   should 'automatically translate string options when possible' do
     set_locale( 'cs' ).locale.code.should == 'cs'
     f = TestR18nForm.new
@@ -110,7 +110,7 @@ describe FormInput do
     p[ :reject_msg ].should == '%p obsahuje nepovolené znaky'
     p[ :required_msg ].should == '%p musí být vyplněn'
   end
-  
+
   should 'use default string options for unsupported locales' do
     set_locale( 'en' ).locale.code.should == 'en'
     f = TestR18nForm.new
@@ -123,7 +123,7 @@ describe FormInput do
     p[ :reject_msg ].should.be.nil
     p[ :required_msg ].should.be.nil
   end
-  
+
   should 'provide R18n translation helpers' do
     set_locale( 'en' ).locale.code.should == 'en'
     f = TestR18nForm.new

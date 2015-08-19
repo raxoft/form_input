@@ -10,33 +10,33 @@ class FormInput
 
   # Matches names using latin alphabet.
   LATIN_NAMES_RE = /\A[\p{Latin}\-\. ]+\z/u
-  
+
   # Matches common email addresses. Note that it doesn't match all addresses allowed by RFC, though.
   SIMPLE_EMAIL_RE = /\A[-_.=+%a-z0-9]+@(?:[-_a-z0-9]+\.)+[a-z]{2,4}\z/i
-  
+
   # Matches generic ZIP code. Note that the real format changes for each country.
   ZIP_CODE_RE = /\A[A-Z\d]++(?:[- ]?[A-Z\d]+)*+\z/i
-  
+
   # Filter for phone numbers.
   PHONE_NUMBER_FILTER = ->{ gsub( /\s*[-\/\.]\s*/, '-' ).gsub( /\s+/, ' ' ).strip }
-  
+
   # Matches generic phone number.
   PHONE_NUMBER_RE = /\A\+?\d++(?:[- ]?(?:\d+|\(\d+\)))*+(?:[- ]?[A-Z\d]+)*+\z/i
-  
+
   # Basic types.
-  
+
   # Integer number.
   INTEGER_ARGS = {
     filter: ->{ ( Integer( self, 10 ) rescue self ) unless empty? },
     class: Integer,
   }
-  
+
   # Float number.
   FLOAT_ARGS = {
     filter: ->{ ( Float( self ) rescue self ) unless empty? },
     class: Float,
   }
-  
+
   # Boolean value, displayed as a select menu.
   BOOL_ARGS = {
     type: :select,
@@ -52,32 +52,32 @@ class FormInput
     format: ->{ self if self },
     class: [ TrueClass, FalseClass ],
   }
-  
+
   # Address fields.
 
   # Email.
   EMAIL_ARGS = {
     match: SIMPLE_EMAIL_RE,
   }
-  
+
   # Zip code.
   ZIP_ARGS = {
     match: ZIP_CODE_RE,
   }
-  
+
   # Phone number.
   PHONE_ARGS = {
     filter: PHONE_NUMBER_FILTER,
     match: PHONE_NUMBER_RE,
   }
-  
+
   # Date and time.
-  
+
   # Full time format.
   TIME_FORMAT = "%Y-%m-%d %H:%M:%S".freeze
   # Full time format example.
   TIME_FORMAT_EXAMPLE = "YYYY-MM-DD HH:MM:SS".freeze
-  
+
   # Full time.
   TIME_ARGS = {
     placeholder: TIME_FORMAT_EXAMPLE,
@@ -85,12 +85,12 @@ class FormInput
     format: ->{ strftime( TIME_FORMAT ) rescue self },
     class: Time,
   }
-  
+
   # US date format.
   US_DATE_FORMAT = "%m/%d/%Y".freeze
   # US date format example.
   US_DATE_FORMAT_EXAMPLE = "MM/DD/YYYY".freeze
-  
+
   # Time in US date format.
   US_DATE_ARGS = {
     placeholder: US_DATE_FORMAT_EXAMPLE,
@@ -98,12 +98,12 @@ class FormInput
     format: ->{ strftime( US_DATE_FORMAT ) rescue self },
     class: Time,
   }
-  
+
   # UK date format.
   UK_DATE_FORMAT = "%d/%m/%Y".freeze
   # UK date format example.
   UK_DATE_FORMAT_EXAMPLE = "DD/MM/YYYY".freeze
-  
+
   # Time in UK date format.
   UK_DATE_ARGS = {
     placeholder: UK_DATE_FORMAT_EXAMPLE,
@@ -111,12 +111,12 @@ class FormInput
     format: ->{ strftime( UK_DATE_FORMAT ) rescue self },
     class: Time,
   }
-  
+
   # EU date format.
   EU_DATE_FORMAT = "%-d.%-m.%Y".freeze
   # EU date format example.
   EU_DATE_FORMAT_EXAMPLE = "D.M.YYYY".freeze
-  
+
   # Time in EU date format.
   EU_DATE_ARGS = {
     placeholder: EU_DATE_FORMAT_EXAMPLE,
@@ -124,12 +124,12 @@ class FormInput
     format: ->{ strftime( EU_DATE_FORMAT ) rescue self },
     class: Time,
   }
-  
+
   # Hours format.
   HOURS_FORMAT = "%H:%M".freeze
   # Hours format example.
   HOURS_FORMAT_EXAMPLE = "HH:MM".freeze
-  
+
   # Seconds since midnight in hours:minutes format.
   HOURS_ARGS = {
     placeholder: HOURS_FORMAT_EXAMPLE,
@@ -137,7 +137,7 @@ class FormInput
     format: ->{ Time.at( self ).strftime( HOURS_FORMAT ) rescue self },
     class: Integer,
   }
-  
+
   # Parse time like Time#strptime but raise on trailing garbage.
   # Also ignores -, _ and ^ % modifiers, so the same format can be used for both parsing and formatting.
   def self.parse_time( string, format )
@@ -147,7 +147,7 @@ class FormInput
     suffix = ( string[ -1 ] == "\1" ? "\2" : "\1" )
     Time.strptime( string + suffix, format + suffix )
   end
-  
+
   # Transformation which drops empty values from hashes and arrays and turns empty string into nil.
   PRUNED_ARGS = {
     transform: ->{

@@ -161,7 +161,7 @@ describe FormInput do
     [ 'on like this is not valid', on: { 0 => 1, 2 => "z" } ],
     [ 'on value is too large', on: { 0 => 9, 2 => 9 } ],
   ]
-  
+
   extend Rack::Test::Methods
 
   def app
@@ -175,19 +175,19 @@ describe FormInput do
   def names( params )
     params.map{ |x| x && x.name }
   end
-  
+
   should 'provide request parameters' do
     for result, params in VALID_PARAMS
       post( '/form?q=1', params ).body.should == result
     end
   end
-  
+
   should 'detect invalid parameters' do
     for result, params in INVALID_PARAMS
       post( '/form?q=1', params ).body.should == result
     end
   end
-  
+
   should 'complain about incorrect parameter definition' do
     ->{ TestForm.param :x, "test", "test" }.should.raise( ArgumentError )
     ->{ TestForm.param :x, { type: :email }, :extra }.should.raise( ArgumentError )
@@ -205,7 +205,7 @@ describe FormInput do
     ->{ TestForm.copy TestForm }.should.raise( ArgumentError )
     ->{ TestForm.copy TestForm[ :query ] }.should.raise( ArgumentError )
   end
-  
+
   should 'be cloned and copied properly' do
     f = TestForm.new
     f.report( :password, "error" )
@@ -232,7 +232,7 @@ describe FormInput do
     c.errors_for( :text ).should == [ "Clone" ]
     d.errors_for( :text ).should == [ "Copy" ]
   end
-  
+
   should 'be frozen properly' do
     f = TestForm.new
     f.should.not.be.frozen
@@ -254,7 +254,7 @@ describe FormInput do
 
      f.clone.should.be.frozen
      f.clone.should.be.invalid
-     
+
     ->{ f.clone.query = "x" }.should.raise( RuntimeError )
     ->{ f.clone[ :query ] = "y" }.should.raise( RuntimeError )
     ->{ f.clone.set( query: "z" ) }.should.raise( RuntimeError )
@@ -267,7 +267,7 @@ describe FormInput do
 
     f.dup.should.not.be.frozen
     f.dup.should.be.invalid
-    
+
     ->{ f.dup.query = "x" }.should.not.raise
     ->{ f.dup[ :query ] = "y" }.should.not.raise
     ->{ f.dup.set( query: "z" ) }.should.not.raise
@@ -280,12 +280,12 @@ describe FormInput do
 
     f.query.should.be.nil
   end
-  
+
   should 'support form inheritance' do
     c = Class.new( TestForm ).param :extra
     names( c.new.params ).should == [ :query, :email, :age, :rate, :text, :password, :opts, :on, :extra ]
   end
-  
+
   should 'support parameter copying' do
     c = Class.new( FormInput )
     c.param :first
@@ -305,7 +305,7 @@ describe FormInput do
     c.param :last
     names( c.new.params ).should == [ :first, :password, :age, :last ]
   end
-  
+
   should 'allow changing options when copying parameters' do
     c = Class.new( FormInput )
     c.copy TestForm[ :query ]
@@ -340,22 +340,22 @@ describe FormInput do
     p.code.should == :bar
     p.title.should == "FooBar"
   end
-  
+
   should 'support dynamic options' do
     c = Class.new( FormInput )
     c.class_eval "def limit ; 5 ; end"
     c.param :s, max_size: ->{ form.limit }
     c.array :a, max_count: ->{ form.limit }
-    
+
     ->{ c[ :s ][ :max_size ] }.should.raise NoMethodError
     ->{ c[ :a ][ :max_count ] }.should.raise NoMethodError
-    
+
     f = c.new( s: "123456" )
     f.param( :s )[ :max_size ].should == 5
     f.param( :a )[ :max_count ].should == 5
     f.error_messages.should == [ "s may have at most 5 characters" ]
   end
-  
+
   should 'convert to/from internal value format' do
     c = Class.new( FormInput )
     c.param :str
@@ -368,7 +368,7 @@ describe FormInput do
     c.param :time, filter: ->{ Time.parse( self ) rescue self }, format: ->{ strftime( '%Y-%m-%d %H:%M:%S' ) }, class: Time
     c.param :bool, filter: ->{ self == 'true' unless empty? }, class: [ TrueClass, FalseClass ]
     c.param :str2, filter: ->{ downcase.reverse }, format: ->{ reverse.upcase rescue self }
-    
+
     f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05&bool=true&str2=Abc" ) )
     f.should.be.valid
     f.to_h.should == f.to_hash
@@ -444,7 +444,7 @@ describe FormInput do
     f.to_hash.should == { int2: 2 }
     f.url_params.should == { int2: "2" }
     f.url_query.should == "int2=2"
-    
+
     p = c[ :int ]
     p.format_value( nil ).should == ""
     p.format_value( 10 ).should == "10"
@@ -488,33 +488,33 @@ describe FormInput do
     p.format_value( 10.0 ).should == "10.0"
     p.format_value( "abc" ).should == "CBA"
   end
-  
+
   should 'support input transformation' do
     c = Class.new( FormInput )
     c.array :a
-    
+
     f = c.new( request( "?a[]=abc&a[]=&a[]=123&a[]=" ) )
     f.a.should == [ "abc", "", "123", "" ]
-  
+
     c = Class.new( FormInput )
     c.array :a, filter: ->{ reverse }, transform: ->{ reject{ |x| x.empty? } }
-    
+
     f = c.new( request( "?a[]=abc&a[]=&a[]=123&a[]=" ) )
     f.a.should == [ "cba", "321" ]
-  
+
     f = c.new( a: [ "abc", "", "123" ] )
     f.a.should == [ "abc", "", "123" ]
   end
-  
+
   should 'support string hash keys when allowed' do
     c = Class.new( FormInput )
     c.hash :h
-    
+
     f = c.new( request( "?h[0]=a&h[1]=b&h[2]=c" ) )
     f.should.be.valid
     f.h.should == { 0 => 'a', 1 => 'b', 2 => 'c' }
     f.url_query.should == "h[0]=a&h[1]=b&h[2]=c"
-    
+
     f = c.new( request( "?h[a]=a&h[b]=b&h[c]=c" ) )
     f.should.be.invalid
     f.error_messages.should == [ "h contain invalid key" ]
@@ -523,27 +523,27 @@ describe FormInput do
 
     c = Class.new( FormInput )
     c.hash :h, match_key: /\A\d+\z/
-    
+
     f = c.new( request( "?h[0]=a&h[1]=b&h[2]=c" ) )
     f.should.be.valid
     f.h.should == { 0 => 'a', 1 => 'b', 2 => 'c' }
     f.url_query.should == "h[0]=a&h[1]=b&h[2]=c"
-    
+
     f = c.new( request( "?h[a]=a&h[b]=b&h[c]=c" ) )
     f.should.be.invalid
     f.error_messages.should == [ "h contain invalid key" ]
     f.h.should == { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     f.url_query.should == "h[a]=a&h[b]=b&h[c]=c"
-  
+
     c = Class.new( FormInput )
     c.hash :h, match_key: /\A[a-z]\z/
-    
+
     f = c.new( request( "?h[0]=a&h[1]=b&h[2]=c" ) )
     f.should.be.invalid
     f.error_messages.should == [ "h contain invalid key" ]
     f.h.should == { 0 => 'a', 1 => 'b', 2 => 'c' }
     f.url_query.should == "h[0]=a&h[1]=b&h[2]=c"
-    
+
     f = c.new( request( "?h[a]=a&h[b]=b&h[c]=c" ) )
     f.should.be.valid
     f.h.should == { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
@@ -551,19 +551,19 @@ describe FormInput do
 
     c = Class.new( FormInput )
     c.hash :h, match_key: ->{ [ /\A[a-z]+\z/i, /^[A-Z]/, /[A-Z]$/ ] }
-    
+
     f = c.new( request( "?h[A]=a&h[Bar]=b&h[baZ]=c" ) )
     f.should.be.invalid
     f.error_messages.should == [ "h contain invalid key" ]
     f.h.should == { 'A' => 'a', 'Bar' => 'b', 'baZ' => 'c' }
     f.url_query.should == "h[A]=a&h[Bar]=b&h[baZ]=c"
-    
+
     f = c.new( request( "?h[A]=a&h[BAR]=b&h[BaZ]=c" ) )
     f.should.be.valid
     f.h.should == { 'A' => 'a', 'BAR' => 'b', 'BaZ' => 'c' }
     f.url_query.should == "h[A]=a&h[BAR]=b&h[BaZ]=c"
   end
-  
+
   should 'support select parameters' do
     c = Class.new( FormInput )
     c.param :single, data: ->{ 2.times.map{ |i| [ i, ( 65 + i ).chr ] } }, class: Integer do to_i end
@@ -575,7 +575,7 @@ describe FormInput do
     f.to_hash.should == { single: 1, multi: [ 1, 3 ], x: 5 }
     f.url_params.should == { single: "1", multi: [ "1", "3" ], x: "5" }
     f.url_query.should == "single=1&multi[]=1&multi[]=3&x=5"
-    
+
     p = f.param( :single )
     p.data.should == [ [ 0, "A" ], [ 1, "B" ] ]
     p.code.should == :single
@@ -608,20 +608,20 @@ describe FormInput do
     f.to_hash.should == { single: 0, multi: [ 0, 2 ], x: 3 }
     f.url_params.should == { single: "0", multi: [ "0", "2" ], x: "3" }
     f.url_query.should == "single=0&multi[]=0&multi[]=2&x=3"
-    
+
     f = c.new( request( "?single=5&multi[]=5" ) ) ;
     f.should.be.valid
     f.to_hash.should == { single: 5, multi: [ 5 ] }
     f.url_params.should == { single: "5", multi: [ "5" ] }
     f.url_query.should == "single=5&multi[]=5"
-    
+
     f = c.new( request( "" ) ) ;
     f.should.be.valid
     f.to_hash.should == {}
     f.url_params.should == {}
     f.url_query.should == ""
   end
-  
+
   should 'classify parameters' do
     f = TestForm.new( query: "x", text: "abc", password: nil, email: " " )
     names( f.params ).should == [ :query, :email, :age, :rate, :text, :password, :opts, :on ]
@@ -695,10 +695,10 @@ describe FormInput do
     names( f.invalid_params ).should == [ :email ]
     names( f.valid_params ).should == [ :query, :age, :rate, :text, :password, :opts, :on ]
   end
-  
+
   should 'expose details via parameters' do
     f = TestForm.new( query: "x", text: "abc", :email => " " )
-    
+
     p = f.param( :query )
     p.form.should == f
     p.name.should == :query
@@ -771,7 +771,7 @@ describe FormInput do
     p.errors.should == [ "email address like this is not valid" ]
     p.error.should == "email address like this is not valid"
     p.tags.should == []
-    
+
     p = f.param( :rate )
     p.value.should == nil
     p.form_value.should == ""
@@ -799,7 +799,7 @@ describe FormInput do
     p.should.not.be.untagged( [ :foo, :float ] )
     p.should.not.be.tagged( [ :foo ] )
     p.should.be.untagged( [ :foo ] )
-    
+
     p = f.param( :opts )
     p.value.should == nil
     p.form_value.should == []
@@ -825,24 +825,24 @@ describe FormInput do
     p.should.not.be.ignored
     p.should.not.be.visible
   end
-  
+
   should 'support both new and derived forms' do
     f = TestForm.new
     f.should.be.empty
     f.url_query.should == ""
-    
+
     f = TestForm.new( request( "" ) )
     f.should.be.empty
     f.url_query.should == ""
-    
+
     f = TestForm.new( request( "?q=10" ) )
     f.should.not.be.empty
     f.url_query.should == "q=10"
-    
+
     f = TestForm.new( query: "x" )
     f.should.not.be.empty
     f.url_query.should == "q=x"
-    
+
     f.set( email: "a@b", text: "foo" )
     f.should.not.be.empty
     f.url_query.should == "q=x&email=a%40b&text=foo"
@@ -874,16 +874,16 @@ describe FormInput do
     f = TestForm.new( { age: 2, query: "x" }, { rate: 1, query: "y" } )
     f.should.not.be.empty
     f.url_query.should == "q=y&age=2&rate=1"
-    
+
     f = TestForm.new( request( "?q=10&age=3" ), query: "y", rate: 0 )
     f.should.not.be.empty
     f.url_query.should == "q=y&age=3&rate=0"
-    
+
     f = TestForm.new( { query: "x", age: 5 }, request( "?rate=1&q=10" ) )
     f.should.not.be.empty
     f.url_query.should == "q=10&age=5&rate=1"
   end
-  
+
   should 'provide direct access to values' do
     f = TestForm.new( email: "a@b", text: "foo" )
 
@@ -898,7 +898,7 @@ describe FormInput do
     f[ :query, :text ].should == [ nil, "bar" ]
     f[ :text, :email ].should == [ "bar", "x@y" ]
   end
-    
+
   should 'guard against typos in parameter names' do
     f = TestForm.new
 
@@ -912,7 +912,7 @@ describe FormInput do
     ->{ f.except( [ :typo ] ) }.should.raise( ArgumentError )
     ->{ f.only( :typo ) }.should.raise( ArgumentError )
     ->{ f.only( [ :typo ] ) }.should.raise( ArgumentError )
-    
+
     ->{ f.typo }.should.raise( NoMethodError )
     ->{ f.typo = 10 }.should.raise( NoMethodError )
     ->{ f[ :typo ] }.should.raise( NoMethodError )
@@ -938,7 +938,7 @@ describe FormInput do
     f = TestForm.new( query: "x" )
     f.query.should == "x"
     f[ :query ].should == "x"
-    
+
     f.dup.query = "y"
     f.query.should == "x"
     f[ :query ].should == "x"
@@ -959,7 +959,7 @@ describe FormInput do
     f.query.should == "x"
     f[ :query ].should == "x"
   end
-  
+
   should 'handle non string values gracefully' do
     f = TestForm.new( query: true, age: 3, rate: 0.35, text: false, opts: [], on: {} )
     ->{ f.validate }.should.not.raise
@@ -1017,7 +1017,7 @@ describe FormInput do
     f.url_query.should == "on[1]=&on[true]=&on[false]="
     names( f.incorrect_params ).should == [ :on ]
   end
-  
+
   should 'handle invalid encoding gracefully' do
     s = 255.chr.force_encoding( 'UTF-8' )
 
@@ -1039,7 +1039,7 @@ describe FormInput do
     f.url_params.should == { q: s.dup.force_encoding( 'BINARY' ) }
     f.url_query.should == "q=%FF"
   end
-  
+
   should 'make it easy to extend URLs' do
     f = TestForm.new( query: "x", opts: [ 0, 0, 1 ], on: { 0 => 1 }, age: 10, email: nil, password: "", text: " " )
     f.url_params.should == { q: "x", age: "10", text: " ", opts: [ "0", "0", "1" ], on: { "0" => "1" } }
@@ -1061,7 +1061,7 @@ describe FormInput do
     f.extend_url( URI.parse( "/foo" ) ).should == "/foo"
     f.extend_url( URI.parse( "/foo?x" ) ).should == "/foo?x"
   end
-  
+
   should 'provide useful error detecting and reporting methods' do
     # Create new form every time to test that the validation triggers automatically.
     f = ->{ TestForm.new( email: "x", text: "yy" ) }
@@ -1092,7 +1092,7 @@ describe FormInput do
     f[].error_for( :query ).should == "q is required"
     f[].errors_for( :password ).should == []
     f[].error_for( :password ).should == nil
-    
+
     f = ->{ TestForm.new.report( :query, "msg" ).report( :password, "bad" ) }
     f[].should.not.be.valid
     f[].should.be.invalid
@@ -1116,7 +1116,7 @@ describe FormInput do
     f[].error_for( :query ).should == "q is required"
     f[].errors_for( :password ).should == [ "bad" ]
     f[].error_for( :password ).should == "bad"
-    
+
     f = TestForm.new
     f.should.be.invalid
     f.set( query: "x" ).should.be.valid
@@ -1127,7 +1127,7 @@ describe FormInput do
     f.should.be.valid
     f.dup.set( query: "" ).should.be.invalid
     f.should.be.valid
-    
+
     f.query = nil
     f.should.be.valid
     f.validate?.should.be.valid
@@ -1141,7 +1141,7 @@ describe FormInput do
     f.dup.validate?.should.be.valid
     f.validate.should.be.invalid
     f.validate!.should.be.valid
-    
+
     f[ :query ] = nil
     f.should.be.invalid
     f.validate?.should.be.invalid
@@ -1170,7 +1170,7 @@ describe FormInput do
     f.validate.should.be.valid
     f.validate!.should.be.valid
   end
-  
+
   should 'support some custom error messages' do
     c = Class.new( FormInput )
     c.param! :q, match: /A/, reject: /B/
@@ -1187,7 +1187,7 @@ describe FormInput do
     f = c.new( q: 'A', c: 'A' )
     f.error_messages.should.be.empty
   end
-  
+
   should 'split parameters into rows as desired' do
     c = Class.new( FormInput )
     c.param :a
@@ -1201,7 +1201,7 @@ describe FormInput do
     c.param :i, row: 3
     c.param :j, row: 3
     c.param :k
-    
+
     f = c.new
     f.chunked_params.map{ |x| x.is_a?( Array ) ? x.map{ |y| y.name } : x.name }.should == [
       :a,
@@ -1212,12 +1212,12 @@ describe FormInput do
       [ :h, :i, :j ],
       :k
     ]
-    
+
     f = TestForm.new
     f.chunked_params.should == f.params
     f.chunked_params( f.scalar_params ).should == f.scalar_params
   end
-  
+
 end
 
 # EOF #

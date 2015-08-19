@@ -14,19 +14,19 @@ class TestStepsForm < FormInput
     message: "Message",
     post: nil,
   )
-  
+
   param! :email, tag: :email
-  
+
   param :first_name, tag: :name
   param :last_name, tag: :name
-  
+
   param :street, tag: :address
   param :city, tag: :address
   param :zip, tag: :address
-  
+
   param! :message, tag: :message
   param :comment, tag: :message
-  
+
   param :url, type: :hidden
 
 end
@@ -45,7 +45,7 @@ describe FormInput do
   def names( params )
     params.map{ |x| x && x.name }
   end
-  
+
   should 'make it possible to define steps' do
     ->{ Class.new( FormInput ).define_steps( a: "A" ) }.should.not.raise
   end
@@ -58,7 +58,7 @@ describe FormInput do
       t.should.respond_to name
     end
   end
-  
+
   should 'provide parameters for keeping track of step state' do
     f = Class.new( FormInput ).define_steps( a: "A" ).new
     names( f.untitled_params ).should == [ :step, :next, :last, :seen ]
@@ -85,7 +85,7 @@ describe FormInput do
     t.seen.should == nil
     t.last.should == :intro
   end
-  
+
   should 'allow progressing through all steps in turn' do
     seen = []
     ref = [
@@ -101,7 +101,7 @@ describe FormInput do
     t = TestStepsForm.new
     until t.seen == :post
       t.url_query.should == ref.shift
-    
+
       t.step.should == t.next_step( seen.last )
       t.next.should == t.step
       t.seen.should == seen.last
@@ -114,7 +114,7 @@ describe FormInput do
       t.next = t.next_step
       t = TestStepsForm.new( request( t.extend_url( "?#{params}" ) ) )
     end
-    
+
     t.url_query.should == ref.shift
     ref.should.be.empty?
     seen.should == t.steps
@@ -190,7 +190,7 @@ describe FormInput do
       t = TestStepsForm.new( request( t.extend_url( "?#{params}" ) ) )
     end
   end
-  
+
   should 'allow getting parameters of individual steps' do
     t = TestStepsForm.new( request( "?step=name&next=address&seen=message&last=message" ) )
     names( t.current_params ).should == [ :street, :city, :zip ]
@@ -241,14 +241,14 @@ describe FormInput do
     ->{ t.last_step( :foo ) }.should.raise ArgumentError
     ->{ t.last_step( :email, :foo ) }.should.raise ArgumentError
     ->{ t.last_step( [ nil, :foo, :address] ) }.should.raise ArgumentError
-    
+
     t.previous_steps.should == [ :intro, :email, :name ]
     t.previous_steps( nil ).should == []
     t.previous_steps( :intro ).should == []
     t.previous_steps( :name ).should == [ :intro, :email ]
     t.previous_steps( :post ).should == [ :intro, :email, :name, :address, :message ]
     t.previous_steps( :foo ).should == []
-    
+
     t.next_steps.should == [ :message, :post ]
     t.next_steps( nil ).should == [ :intro, :email, :name, :address, :message, :post ]
     t.next_steps( :intro ).should == [ :email, :name, :address, :message, :post ]
@@ -262,14 +262,14 @@ describe FormInput do
     t.previous_step( :name ).should == :email
     t.previous_step( :post ).should == :message
     t.previous_step( :foo ).should == nil
-    
+
     t.next_step.should == :message
     t.next_step( nil ).should == :intro
     t.next_step( :intro ).should == :email
     t.next_step( :name ).should == :address
     t.next_step( :post ).should == nil
     t.next_step( :foo ).should == :intro
-    
+
     t.extra_step?.should.be.false
     t.extra_step?( :intro ).should.be.true
     t.extra_step?( :email ).should.be.false
@@ -289,10 +289,10 @@ describe FormInput do
     t.regular_step?( :post ).should.be.false
     ->{ t.regular_step?( nil ) }.should.raise ArgumentError
     ->{ t.regular_step?( :foo ) }.should.raise ArgumentError
-    
+
     t.extra_steps.should == [ :intro, :post ]
     t.regular_steps.should == [ :email, :name, :address, :message ]
-    
+
     t.required_step?.should.be.false
     t.required_step?( :intro ).should.be.false
     t.required_step?( :email ).should.be.true
@@ -312,7 +312,7 @@ describe FormInput do
     t.optional_step?( :post ).should.be.true
     ->{ t.optional_step?( nil ) }.should.raise ArgumentError
     ->{ t.optional_step?( :foo ) }.should.raise ArgumentError
-    
+
     t.required_steps.should == [ :email, :message ]
     t.optional_steps.should == [ :name, :address ]
 
@@ -335,7 +335,7 @@ describe FormInput do
     t.unfilled_step?( :post ).should.be.false
     ->{ t.unfilled_step?( nil ) }.should.raise ArgumentError
     ->{ t.unfilled_step?( :foo ) }.should.raise ArgumentError
-    
+
     t.filled_steps.should == [ :name, :message ]
     t.unfilled_steps.should == [ :email, :address ]
 
@@ -358,13 +358,13 @@ describe FormInput do
     t.incorrect_step?( :post ).should.be.false
     ->{ t.incorrect_step?( nil ) }.should.raise ArgumentError
     ->{ t.incorrect_step?( :foo ) }.should.raise ArgumentError
-    
+
     t.correct_steps.should == [ :name, :address ]
     t.incorrect_steps.should == [ :email, :message ]
     t.incorrect_step.should == :email
     t.dup.set( email: "x@foo.com" ).incorrect_step.should == :message
     t.dup.set( email: "x@foo.com", message: "bar" ).incorrect_step.should == nil
-    
+
     t.enabled_step?.should.be.true
     t.enabled_step?( :intro ).should.be.true
     t.enabled_step?( :email ).should.be.true
@@ -384,7 +384,7 @@ describe FormInput do
     t.disabled_step?( :post ).should.be.false
     ->{ t.disabled_step?( nil ) }.should.raise ArgumentError
     ->{ t.disabled_step?( :foo ) }.should.raise ArgumentError
-    
+
     t.enabled_steps.should == [ :email, :name, :address, :message ]
     t.disabled_steps.should == []
     c = Class.new( FormInput )
@@ -394,7 +394,7 @@ describe FormInput do
     names( f.disabled_params ).should == [ :first_name, :last_name, :comment ]
     f.enabled_steps.should == [ :email, :address, :message ]
     f.disabled_steps.should == [ :name ]
-    
+
     t.finished_steps.should == [ :intro, :email, :name ]
     t.unfinished_steps.should == [ :address, :message, :post ]
     t.accessible_steps.should == [ :intro, :email, :name, :address ]

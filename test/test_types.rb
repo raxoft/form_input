@@ -10,7 +10,7 @@ class TestBasicTypesForm < FormInput
   param :float, FLOAT_ARGS
   param :bool, BOOL_ARGS
   param :checkbox, CHECKBOX_ARGS
-  
+
 end
 
 class TestAddressTypesForm < FormInput
@@ -18,7 +18,7 @@ class TestAddressTypesForm < FormInput
   param :email, EMAIL_ARGS
   param :zip, ZIP_ARGS
   param :phone, PHONE_ARGS
-  
+
 end
 
 class TestTimeTypesForm < FormInput
@@ -51,7 +51,7 @@ describe FormInput do
   def names( params )
     params.map{ |x| x && x.name }
   end
-  
+
   should 'provide helper regular expressions' do
     for s in %w[ me@dot.com me@1.cz me.foo_bar+com%123=098@x.co.uk Me@BAR.INFO ]
       FormInput::SIMPLE_EMAIL_RE.should.match s
@@ -87,7 +87,7 @@ describe FormInput do
       FormInput::ZIP_CODE_RE.should.not.match s
     end
   end
-  
+
   should 'provide presets for standard parameter types' do
     f = TestBasicTypesForm.new( request( "?int=0123&float=0123.456&bool=true&checkbox=on" ) )
     f.should.be.valid
@@ -108,7 +108,7 @@ describe FormInput do
     f.url_params.should == { int: "a", float: "b", bool: "false", checkbox: "true" }
     f.url_query.should == "int=a&float=b&bool=false&checkbox=true"
   end
-  
+
   should 'provide presets for address parameter types' do
     f = TestAddressTypesForm.new( request( "?email=me@1.com&zip=12345&phone=123%20456%20789" ) )
     f.should.be.valid
@@ -123,7 +123,7 @@ describe FormInput do
     f.url_params.should == { email: "a", zip: "a.b", phone: "a" }
     f.url_query.should == "email=a&zip=a.b&phone=a"
   end
-  
+
   should 'provide presets for time parameter types' do
     f = TestTimeTypesForm.new
     f.param( :time )[ :placeholder ].should == "YYYY-MM-DD HH:MM:SS"
@@ -131,7 +131,7 @@ describe FormInput do
     f.param( :uk_date )[ :placeholder ].should == "DD/MM/YYYY"
     f.param( :eu_date )[ :placeholder ].should == "D.M.YYYY"
     f.param( :hours )[ :placeholder ].should == "HH:MM"
-    
+
     f = TestTimeTypesForm.new( request( "?time=1999-12-31+23:59:48&us_date=1/2/3&uk_date=1/2/3&eu_date=1.2.3&hours=23:59" ) )
     f.should.be.valid
     f.to_hash.should == {
@@ -182,7 +182,7 @@ describe FormInput do
     f.url_params.should == {}
     f.url_query.should == ""
   end
-  
+
   describe 'Time parsing helper' do
 
     should 'should raise when string is not parsed entirely' do
@@ -204,18 +204,18 @@ describe FormInput do
         ->{ FormInput.parse_time( "2000", "%y" + c ) }.should.raise ArgumentError
       end
     end
-    
+
     should 'correctly ignore % modifiers in time format' do
       for string, format in [ "2000 %- 2", "%Y %%- %-m", "99  3", "%y %_m", "1/12", "%-d/%m", "FEBRUARY", "%^B" ].each_slice( 2 )
         FormInput.parse_time( string, format ).strftime( format ).should == string
       end
     end
-    
+
   end
-  
+
   should 'provide transformation for pruning empty values from input' do
     c = Class.new( FormInput ).copy( TestPrunedTypesForm, transform: nil )
-    
+
     f = TestPrunedTypesForm.new( request( "?str=foo&int=1" ) )
     f.to_h.should == { str: "foo", int: 1 }
     f.url_query.should == "str=foo&int=1"
