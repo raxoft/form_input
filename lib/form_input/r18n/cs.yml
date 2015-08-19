@@ -2,7 +2,11 @@
 
 form_input:
   errors:
-    required_scalar: '%p je povinný' # á,é
+    required_scalar: !!fl
+      m: '%p je povinný'
+      f: '%p je povinná'
+      n: '%p je povinné'
+      p: '%p jsou povinné'
     required_array: '%p jsou povinné'
     not_array: '%p nejsou pole'
     not_hash: '%p nejsou hash'
@@ -25,8 +29,16 @@ form_input:
     max_size: '%p smí mít nejvíce %1'
     min_bytesize: '%p musí mít nejméně %1'
     max_bytesize: '%p smí mít nejvíce %1'
-    reject_msg: '%p jako tento není povolen'
-    match_msg: '%p jako tento není platný'
+    reject_msg: !!fl
+      m: '%p v tomto tvaru není povolen'
+      f: '%p v tomto tvaru není povolena'
+      n: '%p v tomto tvaru není povoleno'
+      p: '%p v tomto tvaru nejsou povolené'
+    match_msg: !!fl
+      m: '%p není ve správném tvaru'
+      f: '%p není ve správném tvaru'
+      n: '%p není ve správném tvaru'
+      p: '%p nejsou ve správném tvaru'
   units:
     byte: !!pl
       1: '%1 byte'

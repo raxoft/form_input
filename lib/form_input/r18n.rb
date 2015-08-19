@@ -14,8 +14,8 @@ class FormInput
     module R18nMethods
 
       # Parameter options known to be often localized.
-      # Note that :title is intentionally missing - parameter should be titled? consistently regardless of locale.
-      LOCALIZED_OPTIONS = [ :form_title, :error_title, :msg, :match_msg, :reject_msg, :required_msg ]
+      # Note that :title is intentionally missing - parameter should respond to titled? consistently regardless of locale.
+      LOCALIZED_OPTIONS = [ :form_title, :error_title, :msg, :match_msg, :reject_msg, :required_msg, :inflect ]
 
       # Automatically attempt to translate available parameter options.
       def []( name )
@@ -70,6 +70,15 @@ class FormInput
   # Like t helper, except that the translation is looked up in the forms.<form_name> scope.
   def ft
     t.forms[ self.class.translation_name ]
+  end
+
+  # Define our inflection filter.
+  R18n::Filters.add( 'fl', :inflection ) do |translation, config, *params|
+    if param = params.last and param.is_a?( Parameter )
+      inflection = ( param[ :inflect ] || ( param.scalar? ? 'm' : 'p' ) ).to_s
+    end
+    inflection = 'm' unless inflection and translation.key?( inflection )
+    translation[ inflection ]
   end
 
 end

@@ -16,6 +16,13 @@ class TestR18nForm < FormInput
   param :msg2, "Second Message", form_title: ->{ ft.msg.title | 'Another Message' }, error_title: ->{ pt.error_title }
 end
 
+class TestInflectionForm < FormInput
+  param! :name, "Name"
+  param! :address, "Address"
+  param! :state, "State"
+  param! :notes, "Notes", PLURAL_ARGS
+end
+
 describe FormInput do
 
   TESTS = [
@@ -44,8 +51,8 @@ describe FormInput do
     [ 'q may have at most 8 characters', 'q smí mít nejvíce 8 znaků', q: '123456789' ],
     [ 'q must have at least 3 bytes', 'q musí mít nejméně 3 byty', q: '01' ],
     [ 'q may have at most 6 bytes', 'q smí mít nejvíce 6 bytů', q: '1234567' ],
-    [ 'q like this is not allowed', 'q jako tento není povolen', q: 'abcd' ],
-    [ 'q like this is not valid', 'q jako tento není platný', q: '12345' ],
+    [ 'q like this is not allowed', 'q v tomto tvaru není povolen', q: 'abcd' ],
+    [ 'q like this is not valid', 'q není ve správném tvaru', q: '12345' ],
   ]
 
   def set_locale( code )
@@ -94,8 +101,28 @@ describe FormInput do
     end
   end
 
+  should 'automatically support inflection of localized strings' do
+    set_locale( 'en' ).locale.code.should == 'en'
+    f = TestInflectionForm.new
+    f.error_messages.should == [
+      "Name is required",
+      "Address is required",
+      "State is required",
+      "Notes are required",
+    ]
+    set_locale( 'cs' ).locale.code.should == 'cs'
+    f.validate!
+    f.error_messages.should == [
+      "Jméno je povinné",
+      "Adresa je povinná",
+      "Stát je povinný",
+      "Poznámky jsou povinné",
+    ]
+  end
+
   should 'provide scope name for automatic translations' do
     TestR18nForm.translation_name.should == 'test_r18n_form'
+    TestInflectionForm.translation_name.should == 'test_inflection_form'
   end
 
   should 'automatically translate string options when possible' do

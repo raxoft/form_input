@@ -14,4 +14,18 @@ forms:
       title: Druhá zpráva
       error_title: Parametr druhá zpráva
 
+  test_inflection_form:
+    name:
+      title: Jméno
+      inflect: n
+    address:
+      title: Adresa
+      inflect: f
+    state:
+      title: Stát
+      inflect: m
+    notes:
+      title: Poznámky
+      inflect: p
+
 # EOF #
