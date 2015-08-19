@@ -100,12 +100,24 @@ describe FormInput do
   
   should 'automatically translate string options when possible' do
     set_locale( 'cs' ).locale.code.should == 'cs'
-    TestR18nForm.new.param( :msg ).title.should == 'Zpráva'
+    f = TestR18nForm.new
+    p = f.param( :msg )
+    p.title.should == 'Zpráva'
+    p[ :msg ].should == '%p jako tato není povolena'
+    p[ :match_msg ].should == '%p není ve správném tvaru'
+    p[ :reject_msg ].should == '%p obsahuje nepovolené znaky'
+    p[ :required_msg ].should == '%p musí být vyplněna'
   end
   
   should 'use default string options for unsupported locales' do
     set_locale( 'en' ).locale.code.should == 'en'
-    TestR18nForm.new.param( :msg ).title.should == 'Message'
+    f = TestR18nForm.new
+    p = f.param( :msg )
+    p.title.should == 'Message'
+    p[ :msg ].should.be.nil
+    p[ :match_msg ].should.be.nil
+    p[ :reject_msg ].should.be.nil
+    p[ :required_msg ].should.be.nil
   end
   
   should 'provide R18n translation helpers' do

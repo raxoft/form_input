@@ -12,6 +12,20 @@ class FormInput
 
     # R18n specific methods.
     module R18nMethods
+
+      # Parameter options known to be often localized.
+      LOCALIZED_OPTIONS = [ :msg, :match_msg, :reject_msg, :required_msg ]
+
+      # Automatically attempt to translate available parameter options.
+      def []( name )
+        if form and r18n
+          if opts[ name ].is_a?( String ) or LOCALIZED_OPTIONS.include?( name )
+            text = pt[ name, self ]
+            return text.to_s if text.translated?
+          end
+        end
+        super
+      end
       
       # Localized version of error message formatting. See original implementation for details.
       def format_error_message( msg, count = nil, singular = nil, *rest )
@@ -21,15 +35,6 @@ class FormInput
         end
         text = t.form_input.errors[ msg, *limit, self ]
         super( text )
-      end
-      
-      # Automatically attempt to translate available parameter options.
-      def []( name )
-        if form and opts[ name ].is_a?( String ) and r18n
-          text = pt[ name, self ]
-          return text.to_s if text.translated?
-        end
-        super
       end
       
       # Like t helper, except that the translation is looked up in the forms.<form_name> scope.
