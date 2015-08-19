@@ -9,7 +9,7 @@ class ChangePasswordForm < FormInput
   # Only strip the password newline in case they cut&paste it from somewhere.
 
   param! :old_password, "Old password", type: :password, filter: ->{ chomp }
-  
+
   copy NewPasswordForm
 
 end

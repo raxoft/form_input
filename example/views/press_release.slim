@@ -25,9 +25,9 @@ form *form_attrs
         .panel-heading
           = @title
         .panel-body
-        
+
           // Additional info derived from @failed or @form.step will usually go here.
-        
+
           fieldset
             == render_snippet :form_hidden,
               params: @form.other_params
@@ -35,12 +35,12 @@ form *form_attrs
               params: @form.chunked_params( @form.current_params ),
               report: @failed,
               focus: true
-              
+
             - unless @form.extra_step?
               .btn-toolbar.pull-left
                 button.btn.btn-default type='submit'
                   Update
-              
+
             .btn-toolbar.pull-right
               a.btn.btn-default href=r
                 Cancel

@@ -12,7 +12,7 @@ class PasswordForm < FormInput
     match: [ /[a-z]/i, /\d/ ],
     msg: "%p must contain at least one digit and one letter",
     filter: ->{ chomp }
-  
+
 end
 
 # EOF #

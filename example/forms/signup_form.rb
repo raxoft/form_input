@@ -19,7 +19,7 @@ class SignupForm < FormInput
   # Enforce size and format of the password the same way the standard password form does.
 
   copy PasswordForm
-  
+
 end
 
 # EOF #

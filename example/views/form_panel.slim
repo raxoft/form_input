@@ -74,7 +74,7 @@
               input.form-control type=p.type name=p.form_name( key ) value=value autofocus=(p.invalid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
           - unless limit = p[ :max_count ] and p.form_value.count >= limit
             input.form-control type=p.type name=p.form_name( p.form_value.count ) autofocus=(p.valid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
-          
+
         - else
           input.form-control type=p.type name=p.form_name value=p.form_value autofocus=(p == focused) disabled=p.disabled? placeholder=p[:placeholder]
         - if report and error = p.error
