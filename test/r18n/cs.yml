@@ -4,5 +4,8 @@ forms:
   test_r18n_form:
     msg:
       title: Zpráva
+    msg2:
+      title: Druhá zpráva
+      error_title: Parametr druhá zpráva
 
 # EOF #

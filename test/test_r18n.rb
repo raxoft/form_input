@@ -13,6 +13,7 @@ class TestR18nForm < FormInput
   param :int, INTEGER_ARGS, min: 5, max: 10
   param :float, FLOAT_ARGS, inf: 0, sup: 1
   param :msg, "Message"
+  param :msg2, "Second Message", form_title: ->{ ft.msg.title | 'Another Message' }, error_title: ->{ pt.error_title }
 end
 
 describe FormInput do
@@ -105,6 +106,26 @@ describe FormInput do
   should 'use default string options for unsupported locales' do
     set_locale( 'en' ).locale.code.should == 'en'
     TestR18nForm.new.param( :msg ).title.should == 'Message'
+  end
+  
+  should 'provide R18n translation helpers' do
+    set_locale( 'en' ).locale.code.should == 'en'
+    f = TestR18nForm.new
+    p = f.param( :msg2 )
+    p.title.should == 'Second Message'
+    p.form_title.should == 'Another Message'
+    p.error_title.to_s.should == '[forms.test_r18n_form.msg2.error_title]'
+
+    set_locale( 'cs' ).locale.code.should == 'cs'
+    p.title.should == 'Druhá zpráva'
+    p.form_title.should == 'Zpráva'
+    p.error_title.should == 'Parametr druhá zpráva'
+
+    f.t.foo.to_s.should == '[foo]'
+    f.ft.foo.to_s.should == 'forms.test_r18n_form.[foo]'
+    p.t.foo.to_s.should == '[foo]'
+    p.ft.foo.to_s.should == 'forms.test_r18n_form.[foo]'
+    p.pt.foo.to_s.should == 'forms.test_r18n_form.msg2.[foo]'
   end
 
 end

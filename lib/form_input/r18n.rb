@@ -19,17 +19,27 @@ class FormInput
         if limit = count and singular
           limit = t.form_input.units[ singular, count ].to_s
         end
-        text = t.form_input.errors[ msg, *limit ]
+        text = t.form_input.errors[ msg, *limit, self ]
         super( text )
       end
       
       # Automatically attempt to translate available parameter options.
       def []( name )
         if form and opts[ name ].is_a?( String ) and r18n
-          text = t.forms[ form.class.translation_name ][ self.name ][ name ]
+          text = pt[ name, self ]
           return text.to_s if text.translated?
         end
         super
+      end
+      
+      # Like t helper, except that the translation is looked up in the forms.<form_name> scope.
+      def ft
+        form.ft
+      end
+      
+      # Like t helper, except that the translation is looked up in the forms.<form_name>.<param_name> scope.
+      def pt
+        ft[ name ]
       end
       
     end
@@ -45,10 +55,15 @@ class FormInput
   
   # Get name of the form used as translation scope for text translations.
   def self.translation_name
-    name.split( '::' ).last
-    .gsub( /([A-Z]+)([A-Z][a-z])/, '\1_\2' )
-    .gsub( /([a-z\d])([A-Z])/, '\1_\2' )
-    .downcase
+    @translation_name ||= name.split( '::' ).last
+      .gsub( /([A-Z]+)([A-Z][a-z])/, '\1_\2' )
+      .gsub( /([a-z\d])([A-Z])/, '\1_\2' )
+      .downcase
+  end
+  
+  # Like t helper, except that the translation is looked up in the forms.<form_name> scope.
+  def ft
+    t.forms[ self.class.translation_name ]
   end
 
 end
