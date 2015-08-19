@@ -4,10 +4,12 @@ forms:
   test_r18n_form:
     msg:
       title: Zpráva
-      msg: '%p jako tato není povolena'
+      form_title: Vaše zpráva
+      error_title: Parametr Zpráva
+      msg: '%p není správně vyplněn'
       match_msg: '%p není ve správném tvaru'
       reject_msg: '%p obsahuje nepovolené znaky'
-      required_msg: '%p musí být vyplněna'
+      required_msg: '%p musí být vyplněn'
     msg2:
       title: Druhá zpráva
       error_title: Parametr druhá zpráva

@@ -103,10 +103,12 @@ describe FormInput do
     f = TestR18nForm.new
     p = f.param( :msg )
     p.title.should == 'Zpráva'
-    p[ :msg ].should == '%p jako tato není povolena'
+    p.form_title.should == 'Vaše zpráva'
+    p.error_title.should == 'Parametr Zpráva'
+    p[ :msg ].should == '%p není správně vyplněn'
     p[ :match_msg ].should == '%p není ve správném tvaru'
     p[ :reject_msg ].should == '%p obsahuje nepovolené znaky'
-    p[ :required_msg ].should == '%p musí být vyplněna'
+    p[ :required_msg ].should == '%p musí být vyplněn'
   end
   
   should 'use default string options for unsupported locales' do
@@ -114,6 +116,8 @@ describe FormInput do
     f = TestR18nForm.new
     p = f.param( :msg )
     p.title.should == 'Message'
+    p.form_title.should == 'Message'
+    p.error_title.should == 'Message'
     p[ :msg ].should.be.nil
     p[ :match_msg ].should.be.nil
     p[ :reject_msg ].should.be.nil
