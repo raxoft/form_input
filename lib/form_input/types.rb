@@ -164,11 +164,6 @@ class FormInput
     }
   }
 
-  # Inflection type for scalar parameters in plural form.
-  PLURAL_ARGS = {
-    inflect: :p
-  }
-
 end
 
 # EOF #

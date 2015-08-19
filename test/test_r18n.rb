@@ -20,7 +20,9 @@ class TestInflectionForm < FormInput
   param! :name, "Name"
   param! :address, "Address"
   param! :state, "State"
-  param! :notes, "Notes", PLURAL_ARGS
+  param! :chars, "Characters", plural: true
+  param! :keywords, "Keywords", plural: true
+  param! :notes, "Notes", plural: true
 end
 
 describe FormInput do
@@ -108,6 +110,8 @@ describe FormInput do
       "Name is required",
       "Address is required",
       "State is required",
+      "Characters are required",
+      "Keywords are required",
       "Notes are required",
     ]
     set_locale( 'cs' ).locale.code.should == 'cs'
@@ -116,6 +120,8 @@ describe FormInput do
       "Jméno je povinné",
       "Adresa je povinná",
       "Stát je povinný",
+      "Znaky jsou povinné",
+      "Klíčová slova jsou povinná",
       "Poznámky jsou povinné",
     ]
   end

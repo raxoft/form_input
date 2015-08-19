@@ -17,15 +17,21 @@ forms:
   test_inflection_form:
     name:
       title: Jméno
-      inflect: n
+      gender: n
     address:
       title: Adresa
-      inflect: f
+      gender: f
     state:
       title: Stát
-      inflect: m
+      gender: m
+    keywords:
+      title: Klíčová slova
+      gender: n
     notes:
       title: Poznámky
-      inflect: p
+      gender: f
+    chars:
+      title: Znaky
+      gender: m
 
 # EOF #

@@ -1,13 +1,26 @@
 # Form input Czech messages.
+#
+# Supports singular and plural numbers and masculine, feminine, and neuter genders,
+# but ignores animate vs inanimate genders, as it is rarely needed in forms.
+# Simply override the corresponding msg text if you need to.
 
 form_input:
+  default_gender: m
   errors:
     required_scalar: !!fl
-      m: '%p je povinný'
-      f: '%p je povinná'
-      n: '%p je povinné'
-      p: '%p jsou povinné'
-    required_array: '%p jsou povinné'
+      sm: '%p je povinný'
+      sf: '%p je povinná'
+      sn: '%p je povinné'
+      pm: '%p jsou povinné'
+      pf: '%p jsou povinné'
+      pn: '%p jsou povinná'
+    required_array: !!fl
+      sm: '%p je povinný'
+      sf: '%p je povinná'
+      sn: '%p je povinné'
+      pm: '%p jsou povinné'
+      pf: '%p jsou povinné'
+      pn: '%p jsou povinná'
     not_array: '%p nejsou pole'
     not_hash: '%p nejsou hash'
     not_string: '%p není řetězec'
@@ -30,15 +43,19 @@ form_input:
     min_bytesize: '%p musí mít nejméně %1'
     max_bytesize: '%p smí mít nejvíce %1'
     reject_msg: !!fl
-      m: '%p v tomto tvaru není povolen'
-      f: '%p v tomto tvaru není povolena'
-      n: '%p v tomto tvaru není povoleno'
-      p: '%p v tomto tvaru nejsou povolené'
+      sm: '%p v tomto tvaru není povolen'
+      sf: '%p v tomto tvaru není povolena'
+      sn: '%p v tomto tvaru není povoleno'
+      pm: '%p v tomto tvaru nejsou povolené' # rather than y (or i)
+      pf: '%p v tomto tvaru nejsou povolené'
+      pn: '%p v tomto tvaru nejsou povolena'
     match_msg: !!fl
-      m: '%p není ve správném tvaru'
-      f: '%p není ve správném tvaru'
-      n: '%p není ve správném tvaru'
-      p: '%p nejsou ve správném tvaru'
+      sm: '%p není ve správném tvaru'
+      sf: '%p není ve správném tvaru'
+      sn: '%p není ve správném tvaru'
+      pm: '%p nejsou ve správném tvaru'
+      pf: '%p nejsou ve správném tvaru'
+      pn: '%p nejsou ve správném tvaru'
   units:
     byte: !!pl
       1: '%1 byte'

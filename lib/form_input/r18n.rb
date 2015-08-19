@@ -15,7 +15,7 @@ class FormInput
 
       # Parameter options known to be often localized.
       # Note that :title is intentionally missing - parameter should respond to titled? consistently regardless of locale.
-      LOCALIZED_OPTIONS = [ :form_title, :error_title, :msg, :match_msg, :reject_msg, :required_msg, :inflect ]
+      LOCALIZED_OPTIONS = [ :form_title, :error_title, :msg, :match_msg, :reject_msg, :required_msg, :inflect, :gender, :plural ]
 
       # Automatically attempt to translate available parameter options.
       def []( name )
@@ -48,6 +48,25 @@ class FormInput
         ft[ name ]
       end
 
+      # Get the inflection string used for correctly inflecting the parameter messages.
+      # Note that it ignores the noun case as the parameter names are supposed to use the nominative case anyway.
+      def inflection
+        self[ :inflect ] || "#{pluralize}#{gender}"
+      end
+
+      # Get the string corresponding to the grammatical number of the parameter name used for inflecting the parameter messages.
+      def pluralize
+        p = self[ :plural ]
+        p = ! scalar? if p.nil?
+        p = p ? 'p' : 's' unless p.is_a?( String ) or p.is_a?( Integer )
+        p
+      end
+
+      # Get the gender string used for inflecting the parameter messages.
+      def gender
+        self[ :gender ] || ( t.form_input.default_gender | 'n' ).to_s
+      end
+
     end
 
     include R18nMethods
@@ -75,9 +94,9 @@ class FormInput
   # Define our inflection filter.
   R18n::Filters.add( 'fl', :inflection ) do |translation, config, *params|
     if param = params.last and param.is_a?( Parameter )
-      inflection = ( param[ :inflect ] || ( param.scalar? ? 'm' : 'p' ) ).to_s
+      inflection = param.inflection
     end
-    inflection = 'm' unless inflection and translation.key?( inflection )
+    inflection = 'sn' unless inflection and translation.key?( inflection )
     translation[ inflection ]
   end
 
