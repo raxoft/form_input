@@ -51,20 +51,21 @@ class FormInput
       # Get the inflection string used for correctly inflecting the parameter messages.
       # Note that it ignores the noun case as the parameter names are supposed to use the nominative case anyway.
       def inflection
-        self[ :inflect ] || "#{pluralize}#{gender}"
+        ( self[ :inflect ] || "#{pluralize}#{gender}" ).to_s
       end
 
       # Get the string corresponding to the grammatical number of the parameter name used for inflecting the parameter messages.
       def pluralize
         p = self[ :plural ]
         p = ! scalar? if p.nil?
-        p = p ? 'p' : 's' unless p.is_a?( String ) or p.is_a?( Integer )
-        p
+        p = 's' if p == false
+        p = 'p' if p == true
+        p.to_s
       end
 
       # Get the gender string used for inflecting the parameter messages.
       def gender
-        self[ :gender ] || ( t.form_input.default_gender | 'n' ).to_s
+        ( self[ :gender ] || ( t.form_input.default_gender | 'n' ) ).to_s
       end
 
     end
@@ -91,12 +92,27 @@ class FormInput
     t.forms[ self.class.translation_name ]
   end
 
+  # Iterate over each possible inflection for given inflection string.
+  # You may override this if you need more complex inflection fallbacks for some locale.
+  def self.each_inflection( string )
+    until string.empty?
+      yield string
+      string = string[0..-2]
+    end
+  end
+
   # Define our inflection filter.
   R18n::Filters.add( 'fl', :inflection ) do |translation, config, *params|
     if param = params.last and param.is_a?( Parameter )
       inflection = param.inflection
     end
-    inflection = 'sn' unless inflection and translation.key?( inflection )
+    inflection ||= 'sn'
+    FormInput.each_inflection( inflection ) do |i|
+      if translation.key?( i )
+        inflection = i
+        break
+      end
+    end
     translation[ inflection ]
   end
 

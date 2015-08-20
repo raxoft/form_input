@@ -23,7 +23,10 @@ forms:
       gender: f
     state:
       title: Stát
-      gender: m
+      gender: mi
+    author:
+      title: Autor
+      gender: ma
     keywords:
       title: Klíčová slova
       gender: n
@@ -32,6 +35,9 @@ forms:
       gender: f
     chars:
       title: Znaky
-      gender: m
+      gender: mi
+    friends:
+      title: Přátelé
+      gender: ma
 
 # EOF #

@@ -3,8 +3,8 @@
 form_input:
   errors:
     required_scalar: !!fl
-      sn: '%p is required'
-      pn: '%p are required'
+      s: '%p is required'
+      p: '%p are required'
     required_array: '%p are required'
     not_array: '%p are not an array'
     not_hash: '%p are not a hash'
@@ -28,11 +28,11 @@ form_input:
     min_bytesize: '%p must have at least %1'
     max_bytesize: '%p may have at most %1'
     reject_msg: !!fl
-      sn: '%p like this is not allowed'
-      pn: '%p like this are not allowed'
+      s: '%p like this is not allowed'
+      p: '%p like this are not allowed'
     match_msg: !!fl
-      sn: '%p like this is not valid'
-      pn: '%p like this are not valid'
+      s: '%p like this is not valid'
+      p: '%p like this are not valid'
   units:
     byte: !!pl
       1: '%1 byte'
