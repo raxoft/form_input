@@ -117,6 +117,9 @@ class FormInput
     )[ inflection ]
   end
 
+  # Add our translations as R18n extensions.
+  R18n.extension_places << R18n::Loader::YAML.new( translations_path )
+
 end
 
 # EOF #
