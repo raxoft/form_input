@@ -111,6 +111,7 @@ class FormInput
 
   # Like t helper, except that the translation is looked up in the forms.<form_name> scope.
   def ft
+    # If you get a crash here, you forgot to set the locale with R18n.set('en') or similar. No locale, no helper. Sorry.
     t.forms[ self.class.translation_name ]
   end
 
