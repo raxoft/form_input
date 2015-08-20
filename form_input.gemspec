@@ -11,9 +11,9 @@ This gem allows you to describe your forms using a simple DSL
 and then takes care of sanitizing, transforming, and validating the input for you,
 providing you with the ready-to-use input in a model-like structure.
 Both simple forms as well as multi-step forms are supported.
-Also includes handy accessors for automatically building the forms
-and reporting error messages using a templating engine of your choice
-as well as helpers for extending URLs with the form parameter values.
+Includes handy accessors for automatically building the forms
+and reporting error messages using a templating engine of your choice.
+Localization support with builtin inflection rules can be enabled, too.
 EOT
 
   s.author      = 'Patrik Rak'
