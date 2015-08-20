@@ -120,6 +120,9 @@ class FormInput
   # Add our translations as R18n extensions.
   R18n.extension_places << R18n::Loader::YAML.new( translations_path )
 
+  # Localize the helper for boolean args.
+  BOOL_ARGS[ :data ] = ->{ [ [ true, r18n ? t.yes : 'Yes' ], [ false, r18n ? t.no : 'No' ] ] }
+
 end
 
 # EOF #

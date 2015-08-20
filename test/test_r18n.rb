@@ -14,6 +14,7 @@ class TestR18nForm < FormInput
   param :float, FLOAT_ARGS, inf: 0, sup: 1
   param :msg, "Message"
   param :msg2, "Second Message", form_title: ->{ ft.msg.title | 'Another Message' }, error_title: ->{ pt.error_title }
+  param :bool, BOOL_ARGS
 end
 
 class TestInflectionForm < FormInput
@@ -164,7 +165,7 @@ describe FormInput do
     p[ :required_msg ].should == '%p musí být vyplněn'
   end
 
-  should 'use default string options for unsupported locales' do
+  should 'use default string options for missing translations' do
     set_locale( 'en' )
     f = TestR18nForm.new
     p = f.param( :msg )
@@ -195,6 +196,17 @@ describe FormInput do
     p.t.foo.to_s.should == '[foo]'
     p.ft.foo.to_s.should == 'forms.test_r18n_form.[foo]'
     p.pt.foo.to_s.should == 'forms.test_r18n_form.msg2.[foo]'
+  end
+
+  should 'automatically localize the boolean helper' do
+    R18n.get.should.be.nil
+    f = TestR18nForm.new
+    p = f.param( :bool )
+    p.data.should == [ [ true, 'Yes' ], [ false, 'No' ] ]
+    set_locale( 'en' )
+    p.data.should == [ [ true, 'Yes' ], [ false, 'No' ] ]
+    set_locale( 'cs' )
+    p.data.should == [ [ true, 'Ano' ], [ false, 'Ne' ] ]
   end
 
 end
