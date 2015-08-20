@@ -18,7 +18,7 @@ EOT
 
   s.author      = 'Patrik Rak'
   s.email       = 'patrik@raxoft.cz'
-  s.homepage    = 'http://rubygems.org/gems/form_input'
+  s.homepage    = 'https://github.com/raxoft/form_input'
   s.license     = 'MIT'
 
   s.files       = `git ls-files`.split( "\n" )
