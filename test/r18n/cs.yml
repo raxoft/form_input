@@ -39,5 +39,7 @@ forms:
     friends:
       title: Přátelé
       gender: ma
+    test:
+      inflect: invalid
 
 # EOF #

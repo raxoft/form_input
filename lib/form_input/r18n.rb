@@ -92,28 +92,29 @@ class FormInput
     t.forms[ self.class.translation_name ]
   end
 
-  # Iterate over each possible inflection for given inflection string.
+  # Iterate over each possible inflection for given inflection string and return first non-nil result.
   # You may override this if you need more complex inflection fallbacks for some locale.
-  def self.each_inflection( string )
+  def self.find_inflection( string )
     until string.empty?
-      yield string
+      break if result = yield( string )
       string = string[0..-2]
     end
+    result
   end
 
   # Define our inflection filter.
-  R18n::Filters.add( 'inflect', :inflection ) do |translation, config, *params|
+  R18n::Filters.add( 'inflect', :inflection ) do |translations, config, *params|
     if param = params.last and param.is_a?( Parameter )
       inflection = param.inflection
     end
     inflection ||= 'sn'
-    FormInput.each_inflection( inflection ) do |i|
-      if translation.key?( i )
-        inflection = i
-        break
-      end
+    text = FormInput.find_inflection( inflection ) do |i|
+      translations[ i ] if translations.key?( i )
     end
-    translation[ inflection ]
+    text || R18n::Translation.new(
+      config[ :locale ], config[ :path ],
+      locale: config[ :locale ], translations: translations
+    )[ inflection ]
   end
 
 end

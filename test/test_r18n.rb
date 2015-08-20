@@ -25,6 +25,7 @@ class TestInflectionForm < FormInput
   param! :chars, "Characters", plural: true
   param! :keywords, "Keywords", plural: true
   param! :notes, "Notes", plural: true
+  param :test
 end
 
 describe FormInput do
@@ -132,6 +133,13 @@ describe FormInput do
       "Klíčová slova jsou povinná",
       "Poznámky jsou povinné",
     ]
+  end
+
+  should 'report invalid inflection strings' do
+    set_locale( 'cs' )
+    f = TestInflectionForm.new
+    p = f.param( :test )
+    p.report( :required_scalar ).error.should == 'form_input.errors.required_scalar.[invalid]'
   end
 
   should 'provide scope name for automatic translations' do
