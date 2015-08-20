@@ -348,8 +348,10 @@ class FormInput
 
       # Report an error concerning this parameter.
       # String %p in the message is automatically replaced with error title.
+      # Returns self for chaining.
       def report( msg, *args )
         form.report( name, format_error_message( msg, *args ) ) if form
+        self
       end
 
     end
