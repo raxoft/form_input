@@ -2,7 +2,10 @@
 #
 # Supports singular and plural numbers and masculine, feminine, and neuter genders,
 # including animate and inanimate masculine gender. Nominative case is assumed.
+# Expects plural number for hash and array parameters for simplicity.
+#
 # Inflection classes supported are (plus standard grammatical patterns for reference):
+#
 #   sma: pán muž předseda soudce
 #   smi or sm: hrad stroj
 #   sf: žena růže píseň kost
@@ -11,6 +14,7 @@
 #   pmi or pm: hrady stroje
 #   pf: ženy růže písně kosti
 #   pn: města moře kuřata stavení
+#
 # Note that when exact match is not found, longest prefix match applies (e.g., pma->pm->p is tried in turn).
 
 form_input:
@@ -32,7 +36,9 @@ form_input:
       pn: '%p jsou povinná'
     not_array: '%p nejsou pole'
     not_hash: '%p nejsou hash'
-    not_string: '%p není řetězec'
+    not_string: !!inflect
+      s: '%p není řetězec'
+      p: '%p nejsou řetězec'
     match_key: '%p obsahují neplatný klíč'
     invalid_key: '%p obsahují neplatný klíč'
     min_key: '%p obsahují příliš malý klíč'
