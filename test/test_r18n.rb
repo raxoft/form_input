@@ -59,8 +59,10 @@ describe FormInput do
     [ 'q like this is not valid', 'q není ve správném tvaru', q: '12345' ],
   ]
 
-  def set_locale( code )
-    R18n.set( code, [ "#{__FILE__}/../r18n", FormInput.translations_path ] )
+  def set_locale( code, found = code )
+    result = R18n.set( code, [ "#{__FILE__}/../r18n", FormInput.translations_path ] )
+    result.locale.code.should == found
+    result
   end
 
   def test_translations
@@ -80,17 +82,17 @@ describe FormInput do
   end
 
   should 'localize builtin error messages for supported locales' do
-    set_locale( 'en' ).locale.code.should == 'en'
+    set_locale( 'en' )
     test_translations do |msg, reference|
       msg.should == reference
     end
 
-    set_locale( 'cs' ).locale.code.should == 'cs'
+    set_locale( 'cs' )
     test_translations do |msg, reference, translation|
       msg.should == translation
     end
 
-    set_locale( 'xx' ).locale.code.should == 'xx'
+    set_locale( 'xx' )
     test_translations do |msg, reference|
       msg.should =~ /^{{.*}}$/ unless msg.empty?
       msg.should =~ /^{{.*{{.*}}}}$/ if msg =~ /\d \w/
@@ -99,14 +101,14 @@ describe FormInput do
   end
 
   should 'fallback to English error messages for unsupported locales' do
-    set_locale( 'zz' ).locale.code.should == 'en'
+    set_locale( 'zz', 'en' )
     test_translations do |msg, reference|
       msg.should == reference
     end
   end
 
   should 'automatically support inflection of localized strings' do
-    set_locale( 'en' ).locale.code.should == 'en'
+    set_locale( 'en' )
     f = TestInflectionForm.new
     f.error_messages.should == [
       "Name is required",
@@ -118,7 +120,7 @@ describe FormInput do
       "Keywords are required",
       "Notes are required",
     ]
-    set_locale( 'cs' ).locale.code.should == 'cs'
+    set_locale( 'cs' )
     f.validate!
     f.error_messages.should == [
       "Jméno je povinné",
@@ -138,7 +140,7 @@ describe FormInput do
   end
 
   should 'automatically translate string options when possible' do
-    set_locale( 'cs' ).locale.code.should == 'cs'
+    set_locale( 'cs' )
     f = TestR18nForm.new
     p = f.param( :msg )
     p.title.should == 'Zpráva'
@@ -151,7 +153,7 @@ describe FormInput do
   end
 
   should 'use default string options for unsupported locales' do
-    set_locale( 'en' ).locale.code.should == 'en'
+    set_locale( 'en' )
     f = TestR18nForm.new
     p = f.param( :msg )
     p.title.should == 'Message'
@@ -164,14 +166,14 @@ describe FormInput do
   end
 
   should 'provide R18n translation helpers' do
-    set_locale( 'en' ).locale.code.should == 'en'
+    set_locale( 'en' )
     f = TestR18nForm.new
     p = f.param( :msg2 )
     p.title.should == 'Second Message'
     p.form_title.should == 'Another Message'
     p.error_title.to_s.should == '[forms.test_r18n_form.msg2.error_title]'
 
-    set_locale( 'cs' ).locale.code.should == 'cs'
+    set_locale( 'cs' )
     p.title.should == 'Druhá zpráva'
     p.form_title.should == 'Zpráva'
     p.error_title.should == 'Parametr druhá zpráva'
