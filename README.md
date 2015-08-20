@@ -71,7 +71,23 @@ Sounds cool enough? Then read on.
 
 ## Table of Contents
 
+* [Introduction](#form-input)
 * [Table of Contents](#table-of-contents)
+* [Form Basics](#form-basics)
+  * [Defining Parameters](#defining-parameters)
+  * [Internal vs External Representation](#internal-vs-external-representation)
+    * [Input Filter](#input-filter)
+    * [Output Format](#output-format)
+    * [Input Transform](#input-transform)
+  * [Array and Hash Parameters](#array-and-hash-parameters)
+  * [Reusing Form Parameters](#reusing-form-parameters)
+  * [Creating Forms](#creating-forms)
+  * [Errors and Validation](#errors-and-validation)
+  * [Using Forms](#using-forms)
+  * [Parameter Options](#parameter-options)
+* [Form Templates](#form-templates)
+* [Multi-Step Forms](#multi-step-forms)
+* [Localization](#localization)
 
 ## Form Basics
 
@@ -250,7 +266,7 @@ but in forms and URLs it will use its shorter code name `q` instead.
 This also comes handy when you need to change the external name for some reason,
 but want to retain the internal name which your application uses all over the place.
 
-#### Input Filters
+#### Input Filter
 
 Now the code name was the easy part.
 The cool part is that the parameter values can have different
@@ -367,7 +383,7 @@ The lesson learned here should be:
    * You don't have to worry about `nil` input values in filters.
    * Just make sure you treat an empty or blank string as whatever you consider appropriate.
 
-#### Output Formats
+#### Output Format
 
 Now you know how to convert external values into their internal representation,
 but that's only half of the story.
@@ -649,27 +665,283 @@ Just make sure the new options make sense for all the parameters copied.
 
 ### Creating Forms
 
-Form.new, set, set_from_request, clear, only, except, dup, clone.
+Now when you know how to create the `FormInput` classes which describe your input parameters,
+it's about time you learn how to create the instances of those classes themselves.
+We will use the `ContactForm` class from the [Introduction](#form-input) as an example.
 
-Note that set can also set non-parameter attributes.
+First of all, before there is any external input, you will want to create an empty form input instance:
 
-Example form.clear( form.disabled_params ).
+``` ruby
+  form = ContactForm.new
+```
+
+Once you have it, you can preset its parameters from a hash with the `set` method:
+
+``` ruby
+  form.set( email: user.email, name: user.full_name ) if user?
+```
+
+If you want to preset the parameters unconditionally,
+you may pass the hash directly to the `new` method instead:
+
+``` ruby
+  form = ContactForm.new( email: user.email, name: user.full_name )
+```
+
+You can even ask your models to prefill complex forms without knowing the details:
+
+``` ruby
+  form = ProfileForm.new( user.profile_hash )
+```
+
+Later on, after you receive the web request containing the input parameters,
+just instantiate the form and fill it with the request input
+by passing it the `Rack::Request` compatible `request` argument:
+
+``` ruby
+  form = ContactForm.new( request )
+```
+
+The `initialize` method internally dispatches any `Hash` argument to the `set` method,
+while any other argument is passed to the `set_from_request` method,
+so the above is equivalent to this:
+
+``` ruby
+  form = ContactForm.new.set_from_request( request )
+```
+
+There is a fundamental difference between the `set` and `set_from_request` methods
+which you must understand.
+The former takes parameters in their internal representation and applies no input processing,
+while the latter takes parameters in their external representation and applies input filtering and transformations to them.
+It also conveniently ignores any input parameters which the form doesn't define.
+On the contrary,  the `set` method can be used to set any attributes of the instance,
+even those which are not the form parameters.
+
+So make sure you use the `set_from_request` method explicitly
+if you have a hash with parameters in their external representation which you want processed,
+for example if you want to use Sinatra's `params` hash for some reason:
+
+``` ruby
+  form = ContactForm.new( params )                   # NEVER EVER DO THIS!
+  form = ContactForm.new.set_from_request( params )  # Do this instead.
+```
+
+If you later decide to clear some parameters, you can use the `clear` method.
+You can either clear the entire form, named parameters, or parameter subsets (which we will discuss in detail later):
+
+``` ruby
+  form.clear
+  form.clear( :message )
+  form.clear( :name, :company )
+  form.clear( form.disabled_params )
+```
+
+Alternatively, you can create form copies with just a subset of parameters set:
+
+``` ruby
+  form.only( :email, :message )
+  form.only( form.required_params )
+  form.except( :message )
+  form.except( form.hidden_params )
+```
+
+Of course, creating copies with either `dup` or `clone` works as well.
+
+In either case, you now have your form with the input parameters set,
+and you are all eager to use it.
+But before we discuss how to do that,
+you need to learn about errors and input validation.
 
 ### Errors and Validation
 
-Covers validation, errors, error_title, error reporting, etc.
+Input validation is a must.
+It's impossible to overstate how important it is.
+Many applications opt for letting the models do the validation for them,
+but that's often way too late.
+Besides, lot of input is not intended for models at all.
+
+The `FormInput` class therefore helps you validate all input as soon as possible instead,
+before you even touch it.
+All you need to do is to call the `valid?` method
+and refrain from using the input unless it returns `true`:
+
+``` ruby
+  return unless form.valid?
+```
+
+Of course, you don't have to give up right away.
+The `FormInput` class does all it can so even the invalid input is preserved intact
+and can be fed back to the form template so the user can fix it.
+The fact that the form says the input is not valid doesn't mean you can't access it.
+It's perfectly safe to render the form parameters back in the form template
+and it is the intended use.
+Just make sure you don't use the invalid input the way you normally would, that's all.
+
+The input validation works by testing the current value of each parameter against
+several validation criteria.
+As soon as any of these validation restrictions is not met,
+an error message describing the problem is reported and remembered for that parameter
+and next parameter is tested.
+Any parameter with an error message reported is considered invalid
+for as long as the error message remains on record.
+The entire form is considered invalid as long as any of its parameters are invalid.
+
+It's important to realize that the input validation protection is
+only as effective as the individual validation restrictions
+you place on your parameters.
+When defining your parameters,
+always think of how you can restrict them.
+It's always better to add too many than too little
+and leave yourself open to exploits caused by unchecked input.
+
+So, what kind of validations are available?
+We have already discussed the required vs optional parameters.
+The former are required to be present and non-empty.
+Empty or `nil` parameter values are allowed only if the parameters are optional.
+Unless it is `nil`, the value must also match the parameter kind (string, array or hash).
+
+We have also discussed the string character and byte size limits,
+which are controlled by `:min_size`, `:max_size`, `:min_bytesize`, and `:max_bytesize` options, respectively.
+The array and hash parameters additionally support the `:min_count` and `:max_count` options,
+which limit the number of elements.
+The hash parameters also support the `:min_key` and `:max_key` limits to control the range of their integer keys,
+plus the `:match_key` pattern(s) to enable restricted use of non-integer string keys.
+
+What we haven't discussed yet are the `:min` and `:max` limits.
+When used, these enforce that the input values are
+not less than or greater than given limit, respectively.
+Similarly, the `:inf` and `:sup` limits (from infimum and supremum)
+ensure that the input values are
+greater than and less than given limit, respectively.
+Note that any of these work with both strings and Numeric types,
+as well as anything which responds to the `to_f` method:
+
+``` ruby
+  param :age, INTEGER_ARGS, min: 1, max: 200  # 1 <= age <= 200
+  param :rate, FLOAT_ARGS, inf: 0, sup: 1     # 0 < rate < 1
+```
+
+Additionally, you may specify a regular expression or an array of regular expressions
+which the input values must match using the `:match` option.
+Custom error message if this fails can be set with the `:msg` or `:match_msg` options:
+
+``` ruby
+  param :password,
+    match: [ /[A-Z]/, /[a-z]/, /\d/ ],
+    msg: 'Password must contain one lowercase and one uppercase letter and one digit'
+```
+
+Similarly, you may specify a regular expression or an array of regular expressions
+which the input values may not match using the `:reject` option.
+Custom error message if this fails can be set with the `:msg` or `:reject_msg` options:
+
+``` ruby
+  param :password,
+    reject: /\P{ASCII}|[\t\r\n]/u,
+    reject_msg: 'Password may contain only ASCII characters and spaces',
+```
+
+Of course, prior to all this, the `FormInput` also ensures
+that the strings are in valid encoding and don't contain weird control characters,
+so you don't have to worry about that at all.
+Alternatively,
+for parameters which use a custom object type instead of a string,
+the `:class` option ensures that the object is of the correct type instead.
+
+Now, any violation of these restrictions is automatically reported as an error.
+Note that FormInput normally reports only the first error detected per parameter,
+but you can report arbitrary number of custom errors for given parameter
+using the `report` method.
+This comes handy as it allows you to pass the form into your models
+and let them report any belated additional errors which might get detected during the transaction,
+for example:
+
+``` ruby
+  form.report( :email, 'Email is already taken' ) unless unique_email?( form.email )
+```
+
+As we have already seen, it is common to use the `report`
+method from within the `:check` or `:test` callback of the parameter itself as well:
+
+``` ruby
+  check: ->{ report( '%p is already taken' ) unless unique_email?( value ) }
+```
+
+In this case the `%p` string is replaced by the `title` of the parameter.
+If the parameter has the `:error_title` option set, it is used preferably instead.
+If neither is set, it fallbacks to the parameter `code` name instead.
+
+You can get hash of all errors reported for each parameter from the `errors` method,
+or list consisting of first error message for each parameter from the `error_messages` method:
+
+``` ruby
+  form.errors          # => { email: [ 'Email address is already taken' ] }
+  form.error_messages  # => [ 'Email address is already taken' ]
+```
+
+You can get all errors or first error for given parameter by using
+the `errors_for` or `error_for` method, respectively:
+
+``` ruby
+  form.errors_for( :email )  # => [ 'Email address is already taken' ]
+  form.error_for( :email )   # => 'Email address is already taken'
+```
+
+As we have seen, you can test the validity of the entire form with `valid?` or `invalid?` methods.
+You can use those methods for testing validity of given parameter or parameters, too:
+
+``` ruby
+  form.valid?
+  form.invalid?
+  form.valid?( :email )
+  form.invalid?( :name, :message )
+```
+
+The validation is run automatically when you first access any of
+the validation related methods mentioned above,
+so you don't have to worry about its invocation at all.
+But you can also invoke it explicitly by calling `validate`, `validate?` or `validate!` methods.
+The `validate` method is the standard variant which validates all parameters.
+If any errors were reported before already, however, it leaves them intact.
+The `validate?` method is a lazy variant which invokes the validation only if it was not invoked yet.
+The `validate!` method on the other hand always invokes the validation,
+wiping any previously reported errors first.
+
+In either case any errors collected will remain stored
+until you change any of the parameter values with `set`, `clear` or `[]=`,
+or explicitly run `validate!`.
+Copies created with `dup` (but not `clone`), `only`, and `except` methods
+also have any errors reported before cleared.
+All this ensures you automatically get consistent validation results anytime you ask for them.
+The only exception is when you set the parameter values explicitly using their setter methods.
+This intentionally leaves the errors reported intact,
+allowing you to adjust the parameter values
+without interferring with the validation results.
+Which finally brings us to the topic of accessing the parameter values themselves.
 
 ### Using Forms
 
-Covers parameter subsets, parameter testing, parameter access.
+// Covers parameter subsets, parameter testing, parameter access.
+// URL helpers?
 
-### Parameter options
+Sometimes, you may want to use several parameters as long as they are all valid,
+regardless of if the entire form is valid or not.
+You can do this by using the `valid` method,
+which either gives you the valid values or `nil`:
 
-Comprehensive summary.
+``` ruby
+  return unless email = form.valid( :email )
+  first_name, last_name = form( :first_name, :last_name )
+```
+
+### Parameter Options
+
+// Comprehensive summary.
 
 ## Form Templates
 
-form_title, form_name, form_value, placeholders, parameter chunking, focusing, reporting, etc.
+// form_title, form_name, form_value, placeholders, parameter chunking, focusing, reporting, etc.
 
 ## Multi-Step Forms
 
