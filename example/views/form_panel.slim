@@ -30,8 +30,7 @@
         label
           = p.form_title
           - if subtitle = p[ :subtitle ]
-            '
-            small = subtitle
+            small =< subtitle
         select.form-control name=p.form_name multiple=p.array? autofocus=(p == focused) disabled=p.disabled? size=p[:size]
           - for value, name in p.data
             option selected=p.selected?( value ) value=p.format_value( value ) = name
@@ -45,8 +44,7 @@
         label
           = p.form_title
           - if subtitle = p[ :subtitle ]
-            '
-            small = subtitle
+            small =< subtitle
         textarea.form-control name=p.form_name autofocus=(p == focused) disabled=p.disabled? rows=p[:size] = p.form_value
         - if report and error = p.error
           .help-block
@@ -58,8 +56,7 @@
         label
           = p.form_title
           - if subtitle = p[ :subtitle ]
-            '
-            small = subtitle
+            small =< subtitle
 
         - if p.array?
           - for value in p.form_value
