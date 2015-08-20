@@ -23,8 +23,9 @@ EOT
 
   s.files       = `git ls-files`.split( "\n" )
 
-  s.add_runtime_dependency 'rack' # FIXME: version?
+  s.add_runtime_dependency 'rack', '~> 1.5'
   s.add_development_dependency 'bacon', '~> 1.2'
+  s.add_development_dependency 'r18n-core', '~> 2.0'
 end
 
 # EOF #
