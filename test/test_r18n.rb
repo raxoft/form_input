@@ -60,6 +60,10 @@ describe FormInput do
     [ 'q like this is not valid', 'q není ve správném tvaru', q: '12345' ],
   ]
 
+  after do
+    R18n.reset!
+  end
+
   def set_locale( code, found = code )
     result = R18n.set( code, [ "#{__FILE__}/../r18n", FormInput.translations_path ] )
     result.locale.code.should == found
