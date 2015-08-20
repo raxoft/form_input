@@ -16,14 +16,14 @@
 form_input:
   default_gender: mi # For 'Parametr x'
   errors:
-    required_scalar: !!fl
+    required_scalar: !!inflect
       sm: '%p je povinný'
       sf: '%p je povinná'
       sn: '%p je povinné'
       p: '%p jsou povinné'
       pma: '%p jsou povinní'
       pn: '%p jsou povinná'
-    required_array: !!fl
+    required_array: !!inflect
       sm: '%p je povinný'
       sf: '%p je povinná'
       sn: '%p je povinné'
@@ -51,14 +51,14 @@ form_input:
     max_size: '%p smí mít nejvíce %1'
     min_bytesize: '%p musí mít nejméně %1'
     max_bytesize: '%p smí mít nejvíce %1'
-    reject_msg: !!fl
+    reject_msg: !!inflect
       sm: '%p v tomto tvaru není povolen'
       sf: '%p v tomto tvaru není povolena'
       sn: '%p v tomto tvaru není povoleno'
       p: '%p v tomto tvaru nejsou povoleny'
       pma: '%p v tomto tvaru nejsou povoleni'
       pn: '%p v tomto tvaru nejsou povolena'
-    match_msg: !!fl
+    match_msg: !!inflect
       s: '%p není ve správném tvaru'
       p: '%p nejsou ve správném tvaru'
   units:

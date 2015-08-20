@@ -102,7 +102,7 @@ class FormInput
   end
 
   # Define our inflection filter.
-  R18n::Filters.add( 'fl', :inflection ) do |translation, config, *params|
+  R18n::Filters.add( 'inflect', :inflection ) do |translation, config, *params|
     if param = params.last and param.is_a?( Parameter )
       inflection = param.inflection
     end

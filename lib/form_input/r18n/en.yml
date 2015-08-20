@@ -2,7 +2,7 @@
 
 form_input:
   errors:
-    required_scalar: !!fl
+    required_scalar: !!inflect
       s: '%p is required'
       p: '%p are required'
     required_array: '%p are required'
@@ -27,10 +27,10 @@ form_input:
     max_size: '%p may have at most %1'
     min_bytesize: '%p must have at least %1'
     max_bytesize: '%p may have at most %1'
-    reject_msg: !!fl
+    reject_msg: !!inflect
       s: '%p like this is not allowed'
       p: '%p like this are not allowed'
-    match_msg: !!fl
+    match_msg: !!inflect
       s: '%p like this is not valid'
       p: '%p like this are not valid'
   units:
