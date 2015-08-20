@@ -4,10 +4,13 @@ require 'r18n-core'
 
 class FormInput
 
+  # Include R18n helpers in form context.
   include R18n::Helpers
 
+  # Localize few parameter methods.
   class Parameter
 
+    # Include R18n helpers in parameter context.
     include R18n::Helpers
 
     # R18n specific methods.
@@ -74,6 +77,25 @@ class FormInput
 
   end
 
+  # Localize few step methods.
+  module StepMethods
+
+    # Get name of current or given step, if any.
+    def step_name( step = self.step )
+      name = raw_step_name( step )
+      name = ( ft.steps[ step ] | name ).to_s if r18n and name
+      name
+    end
+
+    # Get hash of steps along with their names.
+    def step_names
+      hash = raw_step_names
+      hash = Hash[ hash.map{ |k,v| [ k, ( ft.steps[ k ] | v ).to_s ] } ] if r18n
+      hash
+    end
+
+  end
+
   # Get path to R18n translations provided by this gem.
   def self.translations_path
     File.expand_path( "#{__FILE__}/../r18n" )
@@ -121,7 +143,7 @@ class FormInput
   R18n.extension_places << R18n::Loader::YAML.new( translations_path )
 
   # Localize the helper for boolean args.
-  BOOL_ARGS[ :data ] = ->{ [ [ true, r18n ? t.yes : 'Yes' ], [ false, r18n ? t.no : 'No' ] ] }
+  BOOL_ARGS[ :data ] = ->{ [ [ true, r18n ? t.yes.to_s : 'Yes' ], [ false, r18n ? t.no.to_s : 'No' ] ] }
 
 end
 

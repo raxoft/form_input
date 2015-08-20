@@ -42,4 +42,11 @@ forms:
     test:
       inflect: invalid
 
+  test_localized_steps_form:
+    steps:
+      one: První
+      two: Druhý
+      three: Třetí
+      four: Should not be here.
+
 # EOF #

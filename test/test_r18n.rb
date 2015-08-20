@@ -29,6 +29,15 @@ class TestInflectionForm < FormInput
   param :test
 end
 
+class TestLocalizedStepsForm < FormInput
+  define_steps(
+    one: "First",
+    two: "Second",
+    three: "Third",
+    four: nil,
+  )
+end
+
 describe FormInput do
 
   TESTS = [
@@ -207,6 +216,41 @@ describe FormInput do
     p.data.should == [ [ true, 'Yes' ], [ false, 'No' ] ]
     set_locale( 'cs' )
     p.data.should == [ [ true, 'Ano' ], [ false, 'Ne' ] ]
+    p.data.first.last.class.should.equal String
+    p.data.last.last.class.should.equal String
+  end
+
+  should 'localize the step names' do
+    R18n.get.should.be.nil
+    f = TestLocalizedStepsForm.new
+    f.form_steps.should == { one: "First", two: "Second", three: "Third", four: nil }
+    f.step_names.should == { one: "First", two: "Second", three: "Third" }
+    f.step_name.should == "First"
+    f.step_name( :two ).should == "Second"
+    f.step_name( :four ).should.be.nil
+    f.step_name( :none ).should.be.nil
+    f.step_name.class.should.equal String
+    f.step_names[ :one ].class.should.equal String
+
+    set_locale( 'en' )
+    f.form_steps.should == { one: "First", two: "Second", three: "Third", four: nil }
+    f.step_names.should == { one: "First", two: "Second", three: "Third" }
+    f.step_name.should == "First"
+    f.step_name( :two ).should == "Second"
+    f.step_name( :four ).should.be.nil
+    f.step_name( :none ).should.be.nil
+    f.step_name.class.should.equal String
+    f.step_names[ :one ].class.should.equal String
+
+    set_locale( 'cs' )
+    f.form_steps.should == { one: "First", two: "Second", three: "Third", four: nil }
+    f.step_names.should == { one: "První", two: "Druhý", three: "Třetí" }
+    f.step_name.should == "První"
+    f.step_name( :two ).should == "Druhý"
+    f.step_name( :four ).should.be.nil
+    f.step_name( :none ).should.be.nil
+    f.step_name.class.should.equal String
+    f.step_names[ :one ].class.should.equal String
   end
 
 end

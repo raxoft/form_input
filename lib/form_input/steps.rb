@@ -65,6 +65,7 @@ class FormInput
     end
 
     # Get hash mapping defined steps to their names.
+    # Note that this is never localized. See step_names instead.
     def form_steps
       self.class.form_steps
     end
@@ -78,11 +79,13 @@ class FormInput
     def step_name( step = self.step )
       form_steps[ step ]
     end
+    alias raw_step_name step_name
 
-    # Get hash of steps along with their names, for use as sidebar.
+    # Get hash of steps along with their names, for use in a sidebar.
     def step_names
       form_steps.reject{ |k,v| v.nil? }
     end
+    alias raw_step_names step_names
 
     # Get index of given/current step among all steps.
     def step_index( step = self.step )
