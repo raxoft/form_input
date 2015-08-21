@@ -24,7 +24,7 @@ class FormInput
       def []( name )
         if form and r18n
           if opts[ name ].is_a?( String ) or LOCALIZED_OPTIONS.include?( name )
-            text = pt[ name, self ]
+            text = pt( name )
             return text.to_s if text.translated?
           end
         end
@@ -42,13 +42,16 @@ class FormInput
       end
 
       # Like t helper, except that the translation is looked up in the forms.<form_name> scope.
-      def ft
-        form.ft
+      # Supports both ft.name( args ) and ft( :name, args ) forms.
+      def ft( *args )
+        form.ft( *args )
       end
 
       # Like t helper, except that the translation is looked up in the forms.<form_name>.<param_name> scope.
-      def pt
-        ft[ name ]
+      # Supports both pt.name( args ) and pt( :name, args ) forms. The latter automatically adds self as last argument to support inflection.
+      def pt( *args )
+        translation = ft[ name ]
+        args.empty? ? translation : translation[ *args, self ]
       end
 
       # Get the inflection string used for correctly inflecting the parameter messages.
@@ -110,9 +113,11 @@ class FormInput
   end
 
   # Like t helper, except that the translation is looked up in the forms.<form_name> scope.
-  def ft
+  # Supports both ft.name( args ) and ft( :name, args ) forms.
+  def ft( *args )
     # If you get a crash here, you forgot to set the locale with R18n.set('en') or similar. No locale, no helper. Sorry.
-    t.forms[ self.class.translation_name ]
+    translation = t.forms[ self.class.translation_name ]
+    args.empty? ? translation : translation[ *args ]
   end
 
   # Iterate over each possible inflection for given inflection string and return first non-nil result.

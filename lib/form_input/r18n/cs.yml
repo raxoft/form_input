@@ -4,7 +4,7 @@
 # including animate and inanimate masculine gender. Nominative case is assumed.
 # Expects plural number for hash and array parameters for simplicity.
 #
-# Inflection classes supported are (plus standard grammatical patterns for reference):
+# Inflection classes supported are (standard declension paradigms included for reference):
 #
 #   sma: pán muž předseda soudce
 #   smi or sm: hrad stroj

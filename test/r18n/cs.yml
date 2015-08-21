@@ -13,6 +13,13 @@ forms:
     msg2:
       title: Druhá zpráva
       error_title: Parametr druhá zpráva
+    msg3:
+      test_msg: Argument %1
+      inflected_msg: !!inflect
+        s: Singular
+        p: Plural
+    texts:
+       test: Test
 
   test_inflection_form:
     name:

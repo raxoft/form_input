@@ -14,6 +14,7 @@ class TestR18nForm < FormInput
   param :float, FLOAT_ARGS, inf: 0, sup: 1
   param :msg, "Message"
   param :msg2, "Second Message", form_title: ->{ ft.msg.title | 'Another Message' }, error_title: ->{ pt.error_title }
+  param :msg3, plural: true
   param :bool, BOOL_ARGS
 end
 
@@ -201,10 +202,33 @@ describe FormInput do
     p.error_title.should == 'Parametr druhá zpráva'
 
     f.t.foo.to_s.should == '[foo]'
-    f.ft.foo.to_s.should == 'forms.test_r18n_form.[foo]'
     p.t.foo.to_s.should == '[foo]'
+
+    f.ft.foo.to_s.should == 'forms.test_r18n_form.[foo]'
     p.ft.foo.to_s.should == 'forms.test_r18n_form.[foo]'
     p.pt.foo.to_s.should == 'forms.test_r18n_form.msg2.[foo]'
+
+    f.ft( :foo ).to_s.should == 'forms.test_r18n_form.[foo]'
+    p.ft( :foo ).to_s.should == 'forms.test_r18n_form.[foo]'
+    p.pt( :foo ).to_s.should == 'forms.test_r18n_form.msg2.[foo]'
+
+    p = f.param( :msg3 )
+    f.ft.texts.test.should == 'Test'
+    f.ft[ :texts ].test.should == 'Test'
+    f.ft( :texts ).test.should == 'Test'
+    p.ft.texts.test.should == 'Test'
+    p.ft[ :texts ].test.should == 'Test'
+    p.ft( :texts ).test.should == 'Test'
+    p.pt.test_msg( 10 ).should == 'Argument 10'
+    p.pt[ :test_msg, 10 ].should == 'Argument 10'
+    p.pt( :test_msg, 10 ).should == 'Argument 10'
+    # Indeed, because without parameter context, the default is singular neuter.
+    p.pt.inflected_msg.should == 'Singular'
+    p.pt[ :inflected_msg ].should == 'Singular'
+    p.pt.inflected_msg( p ).should == 'Plural'
+    p.pt[ :inflected_msg, p ].should == 'Plural'
+    # This form adds the parameter context automatically.
+    p.pt( :inflected_msg ).should == 'Plural'
   end
 
   should 'automatically localize the boolean helper' do
