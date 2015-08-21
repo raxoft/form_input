@@ -1,0 +1,84 @@
+# Form input Slovak messages.
+#
+# Supports singular and plural numbers and masculine, feminine, and neuter genders,
+# including animate and inanimate masculine gender. Nominative case is assumed.
+# Expects plural number for hash and array parameters for simplicity.
+#
+# Inflection classes supported are (standard declension paradigms included for reference):
+#
+#   sma: chlap hrdina
+#   smi or sm: dub stroj
+#   sf: žena ulica dlaň kosť
+#   sn: mesto srdce vysvedčenia dievča
+#   pma: chlapi hrdinovia
+#   pmi or pm: duby stroje
+#   pf: ženy ulice dlane kosti
+#   pn: mestá srdcia vysvedčenia dievčatá
+#
+# Note that when exact match is not found, longest prefix match applies (e.g., pma->pm->p is tried in turn).
+
+form_input:
+  default_gender: mi # For 'Parametr x'
+  errors:
+    required_scalar: !!inflect
+      sm: '%p je povinný'
+      sf: '%p je povinná'
+      sn: '%p je povinné'
+      p: '%p jsou povinné'
+      pma: '%p jsou povinní'
+      pn: '%p jsou povinná'
+    required_array: !!inflect
+      sm: '%p je povinný'
+      sf: '%p je povinná'
+      sn: '%p je povinné'
+      p: '%p jsou povinné'
+      pma: '%p jsou povinní'
+      pn: '%p jsou povinná'
+    not_array: '%p nejsou pole'
+    not_hash: '%p nejsou hash'
+    not_string: !!inflect
+      s: '%p není řetězec'
+      p: '%p nejsou řetězec'
+    match_key: '%p obsahují neplatný klíč'
+    invalid_key: '%p obsahují neplatný klíč'
+    min_key: '%p obsahují příliš malý klíč'
+    max_key: '%p obsahují příliš velký klíč'
+    min_count: '%p musí mít nejméně %1'
+    max_count: '%p smí mít nejvíce %1'
+    value_type: '%p musí mít správný formát'
+    element_type: '%p obsahují neplatnou hodnotu'
+    min_limit: '%p musí být nejméně %1'
+    max_limit: '%p smí být nejvíce %1'
+    inf_limit: '%p musí být větší než %1'
+    sup_limit: '%p musí být menší než %1'
+    invalid_encoding: '%p musí mít platný encoding'
+    invalid_characters: '%p nesmí obsahovat zakázané znaky'
+    min_size: '%p musí mít nejméně %1'
+    max_size: '%p smí mít nejvíce %1'
+    min_bytesize: '%p musí mít nejméně %1'
+    max_bytesize: '%p smí mít nejvíce %1'
+    reject_msg: !!inflect
+      sm: '%p v tomto tvaru není povolen'
+      sf: '%p v tomto tvaru není povolena'
+      sn: '%p v tomto tvaru není povoleno'
+      p: '%p v tomto tvaru nejsou povoleny'
+      pma: '%p v tomto tvaru nejsou povoleni'
+      pn: '%p v tomto tvaru nejsou povolena'
+    match_msg: !!inflect
+      s: '%p není ve správném tvaru'
+      p: '%p nejsou ve správném tvaru'
+  units:
+    byte: !!pl
+      1: '%1 byte'
+      2: '%1 byty'
+      n: '%1 bytů'
+    character: !!pl
+      1: '%1 znak'
+      2: '%1 znaky'
+      n: '%1 znaků'
+    element: !!pl
+      1: '%1 prvek'
+      2: '%1 prvky'
+      n: '%1 prvků'
+
+# EOF #
