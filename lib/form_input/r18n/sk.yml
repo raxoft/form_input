@@ -9,7 +9,7 @@
 #   sma: chlap hrdina
 #   smi or sm: dub stroj
 #   sf: žena ulica dlaň kosť
-#   sn: mesto srdce vysvedčenia dievča
+#   sn: mesto srdce vysvedčenie dievča
 #   pma: chlapi hrdinovia
 #   pmi or pm: duby stroje
 #   pf: ženy ulice dlane kosti
@@ -18,67 +18,64 @@
 # Note that when exact match is not found, longest prefix match applies (e.g., pma->pm->p is tried in turn).
 
 form_input:
-  default_gender: mi # For 'Parametr x'
+  default_gender: mi # For 'Parameter x'
   errors:
     required_scalar: !!inflect
       sm: '%p je povinný'
       sf: '%p je povinná'
       sn: '%p je povinné'
-      p: '%p jsou povinné'
-      pma: '%p jsou povinní'
-      pn: '%p jsou povinná'
+      p: '%p sú povinné'
+      pma: '%p sú povinní'
     required_array: !!inflect
       sm: '%p je povinný'
       sf: '%p je povinná'
       sn: '%p je povinné'
-      p: '%p jsou povinné'
-      pma: '%p jsou povinní'
-      pn: '%p jsou povinná'
-    not_array: '%p nejsou pole'
-    not_hash: '%p nejsou hash'
+      p: '%p sú povinné'
+      pma: '%p sú povinní'
+    not_array: '%p nie sú polia'
+    not_hash: '%p nie sú hash'
     not_string: !!inflect
-      s: '%p není řetězec'
-      p: '%p nejsou řetězec'
-    match_key: '%p obsahují neplatný klíč'
-    invalid_key: '%p obsahují neplatný klíč'
-    min_key: '%p obsahují příliš malý klíč'
-    max_key: '%p obsahují příliš velký klíč'
-    min_count: '%p musí mít nejméně %1'
-    max_count: '%p smí mít nejvíce %1'
-    value_type: '%p musí mít správný formát'
-    element_type: '%p obsahují neplatnou hodnotu'
-    min_limit: '%p musí být nejméně %1'
-    max_limit: '%p smí být nejvíce %1'
-    inf_limit: '%p musí být větší než %1'
-    sup_limit: '%p musí být menší než %1'
-    invalid_encoding: '%p musí mít platný encoding'
-    invalid_characters: '%p nesmí obsahovat zakázané znaky'
-    min_size: '%p musí mít nejméně %1'
-    max_size: '%p smí mít nejvíce %1'
-    min_bytesize: '%p musí mít nejméně %1'
-    max_bytesize: '%p smí mít nejvíce %1'
+      s: '%p nie je reťazec'
+      p: '%p nie sú reťazce'
+    match_key: '%p obsahujú neplatný kľúč'
+    invalid_key: '%p obsahujú neplatný kľúč'
+    min_key: '%p obsahujú príliš malý kľúč'
+    max_key: '%p obsahujú príliš veľký kľúč'
+    min_count: '%p musí mať najmenej %1'
+    max_count: '%p smie mať najviac %1'
+    value_type: '%p musí mať správný formát'
+    element_type: '%p obsahujú neplatnú hodnotu'
+    min_limit: '%p musí byť najmenej %1'
+    max_limit: '%p smie byť najviac %1'
+    inf_limit: '%p musí byť väčší ako %1'
+    sup_limit: '%p musí byť menší ako %1'
+    invalid_encoding: '%p musí mať platný encoding'
+    invalid_characters: '%p nesmie obsahovať zakázané znaky'
+    min_size: '%p musí mať najmenej %1'
+    max_size: '%p smie mať najviac %1'
+    min_bytesize: '%p musí mať najmenej %1'
+    max_bytesize: '%p smie mať najviac %1'
     reject_msg: !!inflect
-      sm: '%p v tomto tvaru není povolen'
-      sf: '%p v tomto tvaru není povolena'
-      sn: '%p v tomto tvaru není povoleno'
-      p: '%p v tomto tvaru nejsou povoleny'
-      pma: '%p v tomto tvaru nejsou povoleni'
-      pn: '%p v tomto tvaru nejsou povolena'
+      sm: '%p v tomto tvare nie je povolený'
+      sf: '%p v tomto tvare nie je povolená'
+      sn: '%p v tomto tvare nie je povolené'
+      p: '%p v tomto tvare nie sú povolené'
+      pma: '%p v tomto tvare nie sú povolení'
     match_msg: !!inflect
-      s: '%p není ve správném tvaru'
-      p: '%p nejsou ve správném tvaru'
+      s: '%p nie je v správnom tvare'
+      p: '%p nie sú v správnom tvare'
   units:
     byte: !!pl
       1: '%1 byte'
       2: '%1 byty'
-      n: '%1 bytů'
+      n: '%1 bytov'
     character: !!pl
       1: '%1 znak'
       2: '%1 znaky'
-      n: '%1 znaků'
+      n: '%1 znakov'
     element: !!pl
-      1: '%1 prvek'
+      1: '%1 prvok'
       2: '%1 prvky'
-      n: '%1 prvků'
+      n: '%1 prvkov'
 
 # EOF #
