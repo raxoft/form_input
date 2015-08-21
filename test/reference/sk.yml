@@ -1,0 +1,14 @@
+# Slovak inflections to test.
+
+smi: Štát
+sma: Autor
+sf: Adresa
+sn: Meno
+pmi: Znaky
+pma: Autori
+pf: Poznámky
+pn: Slová
+
+limits: [ 0, 1, 2, 5 ]
+
+# EOF #

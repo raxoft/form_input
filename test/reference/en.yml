@@ -1,0 +1,8 @@
+# English inflection to test.
+
+s: Query
+p: Keywords
+
+limits: [ 0, 1, 5 ]
+
+# EOF #

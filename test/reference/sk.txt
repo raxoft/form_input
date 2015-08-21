@@ -1,0 +1,292 @@
+Štát je povinný
+Autor je povinný
+Adresa je povinná
+Meno je povinné
+Znaky sú povinné
+Autori sú povinní
+Poznámky sú povinné
+Slová sú povinné
+Znaky sú povinné
+Autori sú povinní
+Poznámky sú povinné
+Slová sú povinné
+Znaky nie sú polia
+Autori nie sú polia
+Poznámky nie sú polia
+Slová nie sú polia
+Znaky nie sú hash
+Autori nie sú hash
+Poznámky nie sú hash
+Slová nie sú hash
+Štát nie je reťazec
+Autor nie je reťazec
+Adresa nie je reťazec
+Meno nie je reťazec
+Znaky nie sú reťazce
+Autori nie sú reťazce
+Poznámky nie sú reťazce
+Slová nie sú reťazce
+Znaky obsahujú neplatný kľúč
+Autori obsahujú neplatný kľúč
+Poznámky obsahujú neplatný kľúč
+Slová obsahujú neplatný kľúč
+Znaky obsahujú neplatný kľúč
+Autori obsahujú neplatný kľúč
+Poznámky obsahujú neplatný kľúč
+Slová obsahujú neplatný kľúč
+Znaky obsahujú príliš malý kľúč
+Autori obsahujú príliš malý kľúč
+Poznámky obsahujú príliš malý kľúč
+Slová obsahujú príliš malý kľúč
+Znaky obsahujú príliš veľký kľúč
+Autori obsahujú príliš veľký kľúč
+Poznámky obsahujú príliš veľký kľúč
+Slová obsahujú príliš veľký kľúč
+Znaky musí mať najmenej 0 prvkov
+Znaky musí mať najmenej 1 prvok
+Znaky musí mať najmenej 2 prvky
+Znaky musí mať najmenej 5 prvkov
+Autori musí mať najmenej 0 prvkov
+Autori musí mať najmenej 1 prvok
+Autori musí mať najmenej 2 prvky
+Autori musí mať najmenej 5 prvkov
+Poznámky musí mať najmenej 0 prvkov
+Poznámky musí mať najmenej 1 prvok
+Poznámky musí mať najmenej 2 prvky
+Poznámky musí mať najmenej 5 prvkov
+Slová musí mať najmenej 0 prvkov
+Slová musí mať najmenej 1 prvok
+Slová musí mať najmenej 2 prvky
+Slová musí mať najmenej 5 prvkov
+Znaky smie mať najviac 1 prvok
+Znaky smie mať najviac 2 prvky
+Znaky smie mať najviac 5 prvkov
+Autori smie mať najviac 1 prvok
+Autori smie mať najviac 2 prvky
+Autori smie mať najviac 5 prvkov
+Poznámky smie mať najviac 1 prvok
+Poznámky smie mať najviac 2 prvky
+Poznámky smie mať najviac 5 prvkov
+Slová smie mať najviac 1 prvok
+Slová smie mať najviac 2 prvky
+Slová smie mať najviac 5 prvkov
+Štát musí mať správný formát
+Autor musí mať správný formát
+Adresa musí mať správný formát
+Meno musí mať správný formát
+Znaky musí mať správný formát
+Autori musí mať správný formát
+Poznámky musí mať správný formát
+Slová musí mať správný formát
+Znaky obsahujú neplatnú hodnotu
+Autori obsahujú neplatnú hodnotu
+Poznámky obsahujú neplatnú hodnotu
+Slová obsahujú neplatnú hodnotu
+Štát musí byť najmenej 0
+Štát musí byť najmenej 10
+Autor musí byť najmenej 0
+Autor musí byť najmenej 10
+Adresa musí byť najmenej 0
+Adresa musí byť najmenej 10
+Meno musí byť najmenej 0
+Meno musí byť najmenej 10
+Znaky musí byť najmenej 0
+Znaky musí byť najmenej 10
+Autori musí byť najmenej 0
+Autori musí byť najmenej 10
+Poznámky musí byť najmenej 0
+Poznámky musí byť najmenej 10
+Slová musí byť najmenej 0
+Slová musí byť najmenej 10
+Štát smie byť najviac 1
+Štát smie byť najviac 100
+Autor smie byť najviac 1
+Autor smie byť najviac 100
+Adresa smie byť najviac 1
+Adresa smie byť najviac 100
+Meno smie byť najviac 1
+Meno smie byť najviac 100
+Znaky smie byť najviac 1
+Znaky smie byť najviac 100
+Autori smie byť najviac 1
+Autori smie byť najviac 100
+Poznámky smie byť najviac 1
+Poznámky smie byť najviac 100
+Slová smie byť najviac 1
+Slová smie byť najviac 100
+Štát musí byť väčší ako 0
+Štát musí byť väčší ako 10
+Autor musí byť väčší ako 0
+Autor musí byť väčší ako 10
+Adresa musí byť väčší ako 0
+Adresa musí byť väčší ako 10
+Meno musí byť väčší ako 0
+Meno musí byť väčší ako 10
+Znaky musí byť väčší ako 0
+Znaky musí byť väčší ako 10
+Autori musí byť väčší ako 0
+Autori musí byť väčší ako 10
+Poznámky musí byť väčší ako 0
+Poznámky musí byť väčší ako 10
+Slová musí byť väčší ako 0
+Slová musí byť väčší ako 10
+Štát musí byť menší ako 1
+Štát musí byť menší ako 100
+Autor musí byť menší ako 1
+Autor musí byť menší ako 100
+Adresa musí byť menší ako 1
+Adresa musí byť menší ako 100
+Meno musí byť menší ako 1
+Meno musí byť menší ako 100
+Znaky musí byť menší ako 1
+Znaky musí byť menší ako 100
+Autori musí byť menší ako 1
+Autori musí byť menší ako 100
+Poznámky musí byť menší ako 1
+Poznámky musí byť menší ako 100
+Slová musí byť menší ako 1
+Slová musí byť menší ako 100
+Štát musí mať platný encoding
+Autor musí mať platný encoding
+Adresa musí mať platný encoding
+Meno musí mať platný encoding
+Znaky musí mať platný encoding
+Autori musí mať platný encoding
+Poznámky musí mať platný encoding
+Slová musí mať platný encoding
+Štát nesmie obsahovať zakázané znaky
+Autor nesmie obsahovať zakázané znaky
+Adresa nesmie obsahovať zakázané znaky
+Meno nesmie obsahovať zakázané znaky
+Znaky nesmie obsahovať zakázané znaky
+Autori nesmie obsahovať zakázané znaky
+Poznámky nesmie obsahovať zakázané znaky
+Slová nesmie obsahovať zakázané znaky
+Štát musí mať najmenej 0 znakov
+Štát musí mať najmenej 1 znak
+Štát musí mať najmenej 2 znaky
+Štát musí mať najmenej 5 znakov
+Autor musí mať najmenej 0 znakov
+Autor musí mať najmenej 1 znak
+Autor musí mať najmenej 2 znaky
+Autor musí mať najmenej 5 znakov
+Adresa musí mať najmenej 0 znakov
+Adresa musí mať najmenej 1 znak
+Adresa musí mať najmenej 2 znaky
+Adresa musí mať najmenej 5 znakov
+Meno musí mať najmenej 0 znakov
+Meno musí mať najmenej 1 znak
+Meno musí mať najmenej 2 znaky
+Meno musí mať najmenej 5 znakov
+Znaky musí mať najmenej 0 znakov
+Znaky musí mať najmenej 1 znak
+Znaky musí mať najmenej 2 znaky
+Znaky musí mať najmenej 5 znakov
+Autori musí mať najmenej 0 znakov
+Autori musí mať najmenej 1 znak
+Autori musí mať najmenej 2 znaky
+Autori musí mať najmenej 5 znakov
+Poznámky musí mať najmenej 0 znakov
+Poznámky musí mať najmenej 1 znak
+Poznámky musí mať najmenej 2 znaky
+Poznámky musí mať najmenej 5 znakov
+Slová musí mať najmenej 0 znakov
+Slová musí mať najmenej 1 znak
+Slová musí mať najmenej 2 znaky
+Slová musí mať najmenej 5 znakov
+Štát smie mať najviac 1 znak
+Štát smie mať najviac 2 znaky
+Štát smie mať najviac 5 znakov
+Autor smie mať najviac 1 znak
+Autor smie mať najviac 2 znaky
+Autor smie mať najviac 5 znakov
+Adresa smie mať najviac 1 znak
+Adresa smie mať najviac 2 znaky
+Adresa smie mať najviac 5 znakov
+Meno smie mať najviac 1 znak
+Meno smie mať najviac 2 znaky
+Meno smie mať najviac 5 znakov
+Znaky smie mať najviac 1 znak
+Znaky smie mať najviac 2 znaky
+Znaky smie mať najviac 5 znakov
+Autori smie mať najviac 1 znak
+Autori smie mať najviac 2 znaky
+Autori smie mať najviac 5 znakov
+Poznámky smie mať najviac 1 znak
+Poznámky smie mať najviac 2 znaky
+Poznámky smie mať najviac 5 znakov
+Slová smie mať najviac 1 znak
+Slová smie mať najviac 2 znaky
+Slová smie mať najviac 5 znakov
+Štát musí mať najmenej 0 bytov
+Štát musí mať najmenej 1 byte
+Štát musí mať najmenej 2 byty
+Štát musí mať najmenej 5 bytov
+Autor musí mať najmenej 0 bytov
+Autor musí mať najmenej 1 byte
+Autor musí mať najmenej 2 byty
+Autor musí mať najmenej 5 bytov
+Adresa musí mať najmenej 0 bytov
+Adresa musí mať najmenej 1 byte
+Adresa musí mať najmenej 2 byty
+Adresa musí mať najmenej 5 bytov
+Meno musí mať najmenej 0 bytov
+Meno musí mať najmenej 1 byte
+Meno musí mať najmenej 2 byty
+Meno musí mať najmenej 5 bytov
+Znaky musí mať najmenej 0 bytov
+Znaky musí mať najmenej 1 byte
+Znaky musí mať najmenej 2 byty
+Znaky musí mať najmenej 5 bytov
+Autori musí mať najmenej 0 bytov
+Autori musí mať najmenej 1 byte
+Autori musí mať najmenej 2 byty
+Autori musí mať najmenej 5 bytov
+Poznámky musí mať najmenej 0 bytov
+Poznámky musí mať najmenej 1 byte
+Poznámky musí mať najmenej 2 byty
+Poznámky musí mať najmenej 5 bytov
+Slová musí mať najmenej 0 bytov
+Slová musí mať najmenej 1 byte
+Slová musí mať najmenej 2 byty
+Slová musí mať najmenej 5 bytov
+Štát smie mať najviac 1 byte
+Štát smie mať najviac 2 byty
+Štát smie mať najviac 5 bytov
+Autor smie mať najviac 1 byte
+Autor smie mať najviac 2 byty
+Autor smie mať najviac 5 bytov
+Adresa smie mať najviac 1 byte
+Adresa smie mať najviac 2 byty
+Adresa smie mať najviac 5 bytov
+Meno smie mať najviac 1 byte
+Meno smie mať najviac 2 byty
+Meno smie mať najviac 5 bytov
+Znaky smie mať najviac 1 byte
+Znaky smie mať najviac 2 byty
+Znaky smie mať najviac 5 bytov
+Autori smie mať najviac 1 byte
+Autori smie mať najviac 2 byty
+Autori smie mať najviac 5 bytov
+Poznámky smie mať najviac 1 byte
+Poznámky smie mať najviac 2 byty
+Poznámky smie mať najviac 5 bytov
+Slová smie mať najviac 1 byte
+Slová smie mať najviac 2 byty
+Slová smie mať najviac 5 bytov
+Štát v tomto tvare nie je povolený
+Autor v tomto tvare nie je povolený
+Adresa v tomto tvare nie je povolená
+Meno v tomto tvare nie je povolené
+Znaky v tomto tvare nie sú povolené
+Autori v tomto tvare nie sú povolení
+Poznámky v tomto tvare nie sú povolené
+Slová v tomto tvare nie sú povolené
+Štát nie je v správnom tvare
+Autor nie je v správnom tvare
+Adresa nie je v správnom tvare
+Meno nie je v správnom tvare
+Znaky nie sú v správnom tvare
+Autori nie sú v správnom tvare
+Poznámky nie sú v správnom tvare
+Slová nie sú v správnom tvare

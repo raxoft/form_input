@@ -1,0 +1,63 @@
+Query is required
+Keywords are required
+Keywords are required
+Keywords are not an array
+Keywords are not a hash
+Query is not a string
+Keywords are not a string
+Keywords contain invalid key
+Keywords contain invalid key
+Keywords contain too small key
+Keywords contain too large key
+Keywords must have at least 0 elements
+Keywords must have at least 1 element
+Keywords must have at least 5 elements
+Keywords may have at most 1 element
+Keywords may have at most 5 elements
+Query like this is not valid
+Keywords like these are not valid
+Keywords contain invalid value
+Query must be at least 0
+Query must be at least 10
+Keywords must be at least 0
+Keywords must be at least 10
+Query may be at most 1
+Query may be at most 100
+Keywords may be at most 1
+Keywords may be at most 100
+Query must be greater than 0
+Query must be greater than 10
+Keywords must be greater than 0
+Keywords must be greater than 10
+Query must be less than 1
+Query must be less than 100
+Keywords must be less than 1
+Keywords must be less than 100
+Query must use valid encoding
+Keywords must use valid encoding
+Query may not contain invalid characters
+Keywords may not contain invalid characters
+Query must have at least 0 characters
+Query must have at least 1 character
+Query must have at least 5 characters
+Keywords must have at least 0 characters
+Keywords must have at least 1 character
+Keywords must have at least 5 characters
+Query may have at most 1 character
+Query may have at most 5 characters
+Keywords may have at most 1 character
+Keywords may have at most 5 characters
+Query must have at least 0 bytes
+Query must have at least 1 byte
+Query must have at least 5 bytes
+Keywords must have at least 0 bytes
+Keywords must have at least 1 byte
+Keywords must have at least 5 bytes
+Query may have at most 1 byte
+Query may have at most 5 bytes
+Keywords may have at most 1 byte
+Keywords may have at most 5 bytes
+Query like this is not allowed
+Keywords like these are not allowed
+Query like this is not valid
+Keywords like these are not valid

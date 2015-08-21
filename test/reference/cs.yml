@@ -1,0 +1,14 @@
+# Czech inflections to test.
+
+smi: Stát
+sma: Autor
+sf: Adresa
+sn: Jméno
+pmi: Znaky
+pma: Autoři
+pf: Poznámky
+pn: Slova
+
+limits: [ 0, 1, 2, 5 ]
+
+# EOF #

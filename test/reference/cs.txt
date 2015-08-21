@@ -1,0 +1,292 @@
+Stát je povinný
+Autor je povinný
+Adresa je povinná
+Jméno je povinné
+Znaky jsou povinné
+Autoři jsou povinní
+Poznámky jsou povinné
+Slova jsou povinná
+Znaky jsou povinné
+Autoři jsou povinní
+Poznámky jsou povinné
+Slova jsou povinná
+Znaky nejsou pole
+Autoři nejsou pole
+Poznámky nejsou pole
+Slova nejsou pole
+Znaky nejsou hash
+Autoři nejsou hash
+Poznámky nejsou hash
+Slova nejsou hash
+Stát není řetězec
+Autor není řetězec
+Adresa není řetězec
+Jméno není řetězec
+Znaky nejsou řetězec
+Autoři nejsou řetězec
+Poznámky nejsou řetězec
+Slova nejsou řetězec
+Znaky obsahují neplatný klíč
+Autoři obsahují neplatný klíč
+Poznámky obsahují neplatný klíč
+Slova obsahují neplatný klíč
+Znaky obsahují neplatný klíč
+Autoři obsahují neplatný klíč
+Poznámky obsahují neplatný klíč
+Slova obsahují neplatný klíč
+Znaky obsahují příliš malý klíč
+Autoři obsahují příliš malý klíč
+Poznámky obsahují příliš malý klíč
+Slova obsahují příliš malý klíč
+Znaky obsahují příliš velký klíč
+Autoři obsahují příliš velký klíč
+Poznámky obsahují příliš velký klíč
+Slova obsahují příliš velký klíč
+Znaky musí mít nejméně 0 prvků
+Znaky musí mít nejméně 1 prvek
+Znaky musí mít nejméně 2 prvky
+Znaky musí mít nejméně 5 prvků
+Autoři musí mít nejméně 0 prvků
+Autoři musí mít nejméně 1 prvek
+Autoři musí mít nejméně 2 prvky
+Autoři musí mít nejméně 5 prvků
+Poznámky musí mít nejméně 0 prvků
+Poznámky musí mít nejméně 1 prvek
+Poznámky musí mít nejméně 2 prvky
+Poznámky musí mít nejméně 5 prvků
+Slova musí mít nejméně 0 prvků
+Slova musí mít nejméně 1 prvek
+Slova musí mít nejméně 2 prvky
+Slova musí mít nejméně 5 prvků
+Znaky smí mít nejvíce 1 prvek
+Znaky smí mít nejvíce 2 prvky
+Znaky smí mít nejvíce 5 prvků
+Autoři smí mít nejvíce 1 prvek
+Autoři smí mít nejvíce 2 prvky
+Autoři smí mít nejvíce 5 prvků
+Poznámky smí mít nejvíce 1 prvek
+Poznámky smí mít nejvíce 2 prvky
+Poznámky smí mít nejvíce 5 prvků
+Slova smí mít nejvíce 1 prvek
+Slova smí mít nejvíce 2 prvky
+Slova smí mít nejvíce 5 prvků
+Stát musí mít správný formát
+Autor musí mít správný formát
+Adresa musí mít správný formát
+Jméno musí mít správný formát
+Znaky musí mít správný formát
+Autoři musí mít správný formát
+Poznámky musí mít správný formát
+Slova musí mít správný formát
+Znaky obsahují neplatnou hodnotu
+Autoři obsahují neplatnou hodnotu
+Poznámky obsahují neplatnou hodnotu
+Slova obsahují neplatnou hodnotu
+Stát musí být nejméně 0
+Stát musí být nejméně 10
+Autor musí být nejméně 0
+Autor musí být nejméně 10
+Adresa musí být nejméně 0
+Adresa musí být nejméně 10
+Jméno musí být nejméně 0
+Jméno musí být nejméně 10
+Znaky musí být nejméně 0
+Znaky musí být nejméně 10
+Autoři musí být nejméně 0
+Autoři musí být nejméně 10
+Poznámky musí být nejméně 0
+Poznámky musí být nejméně 10
+Slova musí být nejméně 0
+Slova musí být nejméně 10
+Stát smí být nejvíce 1
+Stát smí být nejvíce 100
+Autor smí být nejvíce 1
+Autor smí být nejvíce 100
+Adresa smí být nejvíce 1
+Adresa smí být nejvíce 100
+Jméno smí být nejvíce 1
+Jméno smí být nejvíce 100
+Znaky smí být nejvíce 1
+Znaky smí být nejvíce 100
+Autoři smí být nejvíce 1
+Autoři smí být nejvíce 100
+Poznámky smí být nejvíce 1
+Poznámky smí být nejvíce 100
+Slova smí být nejvíce 1
+Slova smí být nejvíce 100
+Stát musí být větší než 0
+Stát musí být větší než 10
+Autor musí být větší než 0
+Autor musí být větší než 10
+Adresa musí být větší než 0
+Adresa musí být větší než 10
+Jméno musí být větší než 0
+Jméno musí být větší než 10
+Znaky musí být větší než 0
+Znaky musí být větší než 10
+Autoři musí být větší než 0
+Autoři musí být větší než 10
+Poznámky musí být větší než 0
+Poznámky musí být větší než 10
+Slova musí být větší než 0
+Slova musí být větší než 10
+Stát musí být menší než 1
+Stát musí být menší než 100
+Autor musí být menší než 1
+Autor musí být menší než 100
+Adresa musí být menší než 1
+Adresa musí být menší než 100
+Jméno musí být menší než 1
+Jméno musí být menší než 100
+Znaky musí být menší než 1
+Znaky musí být menší než 100
+Autoři musí být menší než 1
+Autoři musí být menší než 100
+Poznámky musí být menší než 1
+Poznámky musí být menší než 100
+Slova musí být menší než 1
+Slova musí být menší než 100
+Stát musí mít platný encoding
+Autor musí mít platný encoding
+Adresa musí mít platný encoding
+Jméno musí mít platný encoding
+Znaky musí mít platný encoding
+Autoři musí mít platný encoding
+Poznámky musí mít platný encoding
+Slova musí mít platný encoding
+Stát nesmí obsahovat zakázané znaky
+Autor nesmí obsahovat zakázané znaky
+Adresa nesmí obsahovat zakázané znaky
+Jméno nesmí obsahovat zakázané znaky
+Znaky nesmí obsahovat zakázané znaky
+Autoři nesmí obsahovat zakázané znaky
+Poznámky nesmí obsahovat zakázané znaky
+Slova nesmí obsahovat zakázané znaky
+Stát musí mít nejméně 0 znaků
+Stát musí mít nejméně 1 znak
+Stát musí mít nejméně 2 znaky
+Stát musí mít nejméně 5 znaků
+Autor musí mít nejméně 0 znaků
+Autor musí mít nejméně 1 znak
+Autor musí mít nejméně 2 znaky
+Autor musí mít nejméně 5 znaků
+Adresa musí mít nejméně 0 znaků
+Adresa musí mít nejméně 1 znak
+Adresa musí mít nejméně 2 znaky
+Adresa musí mít nejméně 5 znaků
+Jméno musí mít nejméně 0 znaků
+Jméno musí mít nejméně 1 znak
+Jméno musí mít nejméně 2 znaky
+Jméno musí mít nejméně 5 znaků
+Znaky musí mít nejméně 0 znaků
+Znaky musí mít nejméně 1 znak
+Znaky musí mít nejméně 2 znaky
+Znaky musí mít nejméně 5 znaků
+Autoři musí mít nejméně 0 znaků
+Autoři musí mít nejméně 1 znak
+Autoři musí mít nejméně 2 znaky
+Autoři musí mít nejméně 5 znaků
+Poznámky musí mít nejméně 0 znaků
+Poznámky musí mít nejméně 1 znak
+Poznámky musí mít nejméně 2 znaky
+Poznámky musí mít nejméně 5 znaků
+Slova musí mít nejméně 0 znaků
+Slova musí mít nejméně 1 znak
+Slova musí mít nejméně 2 znaky
+Slova musí mít nejméně 5 znaků
+Stát smí mít nejvíce 1 znak
+Stát smí mít nejvíce 2 znaky
+Stát smí mít nejvíce 5 znaků
+Autor smí mít nejvíce 1 znak
+Autor smí mít nejvíce 2 znaky
+Autor smí mít nejvíce 5 znaků
+Adresa smí mít nejvíce 1 znak
+Adresa smí mít nejvíce 2 znaky
+Adresa smí mít nejvíce 5 znaků
+Jméno smí mít nejvíce 1 znak
+Jméno smí mít nejvíce 2 znaky
+Jméno smí mít nejvíce 5 znaků
+Znaky smí mít nejvíce 1 znak
+Znaky smí mít nejvíce 2 znaky
+Znaky smí mít nejvíce 5 znaků
+Autoři smí mít nejvíce 1 znak
+Autoři smí mít nejvíce 2 znaky
+Autoři smí mít nejvíce 5 znaků
+Poznámky smí mít nejvíce 1 znak
+Poznámky smí mít nejvíce 2 znaky
+Poznámky smí mít nejvíce 5 znaků
+Slova smí mít nejvíce 1 znak
+Slova smí mít nejvíce 2 znaky
+Slova smí mít nejvíce 5 znaků
+Stát musí mít nejméně 0 bytů
+Stát musí mít nejméně 1 byte
+Stát musí mít nejméně 2 byty
+Stát musí mít nejméně 5 bytů
+Autor musí mít nejméně 0 bytů
+Autor musí mít nejméně 1 byte
+Autor musí mít nejméně 2 byty
+Autor musí mít nejméně 5 bytů
+Adresa musí mít nejméně 0 bytů
+Adresa musí mít nejméně 1 byte
+Adresa musí mít nejméně 2 byty
+Adresa musí mít nejméně 5 bytů
+Jméno musí mít nejméně 0 bytů
+Jméno musí mít nejméně 1 byte
+Jméno musí mít nejméně 2 byty
+Jméno musí mít nejméně 5 bytů
+Znaky musí mít nejméně 0 bytů
+Znaky musí mít nejméně 1 byte
+Znaky musí mít nejméně 2 byty
+Znaky musí mít nejméně 5 bytů
+Autoři musí mít nejméně 0 bytů
+Autoři musí mít nejméně 1 byte
+Autoři musí mít nejméně 2 byty
+Autoři musí mít nejméně 5 bytů
+Poznámky musí mít nejméně 0 bytů
+Poznámky musí mít nejméně 1 byte
+Poznámky musí mít nejméně 2 byty
+Poznámky musí mít nejméně 5 bytů
+Slova musí mít nejméně 0 bytů
+Slova musí mít nejméně 1 byte
+Slova musí mít nejméně 2 byty
+Slova musí mít nejméně 5 bytů
+Stát smí mít nejvíce 1 byte
+Stát smí mít nejvíce 2 byty
+Stát smí mít nejvíce 5 bytů
+Autor smí mít nejvíce 1 byte
+Autor smí mít nejvíce 2 byty
+Autor smí mít nejvíce 5 bytů
+Adresa smí mít nejvíce 1 byte
+Adresa smí mít nejvíce 2 byty
+Adresa smí mít nejvíce 5 bytů
+Jméno smí mít nejvíce 1 byte
+Jméno smí mít nejvíce 2 byty
+Jméno smí mít nejvíce 5 bytů
+Znaky smí mít nejvíce 1 byte
+Znaky smí mít nejvíce 2 byty
+Znaky smí mít nejvíce 5 bytů
+Autoři smí mít nejvíce 1 byte
+Autoři smí mít nejvíce 2 byty
+Autoři smí mít nejvíce 5 bytů
+Poznámky smí mít nejvíce 1 byte
+Poznámky smí mít nejvíce 2 byty
+Poznámky smí mít nejvíce 5 bytů
+Slova smí mít nejvíce 1 byte
+Slova smí mít nejvíce 2 byty
+Slova smí mít nejvíce 5 bytů
+Stát v tomto tvaru není povolen
+Autor v tomto tvaru není povolen
+Adresa v tomto tvaru není povolena
+Jméno v tomto tvaru není povoleno
+Znaky v tomto tvaru nejsou povoleny
+Autoři v tomto tvaru nejsou povoleni
+Poznámky v tomto tvaru nejsou povoleny
+Slova v tomto tvaru nejsou povolena
+Stát není ve správném tvaru
+Autor není ve správném tvaru
+Adresa není ve správném tvaru
+Jméno není ve správném tvaru
+Znaky nejsou ve správném tvaru
+Autoři nejsou ve správném tvaru
+Poznámky nejsou ve správném tvaru
+Slova nejsou ve správném tvaru

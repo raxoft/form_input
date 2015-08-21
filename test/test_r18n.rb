@@ -157,6 +157,63 @@ describe FormInput do
     p.report( :required_scalar ).error.should == 'form_input.errors.required_scalar.[invalid]'
   end
 
+  def each_error_message( default_limits )
+    for code, text in FormInput::DEFAULT_ERROR_MESSAGES
+      limits = case code.to_s
+      when /(min|inf)_limit/
+        [ 0, 10 ]
+      when /(max|sup)_limit/
+        [ 1, 100 ]
+      when /bytesize|size|count/
+        unit = { 'bytesize' => 'byte', 'size' => 'character', 'count' => 'element' }[ $& ]
+        values = default_limits.dup
+        values.shift if code.to_s =~ /max/ and values.first == 0
+        values.map{ |x| [ x, unit ] }
+      end
+      yield( code, limits )
+    end
+  end
+
+  should 'properly inflect all builtin messages in all locales' do
+    # Setup parameter which will fake the inflection and title we need.
+    inflection = name = nil
+    p = TestInflectionForm.new.param( :name )
+    p.define_singleton_method( :inflection ) do
+      inflection
+    end
+    p.define_singleton_method( :error_title ) do
+      name
+    end
+
+    dir = File.expand_path( "#{__FILE__}/../reference" )
+    R18n.available_locales( FormInput.translations_path ).each do |locale|
+      R18n.set( locale.code, FormInput.translations_path )
+
+      base = "#{dir}/#{locale.code}"
+      inflections = YAML.load_file( "#{base}.yml" )
+      limits = inflections.delete( 'limits' )
+
+      file = "#{base}.txt"
+      read = File.exists?( file )
+      File.open( file, read ? "r" : "w" ) do |file|
+        each_error_message( limits ) do |code, limits|
+          for inflection, name in inflections
+            plural_only = code.to_s =~ /array|hash|key|count|element/
+            next if plural_only and inflection =~ /^s/
+            for limit in limits || [ nil ]
+              text = p.format_error_message( code, *limit )
+              if read
+                text.should == file.gets.chomp
+              else
+                file.puts text
+              end
+            end
+          end
+        end
+      end
+    end.map{ |x| x.code }.sort.should == %w[ cs en sk ]
+  end
+
   should 'provide scope name for automatic translations' do
     TestR18nForm.translation_name.should == 'test_r18n_form'
     TestInflectionForm.translation_name.should == 'test_inflection_form'
