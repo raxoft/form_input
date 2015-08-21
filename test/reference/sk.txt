@@ -42,42 +42,42 @@ Znaky obsahujú príliš veľký kľúč
 Autori obsahujú príliš veľký kľúč
 Poznámky obsahujú príliš veľký kľúč
 Slová obsahujú príliš veľký kľúč
-Znaky musí mať najmenej 0 prvkov
-Znaky musí mať najmenej 1 prvok
-Znaky musí mať najmenej 2 prvky
-Znaky musí mať najmenej 5 prvkov
-Autori musí mať najmenej 0 prvkov
-Autori musí mať najmenej 1 prvok
-Autori musí mať najmenej 2 prvky
-Autori musí mať najmenej 5 prvkov
-Poznámky musí mať najmenej 0 prvkov
-Poznámky musí mať najmenej 1 prvok
-Poznámky musí mať najmenej 2 prvky
-Poznámky musí mať najmenej 5 prvkov
-Slová musí mať najmenej 0 prvkov
-Slová musí mať najmenej 1 prvok
-Slová musí mať najmenej 2 prvky
-Slová musí mať najmenej 5 prvkov
-Znaky smie mať najviac 1 prvok
-Znaky smie mať najviac 2 prvky
-Znaky smie mať najviac 5 prvkov
-Autori smie mať najviac 1 prvok
-Autori smie mať najviac 2 prvky
-Autori smie mať najviac 5 prvkov
-Poznámky smie mať najviac 1 prvok
-Poznámky smie mať najviac 2 prvky
-Poznámky smie mať najviac 5 prvkov
-Slová smie mať najviac 1 prvok
-Slová smie mať najviac 2 prvky
-Slová smie mať najviac 5 prvkov
+Znaky musia mať najmenej 0 prvkov
+Znaky musia mať najmenej 1 prvok
+Znaky musia mať najmenej 2 prvky
+Znaky musia mať najmenej 5 prvkov
+Autori musia mať najmenej 0 prvkov
+Autori musia mať najmenej 1 prvok
+Autori musia mať najmenej 2 prvky
+Autori musia mať najmenej 5 prvkov
+Poznámky musia mať najmenej 0 prvkov
+Poznámky musia mať najmenej 1 prvok
+Poznámky musia mať najmenej 2 prvky
+Poznámky musia mať najmenej 5 prvkov
+Slová musia mať najmenej 0 prvkov
+Slová musia mať najmenej 1 prvok
+Slová musia mať najmenej 2 prvky
+Slová musia mať najmenej 5 prvkov
+Znaky smú mať najviac 1 prvok
+Znaky smú mať najviac 2 prvky
+Znaky smú mať najviac 5 prvkov
+Autori smú mať najviac 1 prvok
+Autori smú mať najviac 2 prvky
+Autori smú mať najviac 5 prvkov
+Poznámky smú mať najviac 1 prvok
+Poznámky smú mať najviac 2 prvky
+Poznámky smú mať najviac 5 prvkov
+Slová smú mať najviac 1 prvok
+Slová smú mať najviac 2 prvky
+Slová smú mať najviac 5 prvkov
 Štát musí mať správný formát
 Autor musí mať správný formát
 Adresa musí mať správný formát
 Meno musí mať správný formát
-Znaky musí mať správný formát
-Autori musí mať správný formát
-Poznámky musí mať správný formát
-Slová musí mať správný formát
+Znaky musia mať správný formát
+Autori musia mať správný formát
+Poznámky musia mať správný formát
+Slová musia mať správný formát
 Znaky obsahujú neplatnú hodnotu
 Autori obsahujú neplatnú hodnotu
 Poznámky obsahujú neplatnú hodnotu
@@ -90,14 +90,14 @@ Adresa musí byť najmenej 0
 Adresa musí byť najmenej 10
 Meno musí byť najmenej 0
 Meno musí byť najmenej 10
-Znaky musí byť najmenej 0
-Znaky musí byť najmenej 10
-Autori musí byť najmenej 0
-Autori musí byť najmenej 10
-Poznámky musí byť najmenej 0
-Poznámky musí byť najmenej 10
-Slová musí byť najmenej 0
-Slová musí byť najmenej 10
+Znaky musia byť najmenej 0
+Znaky musia byť najmenej 10
+Autori musia byť najmenej 0
+Autori musia byť najmenej 10
+Poznámky musia byť najmenej 0
+Poznámky musia byť najmenej 10
+Slová musia byť najmenej 0
+Slová musia byť najmenej 10
 Štát smie byť najviac 1
 Štát smie byť najviac 100
 Autor smie byť najviac 1
@@ -106,14 +106,14 @@ Adresa smie byť najviac 1
 Adresa smie byť najviac 100
 Meno smie byť najviac 1
 Meno smie byť najviac 100
-Znaky smie byť najviac 1
-Znaky smie byť najviac 100
-Autori smie byť najviac 1
-Autori smie byť najviac 100
-Poznámky smie byť najviac 1
-Poznámky smie byť najviac 100
-Slová smie byť najviac 1
-Slová smie byť najviac 100
+Znaky smú byť najviac 1
+Znaky smú byť najviac 100
+Autori smú byť najviac 1
+Autori smú byť najviac 100
+Poznámky smú byť najviac 1
+Poznámky smú byť najviac 100
+Slová smú byť najviac 1
+Slová smú byť najviac 100
 Štát musí byť väčší ako 0
 Štát musí byť väčší ako 10
 Autor musí byť väčší ako 0
@@ -122,14 +122,14 @@ Adresa musí byť väčší ako 0
 Adresa musí byť väčší ako 10
 Meno musí byť väčší ako 0
 Meno musí byť väčší ako 10
-Znaky musí byť väčší ako 0
-Znaky musí byť väčší ako 10
-Autori musí byť väčší ako 0
-Autori musí byť väčší ako 10
-Poznámky musí byť väčší ako 0
-Poznámky musí byť väčší ako 10
-Slová musí byť väčší ako 0
-Slová musí byť väčší ako 10
+Znaky musia byť väčší ako 0
+Znaky musia byť väčší ako 10
+Autori musia byť väčší ako 0
+Autori musia byť väčší ako 10
+Poznámky musia byť väčší ako 0
+Poznámky musia byť väčší ako 10
+Slová musia byť väčší ako 0
+Slová musia byť väčší ako 10
 Štát musí byť menší ako 1
 Štát musí byť menší ako 100
 Autor musí byť menší ako 1
@@ -138,30 +138,30 @@ Adresa musí byť menší ako 1
 Adresa musí byť menší ako 100
 Meno musí byť menší ako 1
 Meno musí byť menší ako 100
-Znaky musí byť menší ako 1
-Znaky musí byť menší ako 100
-Autori musí byť menší ako 1
-Autori musí byť menší ako 100
-Poznámky musí byť menší ako 1
-Poznámky musí byť menší ako 100
-Slová musí byť menší ako 1
-Slová musí byť menší ako 100
+Znaky musia byť menší ako 1
+Znaky musia byť menší ako 100
+Autori musia byť menší ako 1
+Autori musia byť menší ako 100
+Poznámky musia byť menší ako 1
+Poznámky musia byť menší ako 100
+Slová musia byť menší ako 1
+Slová musia byť menší ako 100
 Štát musí mať platný encoding
 Autor musí mať platný encoding
 Adresa musí mať platný encoding
 Meno musí mať platný encoding
-Znaky musí mať platný encoding
-Autori musí mať platný encoding
-Poznámky musí mať platný encoding
-Slová musí mať platný encoding
+Znaky musia mať platný encoding
+Autori musia mať platný encoding
+Poznámky musia mať platný encoding
+Slová musia mať platný encoding
 Štát nesmie obsahovať zakázané znaky
 Autor nesmie obsahovať zakázané znaky
 Adresa nesmie obsahovať zakázané znaky
 Meno nesmie obsahovať zakázané znaky
-Znaky nesmie obsahovať zakázané znaky
-Autori nesmie obsahovať zakázané znaky
-Poznámky nesmie obsahovať zakázané znaky
-Slová nesmie obsahovať zakázané znaky
+Znaky nesmú obsahovať zakázané znaky
+Autori nesmú obsahovať zakázané znaky
+Poznámky nesmú obsahovať zakázané znaky
+Slová nesmú obsahovať zakázané znaky
 Štát musí mať najmenej 0 znakov
 Štát musí mať najmenej 1 znak
 Štát musí mať najmenej 2 znaky
@@ -178,22 +178,22 @@ Meno musí mať najmenej 0 znakov
 Meno musí mať najmenej 1 znak
 Meno musí mať najmenej 2 znaky
 Meno musí mať najmenej 5 znakov
-Znaky musí mať najmenej 0 znakov
-Znaky musí mať najmenej 1 znak
-Znaky musí mať najmenej 2 znaky
-Znaky musí mať najmenej 5 znakov
-Autori musí mať najmenej 0 znakov
-Autori musí mať najmenej 1 znak
-Autori musí mať najmenej 2 znaky
-Autori musí mať najmenej 5 znakov
-Poznámky musí mať najmenej 0 znakov
-Poznámky musí mať najmenej 1 znak
-Poznámky musí mať najmenej 2 znaky
-Poznámky musí mať najmenej 5 znakov
-Slová musí mať najmenej 0 znakov
-Slová musí mať najmenej 1 znak
-Slová musí mať najmenej 2 znaky
-Slová musí mať najmenej 5 znakov
+Znaky musia mať najmenej 0 znakov
+Znaky musia mať najmenej 1 znak
+Znaky musia mať najmenej 2 znaky
+Znaky musia mať najmenej 5 znakov
+Autori musia mať najmenej 0 znakov
+Autori musia mať najmenej 1 znak
+Autori musia mať najmenej 2 znaky
+Autori musia mať najmenej 5 znakov
+Poznámky musia mať najmenej 0 znakov
+Poznámky musia mať najmenej 1 znak
+Poznámky musia mať najmenej 2 znaky
+Poznámky musia mať najmenej 5 znakov
+Slová musia mať najmenej 0 znakov
+Slová musia mať najmenej 1 znak
+Slová musia mať najmenej 2 znaky
+Slová musia mať najmenej 5 znakov
 Štát smie mať najviac 1 znak
 Štát smie mať najviac 2 znaky
 Štát smie mať najviac 5 znakov
@@ -206,18 +206,18 @@ Adresa smie mať najviac 5 znakov
 Meno smie mať najviac 1 znak
 Meno smie mať najviac 2 znaky
 Meno smie mať najviac 5 znakov
-Znaky smie mať najviac 1 znak
-Znaky smie mať najviac 2 znaky
-Znaky smie mať najviac 5 znakov
-Autori smie mať najviac 1 znak
-Autori smie mať najviac 2 znaky
-Autori smie mať najviac 5 znakov
-Poznámky smie mať najviac 1 znak
-Poznámky smie mať najviac 2 znaky
-Poznámky smie mať najviac 5 znakov
-Slová smie mať najviac 1 znak
-Slová smie mať najviac 2 znaky
-Slová smie mať najviac 5 znakov
+Znaky smú mať najviac 1 znak
+Znaky smú mať najviac 2 znaky
+Znaky smú mať najviac 5 znakov
+Autori smú mať najviac 1 znak
+Autori smú mať najviac 2 znaky
+Autori smú mať najviac 5 znakov
+Poznámky smú mať najviac 1 znak
+Poznámky smú mať najviac 2 znaky
+Poznámky smú mať najviac 5 znakov
+Slová smú mať najviac 1 znak
+Slová smú mať najviac 2 znaky
+Slová smú mať najviac 5 znakov
 Štát musí mať najmenej 0 bytov
 Štát musí mať najmenej 1 byte
 Štát musí mať najmenej 2 byty
@@ -234,22 +234,22 @@ Meno musí mať najmenej 0 bytov
 Meno musí mať najmenej 1 byte
 Meno musí mať najmenej 2 byty
 Meno musí mať najmenej 5 bytov
-Znaky musí mať najmenej 0 bytov
-Znaky musí mať najmenej 1 byte
-Znaky musí mať najmenej 2 byty
-Znaky musí mať najmenej 5 bytov
-Autori musí mať najmenej 0 bytov
-Autori musí mať najmenej 1 byte
-Autori musí mať najmenej 2 byty
-Autori musí mať najmenej 5 bytov
-Poznámky musí mať najmenej 0 bytov
-Poznámky musí mať najmenej 1 byte
-Poznámky musí mať najmenej 2 byty
-Poznámky musí mať najmenej 5 bytov
-Slová musí mať najmenej 0 bytov
-Slová musí mať najmenej 1 byte
-Slová musí mať najmenej 2 byty
-Slová musí mať najmenej 5 bytov
+Znaky musia mať najmenej 0 bytov
+Znaky musia mať najmenej 1 byte
+Znaky musia mať najmenej 2 byty
+Znaky musia mať najmenej 5 bytov
+Autori musia mať najmenej 0 bytov
+Autori musia mať najmenej 1 byte
+Autori musia mať najmenej 2 byty
+Autori musia mať najmenej 5 bytov
+Poznámky musia mať najmenej 0 bytov
+Poznámky musia mať najmenej 1 byte
+Poznámky musia mať najmenej 2 byty
+Poznámky musia mať najmenej 5 bytov
+Slová musia mať najmenej 0 bytov
+Slová musia mať najmenej 1 byte
+Slová musia mať najmenej 2 byty
+Slová musia mať najmenej 5 bytov
 Štát smie mať najviac 1 byte
 Štát smie mať najviac 2 byty
 Štát smie mať najviac 5 bytov
@@ -262,18 +262,18 @@ Adresa smie mať najviac 5 bytov
 Meno smie mať najviac 1 byte
 Meno smie mať najviac 2 byty
 Meno smie mať najviac 5 bytov
-Znaky smie mať najviac 1 byte
-Znaky smie mať najviac 2 byty
-Znaky smie mať najviac 5 bytov
-Autori smie mať najviac 1 byte
-Autori smie mať najviac 2 byty
-Autori smie mať najviac 5 bytov
-Poznámky smie mať najviac 1 byte
-Poznámky smie mať najviac 2 byty
-Poznámky smie mať najviac 5 bytov
-Slová smie mať najviac 1 byte
-Slová smie mať najviac 2 byty
-Slová smie mať najviac 5 bytov
+Znaky smú mať najviac 1 byte
+Znaky smú mať najviac 2 byty
+Znaky smú mať najviac 5 bytov
+Autori smú mať najviac 1 byte
+Autori smú mať najviac 2 byty
+Autori smú mať najviac 5 bytov
+Poznámky smú mať najviac 1 byte
+Poznámky smú mať najviac 2 byty
+Poznámky smú mať najviac 5 bytov
+Slová smú mať najviac 1 byte
+Slová smú mať najviac 2 byty
+Slová smú mať najviac 5 bytov
 Štát v tomto tvare nie je povolený
 Autor v tomto tvare nie je povolený
 Adresa v tomto tvare nie je povolená

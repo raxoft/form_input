@@ -41,20 +41,42 @@ form_input:
     invalid_key: '%p obsahujú neplatný kľúč'
     min_key: '%p obsahujú príliš malý kľúč'
     max_key: '%p obsahujú príliš veľký kľúč'
-    min_count: '%p musí mať najmenej %1'
-    max_count: '%p smie mať najviac %1'
-    value_type: '%p musí mať správný formát'
+    min_count: '%p musia mať najmenej %1'
+    max_count: '%p smú mať najviac %1'
+    value_type: !!inflect
+      s: '%p musí mať správný formát'
+      p: '%p musia mať správný formát'
     element_type: '%p obsahujú neplatnú hodnotu'
-    min_limit: '%p musí byť najmenej %1'
-    max_limit: '%p smie byť najviac %1'
-    inf_limit: '%p musí byť väčší ako %1'
-    sup_limit: '%p musí byť menší ako %1'
-    invalid_encoding: '%p musí mať platný encoding'
-    invalid_characters: '%p nesmie obsahovať zakázané znaky'
-    min_size: '%p musí mať najmenej %1'
-    max_size: '%p smie mať najviac %1'
-    min_bytesize: '%p musí mať najmenej %1'
-    max_bytesize: '%p smie mať najviac %1'
+    min_limit: !!inflect
+      s: '%p musí byť najmenej %1'
+      p: '%p musia byť najmenej %1'
+    max_limit: !!inflect
+      s: '%p smie byť najviac %1'
+      p: '%p smú byť najviac %1'
+    inf_limit: !!inflect
+      s: '%p musí byť väčší ako %1'
+      p: '%p musia byť väčší ako %1'
+    sup_limit: !!inflect
+      s: '%p musí byť menší ako %1'
+      p: '%p musia byť menší ako %1'
+    invalid_encoding: !!inflect
+      s: '%p musí mať platný encoding'
+      p: '%p musia mať platný encoding'
+    invalid_characters: !!inflect
+      s: '%p nesmie obsahovať zakázané znaky'
+      p: '%p nesmú obsahovať zakázané znaky'
+    min_size: !!inflect
+      s: '%p musí mať najmenej %1'
+      p: '%p musia mať najmenej %1'
+    max_size: !!inflect
+      s: '%p smie mať najviac %1'
+      p: '%p smú mať najviac %1'
+    min_bytesize: !!inflect
+      s: '%p musí mať najmenej %1'
+      p: '%p musia mať najmenej %1'
+    max_bytesize: !!inflect
+      s: '%p smie mať najviac %1'
+      p: '%p smú mať najviac %1'
     reject_msg: !!inflect
       sm: '%p v tomto tvare nie je povolený'
       sf: '%p v tomto tvare nie je povolená'
