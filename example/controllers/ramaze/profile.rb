@@ -13,20 +13,20 @@ class HomeController < Controller
     # Check new data when the form is posted.
 
     @form = ProfileForm.new( request )
-    @action = :post
+    @state = :report
     return unless @form.valid?
 
     # Attempt to update the profile.
 
     unless user.update_profile( @form )
-      @failed = :update
+      @state = :update_failed
       return
     end
 
     # Refetch the profile just in case the model changed something, and report success.
 
     @form = ProfileForm.new( user.profile_hash )
-    @action = :done
+    @state = :done
   end
 
 end

@@ -25,29 +25,30 @@ class PRController < Controller
     # Fetch the data from the post.
 
     @form = PressReleaseForm.new( user.active_plan, request )
-    @action = @form.step
-    @failed = @action if @form.invalid_step? and @form.finished_step?
+    @state = :report if @form.invalid_step? and @form.finished_step?
 
     # That's all until the last steps are reached.
 
-    return unless @action == :summary or @action == :post
+    step = @form.step
+    return unless step == :summary or step == :post
 
     # In case the form is still invalid, return to the appropriate step.
 
     unless @form.valid?
-      @failed = @action = @form.step = @form.invalid_step
+      @form.step = @form.invalid_step
+      @state = :report
       return
     end
 
     # That's all until the last step is reached.
 
-    return unless @action == :post
+    return unless step == :post
 
     # Finally save the press release.
 
     unless user.create_press_release( @form )
-      @action = @form.step = :summary
-      @failed = :create
+      @form.step = :summary
+      @state = :create_failed
       return
     end
 
@@ -63,36 +64,37 @@ class PRController < Controller
 
     unless request.post?
       @form = PressReleaseForm.new( pr.user.active_plan, pr.form_hash ).unlock_steps
-      @failed = :invalid unless pr.valid?
+      @state = :invalid unless pr.valid?
       return
     end
 
     # Fetch the data from the post.
 
-    @form = PressReleaseForm.new( request, plan: pr.user.active_plan )
-    @action = @form.step
-    @failed = @action if @form.invalid_step? and @form.finished_step?
+    @form = PressReleaseForm.new( pr.user.active_plan, request )
+    @state = :report if @form.invalid_step? and @form.finished_step?
 
     # That's all until the last steps are reached.
 
-    return unless @action == :summary or @action == :post
+    step = @form.step
+    return unless step == :summary or step == :post
 
     # In case the form is invalid, return to the appropriate step.
 
     unless @form.valid?
-      @failed = @action = @form.step = @form.invalid_step
+      @form.step = @form.invalid_step
+      @state = :report
       return
     end
 
     # That's all until the last step is reached.
 
-    return unless @action == :post
+    return unless step == :post
 
     # Finally update the press release.
 
     unless pr.user.update_press_release( pr, @form, user )
-      @action = @form.step = :summary
-      @failed = :update
+      @form.step = :summary
+      @state = :update_failed
       return
     end
 
