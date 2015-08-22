@@ -2,6 +2,8 @@
 
 - @title = "Press Release: #{@form.step_name}"
 
+edit_mode = ( page_action == 'edit' )
+
 form *form_attrs
 
   // Invisible first submit button to send users to the next page
@@ -12,7 +14,7 @@ form *form_attrs
     .col-md-3 role="navigation"
 
       == render_partial :sidebar,
-        title: "#{@edit_mode ? 'Edit' : 'Create'} Press Release",
+        title: "#{edit_mode ? 'Edit' : 'Create'} Press Release",
         items: @form.sidebar_items,
         accessible: @form.accessible_steps,
         valid: @form.good_steps,
@@ -50,7 +52,7 @@ form *form_attrs
               - else
                 button.btn.btn-default type='submit' name='next' value='summary'
                   Finish
-                - unless @edit_mode
+                - unless edit_mode
                   button.btn.btn-primary.pull-right type='submit' name='next' value=@form.next_step
                     Next
 
