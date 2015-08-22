@@ -22,29 +22,12 @@ class PRController < Controller
       return
     end
 
-    # Fetch the data from the post.
+    # Process the data from the post.
 
     @form = PressReleaseForm.new( user.active_plan, request )
-    @state = :report if @form.invalid_step? and @form.finished_step?
+    return unless process_form( @form )
 
-    # That's all until the last steps are reached.
-
-    step = @form.step
-    return unless step == :summary or step == :post
-
-    # In case the form is still invalid, return to the appropriate step.
-
-    unless @form.valid?
-      @form.step = @form.invalid_step
-      @state = :report
-      return
-    end
-
-    # That's all until the last step is reached.
-
-    return unless step == :post
-
-    # Finally save the press release.
+    # Save the press release.
 
     unless user.create_press_release( @form )
       @form.step = :summary
@@ -57,40 +40,29 @@ class PRController < Controller
 
   # Edit press release.
   def edit( hid )
+
+    # Fetch the existing press release.
+    # Note that it can be edited by admins in addition to its owner.
+
     not_found unless pr = PressRelease.from_hid( hid )
 
     owner = ( pr.user_id == user.id )
     forbidden unless owner or user.admin?
 
+    # Start by filling the form from the press release.
+
     unless request.post?
       @form = PressReleaseForm.new( pr.user.active_plan, pr.form_hash ).unlock_steps
-      @state = :invalid unless pr.valid?
       return
     end
 
-    # Fetch the data from the post.
+    # Process the data from the post.
 
+    pr = get_press_release( hid )
     @form = PressReleaseForm.new( pr.user.active_plan, request )
-    @state = :report if @form.invalid_step? and @form.finished_step?
+    return unless process_form( @form )
 
-    # That's all until the last steps are reached.
-
-    step = @form.step
-    return unless step == :summary or step == :post
-
-    # In case the form is invalid, return to the appropriate step.
-
-    unless @form.valid?
-      @form.step = @form.invalid_step
-      @state = :report
-      return
-    end
-
-    # That's all until the last step is reached.
-
-    return unless step == :post
-
-    # Finally update the press release.
+    # Update the press release.
 
     unless pr.user.update_press_release( pr, @form, user )
       @form.step = :summary
@@ -102,6 +74,31 @@ class PRController < Controller
   end
 
   alias_view :edit, :create
+
+  # Common logic for processing the form steps.
+  def process_form( form )
+
+    # Report errors whenever there are some in the currently finished step.
+
+    @state = :report if form.invalid_step? and form.finished_step?
+
+    # That's all until the last steps are reached.
+
+    step = form.step
+    return unless step == :summary or step == :post
+
+    # In case the form is still invalid, return to the appropriate step.
+
+    unless form.valid?
+      form.step = form.invalid_step
+      @state = :report
+      return
+    end
+
+    # That's all until the last step is reached.
+
+    return step == :post
+  end
 
 end
 
