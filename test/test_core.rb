@@ -1040,7 +1040,7 @@ describe FormInput do
     f.url_query.should == "q=%FF"
   end
 
-  should 'make it easy to extend URLs' do
+  should 'make it easy to create URLs' do
     f = TestForm.new( query: "x", opts: [ 0, 0, 1 ], on: { 0 => 1 }, age: 10, email: nil, password: "", text: " " )
     f.url_params.should == { q: "x", age: "10", text: " ", opts: [ "0", "0", "1" ], on: { "0" => "1" } }
     f.url_query.should == "q=x&age=10&text=+&opts[]=0&opts[]=0&opts[]=1&on[0]=1"
@@ -1060,6 +1060,10 @@ describe FormInput do
     f.extend_url( "/foo?x" ).should == "/foo?x"
     f.extend_url( URI.parse( "/foo" ) ).should == "/foo"
     f.extend_url( URI.parse( "/foo?x" ) ).should == "/foo?x"
+
+    f.build_url( "/" ).should == "/"
+    f.build_url( "/foo", query: "x" ).should == "/foo?q=x"
+    f.build_url( "/foo?x", query: "x", age: 42 ).should == "/foo?x&q=x&age=42"
   end
 
   should 'provide useful error detecting and reporting methods' do

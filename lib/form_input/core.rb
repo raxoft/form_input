@@ -1079,7 +1079,7 @@ class FormInput
     Rack::Utils.build_nested_query( url_params )
   end
 
-  # Extend given url with query created from all current non-empty parameters.
+  # Extend given URL with query created from all current non-empty parameters.
   def extend_url( url )
     url = url.to_s.dup
     query = url_query
@@ -1087,6 +1087,11 @@ class FormInput
       url << ( url['?'] ? '&' : '?' ) << query
     end
     url
+  end
+
+  # Build URL from given URL and combination of current paramaters and provided parameters.
+  def build_url( url, args = {} )
+    dup.set( args ).extend_url( url )
   end
 
   # Validation.
