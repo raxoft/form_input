@@ -284,6 +284,7 @@ describe FormInput do
     p.pt[ :inflected_msg ].should == 'Singular'
     p.pt.inflected_msg( p ).should == 'Plural'
     p.pt[ :inflected_msg, p ].should == 'Plural'
+    p.pt[ :inflected_msg, p.inflection ].should == 'Plural'
     # This form adds the parameter context automatically.
     p.pt( :inflected_msg ).should == 'Plural'
   end

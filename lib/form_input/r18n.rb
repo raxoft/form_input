@@ -132,8 +132,11 @@ class FormInput
 
   # Define our inflection filter.
   R18n::Filters.add( 'inflect', :inflection ) do |translations, config, *params|
-    if param = params.last and param.is_a?( Parameter )
-      inflection = param.inflection
+    inflection = case param = params.last
+    when Parameter
+      param.inflection
+    when String
+      param
     end
     inflection ||= 'sn'
     text = FormInput.find_inflection( inflection ) do |i|
