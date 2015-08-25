@@ -198,8 +198,6 @@ describe FormInput do
       File.open( file, read ? "r" : "w" ) do |file|
         each_error_message( limits ) do |code, limits|
           for inflection, name in inflections
-            plural_only = code.to_s =~ /array|hash|key|count|element/
-            next if plural_only and inflection =~ /^s/
             for limit in limits || [ nil ]
               text = p.format_error_message( code, *limit )
               if read

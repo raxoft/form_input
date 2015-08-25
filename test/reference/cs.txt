@@ -6,14 +6,26 @@ Znaky jsou povinné
 Autoři jsou povinní
 Poznámky jsou povinné
 Slova jsou povinná
+Stát je povinný
+Autor je povinný
+Adresa je povinná
+Jméno je povinné
 Znaky jsou povinné
 Autoři jsou povinní
 Poznámky jsou povinné
 Slova jsou povinná
+Stát není pole
+Autor není pole
+Adresa není pole
+Jméno není pole
 Znaky nejsou pole
 Autoři nejsou pole
 Poznámky nejsou pole
 Slova nejsou pole
+Stát není hash
+Autor není hash
+Adresa není hash
+Jméno není hash
 Znaky nejsou hash
 Autoři nejsou hash
 Poznámky nejsou hash
@@ -26,22 +38,54 @@ Znaky nejsou řetězec
 Autoři nejsou řetězec
 Poznámky nejsou řetězec
 Slova nejsou řetězec
+Stát obsahuje neplatný klíč
+Autor obsahuje neplatný klíč
+Adresa obsahuje neplatný klíč
+Jméno obsahuje neplatný klíč
 Znaky obsahují neplatný klíč
 Autoři obsahují neplatný klíč
 Poznámky obsahují neplatný klíč
 Slova obsahují neplatný klíč
+Stát obsahuje neplatný klíč
+Autor obsahuje neplatný klíč
+Adresa obsahuje neplatný klíč
+Jméno obsahuje neplatný klíč
 Znaky obsahují neplatný klíč
 Autoři obsahují neplatný klíč
 Poznámky obsahují neplatný klíč
 Slova obsahují neplatný klíč
+Stát obsahuje příliš malý klíč
+Autor obsahuje příliš malý klíč
+Adresa obsahuje příliš malý klíč
+Jméno obsahuje příliš malý klíč
 Znaky obsahují příliš malý klíč
 Autoři obsahují příliš malý klíč
 Poznámky obsahují příliš malý klíč
 Slova obsahují příliš malý klíč
+Stát obsahuje příliš velký klíč
+Autor obsahuje příliš velký klíč
+Adresa obsahuje příliš velký klíč
+Jméno obsahuje příliš velký klíč
 Znaky obsahují příliš velký klíč
 Autoři obsahují příliš velký klíč
 Poznámky obsahují příliš velký klíč
 Slova obsahují příliš velký klíč
+Stát musí mít nejméně 0 prvků
+Stát musí mít nejméně 1 prvek
+Stát musí mít nejméně 2 prvky
+Stát musí mít nejméně 5 prvků
+Autor musí mít nejméně 0 prvků
+Autor musí mít nejméně 1 prvek
+Autor musí mít nejméně 2 prvky
+Autor musí mít nejméně 5 prvků
+Adresa musí mít nejméně 0 prvků
+Adresa musí mít nejméně 1 prvek
+Adresa musí mít nejméně 2 prvky
+Adresa musí mít nejméně 5 prvků
+Jméno musí mít nejméně 0 prvků
+Jméno musí mít nejméně 1 prvek
+Jméno musí mít nejméně 2 prvky
+Jméno musí mít nejméně 5 prvků
 Znaky musí mít nejméně 0 prvků
 Znaky musí mít nejméně 1 prvek
 Znaky musí mít nejméně 2 prvky
@@ -58,6 +102,18 @@ Slova musí mít nejméně 0 prvků
 Slova musí mít nejméně 1 prvek
 Slova musí mít nejméně 2 prvky
 Slova musí mít nejméně 5 prvků
+Stát smí mít nejvíce 1 prvek
+Stát smí mít nejvíce 2 prvky
+Stát smí mít nejvíce 5 prvků
+Autor smí mít nejvíce 1 prvek
+Autor smí mít nejvíce 2 prvky
+Autor smí mít nejvíce 5 prvků
+Adresa smí mít nejvíce 1 prvek
+Adresa smí mít nejvíce 2 prvky
+Adresa smí mít nejvíce 5 prvků
+Jméno smí mít nejvíce 1 prvek
+Jméno smí mít nejvíce 2 prvky
+Jméno smí mít nejvíce 5 prvků
 Znaky smí mít nejvíce 1 prvek
 Znaky smí mít nejvíce 2 prvky
 Znaky smí mít nejvíce 5 prvků
@@ -78,6 +134,10 @@ Znaky musí mít správný formát
 Autoři musí mít správný formát
 Poznámky musí mít správný formát
 Slova musí mít správný formát
+Stát obsahuje neplatnou hodnotu
+Autor obsahuje neplatnou hodnotu
+Adresa obsahuje neplatnou hodnotu
+Jméno obsahuje neplatnou hodnotu
 Znaky obsahují neplatnou hodnotu
 Autoři obsahují neplatnou hodnotu
 Poznámky obsahují neplatnou hodnotu

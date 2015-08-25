@@ -1,7 +1,6 @@
 # Form input English messages.
 #
-# Supports singular and plural inflection for scalar parameters.
-# Expects plural number for array and hash parameters.
+# Supports singular and plural inflection for all messages.
 # All parameter names are assumed to use the nominative case.
 
 form_input:
@@ -9,22 +8,38 @@ form_input:
     required_scalar: !!inflect
       s: '%p is required'
       p: '%p are required'
-    required_array: '%p are required'
-    not_array: '%p are not an array'
-    not_hash: '%p are not a hash'
+    required_array: !!inflect
+      s: '%p is required'
+      p: '%p are required'
+    not_array: !!inflect
+      s: '%p is not an array'
+      p: '%p are not an array'
+    not_hash: !!inflect
+      s: '%p is not a hash'
+      p: '%p are not a hash'
     not_string: !!inflect
       s: '%p is not a string'
       p: '%p are not a string'
-    match_key: '%p contain invalid key'
-    invalid_key: '%p contain invalid key'
-    min_key: '%p contain too small key'
-    max_key: '%p contain too large key'
+    match_key: !!inflect
+      s: '%p contains invalid key'
+      p: '%p contain invalid key'
+    invalid_key: !!inflect
+      s: '%p contains invalid key'
+      p: '%p contain invalid key'
+    min_key: !!inflect
+      s: '%p contains too small key'
+      p: '%p contain too small key'
+    max_key: !!inflect
+      s: '%p contains too large key'
+      p: '%p contain too large key'
     min_count: '%p must have at least %1'
     max_count: '%p may have at most %1'
     value_type: !!inflect
       s: '%p like this is not valid'
       p: '%p like these are not valid'
-    element_type: '%p contain invalid value'
+    element_type: !!inflect
+      s: '%p contains invalid value'
+      p: '%p contain invalid value'
     min_limit: '%p must be at least %1'
     max_limit: '%p may be at most %1'
     inf_limit: '%p must be greater than %1'

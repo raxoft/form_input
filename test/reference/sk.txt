@@ -6,14 +6,26 @@ Znaky sú povinné
 Autori sú povinní
 Poznámky sú povinné
 Slová sú povinné
+Štát je povinný
+Autor je povinný
+Adresa je povinná
+Meno je povinné
 Znaky sú povinné
 Autori sú povinní
 Poznámky sú povinné
 Slová sú povinné
+Štát nie je polia
+Autor nie je polia
+Adresa nie je polia
+Meno nie je polia
 Znaky nie sú polia
 Autori nie sú polia
 Poznámky nie sú polia
 Slová nie sú polia
+Štát nie je hash
+Autor nie je hash
+Adresa nie je hash
+Meno nie je hash
 Znaky nie sú hash
 Autori nie sú hash
 Poznámky nie sú hash
@@ -26,22 +38,54 @@ Znaky nie sú reťazce
 Autori nie sú reťazce
 Poznámky nie sú reťazce
 Slová nie sú reťazce
+Štát obsahuje neplatný kľúč
+Autor obsahuje neplatný kľúč
+Adresa obsahuje neplatný kľúč
+Meno obsahuje neplatný kľúč
 Znaky obsahujú neplatný kľúč
 Autori obsahujú neplatný kľúč
 Poznámky obsahujú neplatný kľúč
 Slová obsahujú neplatný kľúč
+Štát obsahuje neplatný kľúč
+Autor obsahuje neplatný kľúč
+Adresa obsahuje neplatný kľúč
+Meno obsahuje neplatný kľúč
 Znaky obsahujú neplatný kľúč
 Autori obsahujú neplatný kľúč
 Poznámky obsahujú neplatný kľúč
 Slová obsahujú neplatný kľúč
+Štát obsahuje príliš malý kľúč
+Autor obsahuje príliš malý kľúč
+Adresa obsahuje príliš malý kľúč
+Meno obsahuje príliš malý kľúč
 Znaky obsahujú príliš malý kľúč
 Autori obsahujú príliš malý kľúč
 Poznámky obsahujú príliš malý kľúč
 Slová obsahujú príliš malý kľúč
+Štát obsahuje príliš veľký kľúč
+Autor obsahuje príliš veľký kľúč
+Adresa obsahuje príliš veľký kľúč
+Meno obsahuje príliš veľký kľúč
 Znaky obsahujú príliš veľký kľúč
 Autori obsahujú príliš veľký kľúč
 Poznámky obsahujú príliš veľký kľúč
 Slová obsahujú príliš veľký kľúč
+Štát musí mať najmenej 0 prvkov
+Štát musí mať najmenej 1 prvok
+Štát musí mať najmenej 2 prvky
+Štát musí mať najmenej 5 prvkov
+Autor musí mať najmenej 0 prvkov
+Autor musí mať najmenej 1 prvok
+Autor musí mať najmenej 2 prvky
+Autor musí mať najmenej 5 prvkov
+Adresa musí mať najmenej 0 prvkov
+Adresa musí mať najmenej 1 prvok
+Adresa musí mať najmenej 2 prvky
+Adresa musí mať najmenej 5 prvkov
+Meno musí mať najmenej 0 prvkov
+Meno musí mať najmenej 1 prvok
+Meno musí mať najmenej 2 prvky
+Meno musí mať najmenej 5 prvkov
 Znaky musia mať najmenej 0 prvkov
 Znaky musia mať najmenej 1 prvok
 Znaky musia mať najmenej 2 prvky
@@ -58,6 +102,18 @@ Slová musia mať najmenej 0 prvkov
 Slová musia mať najmenej 1 prvok
 Slová musia mať najmenej 2 prvky
 Slová musia mať najmenej 5 prvkov
+Štát smie mať najviac 1 prvok
+Štát smie mať najviac 2 prvky
+Štát smie mať najviac 5 prvkov
+Autor smie mať najviac 1 prvok
+Autor smie mať najviac 2 prvky
+Autor smie mať najviac 5 prvkov
+Adresa smie mať najviac 1 prvok
+Adresa smie mať najviac 2 prvky
+Adresa smie mať najviac 5 prvkov
+Meno smie mať najviac 1 prvok
+Meno smie mať najviac 2 prvky
+Meno smie mať najviac 5 prvkov
 Znaky smú mať najviac 1 prvok
 Znaky smú mať najviac 2 prvky
 Znaky smú mať najviac 5 prvkov
@@ -78,6 +134,10 @@ Znaky musia mať správný formát
 Autori musia mať správný formát
 Poznámky musia mať správný formát
 Slová musia mať správný formát
+Štát obsahuje neplatnú hodnotu
+Autor obsahuje neplatnú hodnotu
+Adresa obsahuje neplatnú hodnotu
+Meno obsahuje neplatnú hodnotu
 Znaky obsahujú neplatnú hodnotu
 Autori obsahujú neplatnú hodnotu
 Poznámky obsahujú neplatnú hodnotu

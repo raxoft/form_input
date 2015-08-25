@@ -2,7 +2,6 @@
 #
 # Supports singular and plural numbers and masculine, feminine, and neuter genders,
 # including animate and inanimate masculine gender. Nominative case is assumed.
-# Expects plural number for hash and array parameters for simplicity.
 #
 # Inflection classes supported are (standard declension paradigms included for reference):
 #
@@ -32,21 +31,39 @@ form_input:
       sn: '%p je povinné'
       p: '%p sú povinné'
       pma: '%p sú povinní'
-    not_array: '%p nie sú polia'
-    not_hash: '%p nie sú hash'
+    not_array: !!inflect
+      s: '%p nie je polia'
+      p: '%p nie sú polia'
+    not_hash: !!inflect
+      s: '%p nie je hash'
+      p: '%p nie sú hash'
     not_string: !!inflect
       s: '%p nie je reťazec'
       p: '%p nie sú reťazce'
-    match_key: '%p obsahujú neplatný kľúč'
-    invalid_key: '%p obsahujú neplatný kľúč'
-    min_key: '%p obsahujú príliš malý kľúč'
-    max_key: '%p obsahujú príliš veľký kľúč'
-    min_count: '%p musia mať najmenej %1'
-    max_count: '%p smú mať najviac %1'
+    match_key: !!inflect
+      s: '%p obsahuje neplatný kľúč'
+      p: '%p obsahujú neplatný kľúč'
+    invalid_key: !!inflect
+      s: '%p obsahuje neplatný kľúč'
+      p: '%p obsahujú neplatný kľúč'
+    min_key: !!inflect
+      s: '%p obsahuje príliš malý kľúč'
+      p: '%p obsahujú príliš malý kľúč'
+    max_key: !!inflect
+      s: '%p obsahuje príliš veľký kľúč'
+      p: '%p obsahujú príliš veľký kľúč'
+    min_count: !!inflect
+      s: '%p musí mať najmenej %1'
+      p: '%p musia mať najmenej %1'
+    max_count: !!inflect
+      s: '%p smie mať najviac %1'
+      p: '%p smú mať najviac %1'
     value_type: !!inflect
       s: '%p musí mať správný formát'
       p: '%p musia mať správný formát'
-    element_type: '%p obsahujú neplatnú hodnotu'
+    element_type: !!inflect
+      s: '%p obsahuje neplatnú hodnotu'
+      p: '%p obsahujú neplatnú hodnotu'
     min_limit: !!inflect
       s: '%p musí byť najmenej %1'
       p: '%p musia byť najmenej %1'

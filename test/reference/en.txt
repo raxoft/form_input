@@ -1,21 +1,34 @@
 Query is required
 Keywords are required
+Query is required
 Keywords are required
+Query is not an array
 Keywords are not an array
+Query is not a hash
 Keywords are not a hash
 Query is not a string
 Keywords are not a string
+Query contains invalid key
 Keywords contain invalid key
+Query contains invalid key
 Keywords contain invalid key
+Query contains too small key
 Keywords contain too small key
+Query contains too large key
 Keywords contain too large key
+Query must have at least 0 elements
+Query must have at least 1 element
+Query must have at least 5 elements
 Keywords must have at least 0 elements
 Keywords must have at least 1 element
 Keywords must have at least 5 elements
+Query may have at most 1 element
+Query may have at most 5 elements
 Keywords may have at most 1 element
 Keywords may have at most 5 elements
 Query like this is not valid
 Keywords like these are not valid
+Query contains invalid value
 Keywords contain invalid value
 Query must be at least 0
 Query must be at least 10
