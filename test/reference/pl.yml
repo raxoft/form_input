@@ -1,0 +1,16 @@
+# Polish inflections to test.
+
+smp: Autor
+sma: Pies
+smi: Komputer
+sf: Kobieta
+sn: Piwo
+pmp: Autorzy
+pma: Psy
+pmi: Komputery
+pf: Kobiety
+pn: Piwa
+
+limits: [ 0, 1, 2, 5 ]
+
+# EOF #

@@ -1,0 +1,122 @@
+# Form input Polish messages.
+#
+# Supports singular and plural numbers and masculine, feminine, and neuter genders,
+# including personal, animate, and inanimate masculine gender. Nominative case is assumed.
+#
+# Inflection classes supported are (some declension templates included for reference):
+#
+#   smp: Chłopak Rolnik Krzyś Facet Inżynier
+#   sma: Kot Pies
+#   smi or sm: Komputer Stół
+#   sf: Dziewczyna Kobieta Mrówka Kawa Krowa Kasia Komedia Miłość Wysokość
+#   sn: Piwo Krzesło Ciastko Dziecko Oko Ucho Spotkanie
+#   pmp: Chłopaki Rolnicy Krzysie Faceci Inżynierzy
+#   pma: Koty Psy
+#   pmi or pm: Komputery Stoły
+#   pf: Dziewczyny Kobiety Mrówki Kawy Krowy Kasie Komedie Miłości Wysokości
+#   pn: Piwa Krzesła Ciastka Dzieci Oczy Uszy Spotkania
+#
+# Note that when exact match is not found, longest prefix match applies (e.g., pma->pm->p is tried in turn).
+
+form_input:
+  default_gender: mi # For 'Parametr x'
+  errors:
+    required_scalar: !!inflect
+      sm: '%p jest wymagany'
+      sf: '%p jest wymagana'
+      sn: '%p jest wymagane'
+      pmp: '%p są wymagani'
+      p: '%p są wymagane'
+    required_array: !!inflect
+      sm: '%p jest wymagany'
+      sf: '%p jest wymagana'
+      sn: '%p jest wymagane'
+      pmp: '%p są wymagani'
+      p: '%p są wymagane'
+    not_array: !!inflect
+      s: '%p nie jest tablicą'
+      p: '%p nie są tablicami'
+    not_hash: !!inflect
+      s: '%p nie jest hashem'
+      p: '%p nie są hashami'
+    not_string: !!inflect
+      s: '%p nie jest ciągiem znaków'
+      p: '%p nie są ciągiem znaków'
+    match_key: !!inflect
+      s: '%p zawiera nieprawidłowy klucz'
+      p: '%p zawierają nieprawidłowy klucz'
+    invalid_key: !!inflect
+      s: '%p zawiera nieprawidłowy klucz'
+      p: '%p zawierają nieprawidłowy klucz'
+    min_key: !!inflect
+      s: '%p zawiera za mały klucz'
+      p: '%p zawierają za mały klucz'
+    max_key: !!inflect
+      s: '%p zawiera za duży klucz'
+      p: '%p zawierają za duży klucz'
+    min_count: !!inflect
+      s: '%p musi mieć conajmniej %1'
+      p: '%p muszą mieć conajmniej %1'
+    max_count: !!inflect
+      s: '%p musi mieć maksymalnie %1'
+      p: '%p muszą mieć maksymalnie %1'
+    value_type: !!inflect
+      s: '%p musi mieć poprawny format'
+      p: '%p muszą mieć poprawny format'
+    element_type: !!inflect
+      s: '%p zawiera nieprawidłową wartość'
+      p: '%p zawierają nieprawidłową wartość'
+    min_limit: !!inflect
+      s: '%p musi wynosić conajmniej %1'
+      p: '%p muszą wynosić conajmniej %1'
+    max_limit: !!inflect
+      s: '%p musi wynosić maksymalnie %1'
+      p: '%p muszą wynosić maksymalnie %1'
+    inf_limit: !!inflect
+      s: '%p musi wynosić więcej niż %1'
+      p: '%p muszą wynosić więcej niż %1'
+    sup_limit: !!inflect
+      s: '%p musi wynosić mniej niż %1'
+      p: '%p muszą wynosić mniej niż %1'
+    invalid_encoding: !!inflect
+      s: '%p musi używać poprawnego kodowania'
+      p: '%p muszą używać poprawnego kodowania'
+    invalid_characters: !!inflect
+      s: '%p nie może zawierać zabronionych znaków'
+      p: '%p nie mogą zawierać zabronionych znaków'
+    min_size: !!inflect
+      s: '%p musi mieć przynajmniej %1'
+      p: '%p muszą mieć przynajmniej %1'
+    max_size: !!inflect
+      s: '%p musi mieć maksymalnie %1'
+      p: '%p muszą mieć maksymalnie %1'
+    min_bytesize: !!inflect
+      s: '%p musi mieć przynajmniej %1'
+      p: '%p muszą mieć przynajmniej %1'
+    max_bytesize: !!inflect
+      s: '%p musi mieć maksymalnie %1'
+      p: '%p muszą mieć maksymalnie %1'
+    reject_msg: !!inflect
+      sm: '%p w tej postaci nie jest poprawny'
+      sf: '%p w tej postaci nie jest poprawna'
+      sn: '%p w tej postaci nie jest poprawne'
+      pmp: '%p w tej postaci nie są poprawni'
+      p: '%p w tej postaci nie są poprawne'
+    match_msg: !!inflect
+      s: '%p nie jest w poprawnej formie'
+      p: '%p nie są w poprawnej formie'
+  units:
+    byte: !!pl
+      1: '%1 bajt'
+      2: '%1 bajty'
+      n: '%1 bajtów'
+    character: !!pl
+      1: '%1 znak'
+      2: '%1 znaki'
+      n: '%1 znaków'
+    element: !!pl
+      1: '%1 element'
+      2: '%1 elementy'
+      n: '%1 elementów'
+
+# EOF #

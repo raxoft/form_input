@@ -1,0 +1,440 @@
+Autor jest wymagany
+Pies jest wymagany
+Komputer jest wymagany
+Kobieta jest wymagana
+Piwo jest wymagane
+Autorzy są wymagani
+Psy są wymagane
+Komputery są wymagane
+Kobiety są wymagane
+Piwa są wymagane
+Autor jest wymagany
+Pies jest wymagany
+Komputer jest wymagany
+Kobieta jest wymagana
+Piwo jest wymagane
+Autorzy są wymagani
+Psy są wymagane
+Komputery są wymagane
+Kobiety są wymagane
+Piwa są wymagane
+Autor nie jest tablicą
+Pies nie jest tablicą
+Komputer nie jest tablicą
+Kobieta nie jest tablicą
+Piwo nie jest tablicą
+Autorzy nie są tablicami
+Psy nie są tablicami
+Komputery nie są tablicami
+Kobiety nie są tablicami
+Piwa nie są tablicami
+Autor nie jest hashem
+Pies nie jest hashem
+Komputer nie jest hashem
+Kobieta nie jest hashem
+Piwo nie jest hashem
+Autorzy nie są hashami
+Psy nie są hashami
+Komputery nie są hashami
+Kobiety nie są hashami
+Piwa nie są hashami
+Autor nie jest ciągiem znaków
+Pies nie jest ciągiem znaków
+Komputer nie jest ciągiem znaków
+Kobieta nie jest ciągiem znaków
+Piwo nie jest ciągiem znaków
+Autorzy nie są ciągiem znaków
+Psy nie są ciągiem znaków
+Komputery nie są ciągiem znaków
+Kobiety nie są ciągiem znaków
+Piwa nie są ciągiem znaków
+Autor zawiera nieprawidłowy klucz
+Pies zawiera nieprawidłowy klucz
+Komputer zawiera nieprawidłowy klucz
+Kobieta zawiera nieprawidłowy klucz
+Piwo zawiera nieprawidłowy klucz
+Autorzy zawierają nieprawidłowy klucz
+Psy zawierają nieprawidłowy klucz
+Komputery zawierają nieprawidłowy klucz
+Kobiety zawierają nieprawidłowy klucz
+Piwa zawierają nieprawidłowy klucz
+Autor zawiera nieprawidłowy klucz
+Pies zawiera nieprawidłowy klucz
+Komputer zawiera nieprawidłowy klucz
+Kobieta zawiera nieprawidłowy klucz
+Piwo zawiera nieprawidłowy klucz
+Autorzy zawierają nieprawidłowy klucz
+Psy zawierają nieprawidłowy klucz
+Komputery zawierają nieprawidłowy klucz
+Kobiety zawierają nieprawidłowy klucz
+Piwa zawierają nieprawidłowy klucz
+Autor zawiera za mały klucz
+Pies zawiera za mały klucz
+Komputer zawiera za mały klucz
+Kobieta zawiera za mały klucz
+Piwo zawiera za mały klucz
+Autorzy zawierają za mały klucz
+Psy zawierają za mały klucz
+Komputery zawierają za mały klucz
+Kobiety zawierają za mały klucz
+Piwa zawierają za mały klucz
+Autor zawiera za duży klucz
+Pies zawiera za duży klucz
+Komputer zawiera za duży klucz
+Kobieta zawiera za duży klucz
+Piwo zawiera za duży klucz
+Autorzy zawierają za duży klucz
+Psy zawierają za duży klucz
+Komputery zawierają za duży klucz
+Kobiety zawierają za duży klucz
+Piwa zawierają za duży klucz
+Autor musi mieć conajmniej 0 elementów
+Autor musi mieć conajmniej 1 element
+Autor musi mieć conajmniej 2 elementy
+Autor musi mieć conajmniej 5 elementów
+Pies musi mieć conajmniej 0 elementów
+Pies musi mieć conajmniej 1 element
+Pies musi mieć conajmniej 2 elementy
+Pies musi mieć conajmniej 5 elementów
+Komputer musi mieć conajmniej 0 elementów
+Komputer musi mieć conajmniej 1 element
+Komputer musi mieć conajmniej 2 elementy
+Komputer musi mieć conajmniej 5 elementów
+Kobieta musi mieć conajmniej 0 elementów
+Kobieta musi mieć conajmniej 1 element
+Kobieta musi mieć conajmniej 2 elementy
+Kobieta musi mieć conajmniej 5 elementów
+Piwo musi mieć conajmniej 0 elementów
+Piwo musi mieć conajmniej 1 element
+Piwo musi mieć conajmniej 2 elementy
+Piwo musi mieć conajmniej 5 elementów
+Autorzy muszą mieć conajmniej 0 elementów
+Autorzy muszą mieć conajmniej 1 element
+Autorzy muszą mieć conajmniej 2 elementy
+Autorzy muszą mieć conajmniej 5 elementów
+Psy muszą mieć conajmniej 0 elementów
+Psy muszą mieć conajmniej 1 element
+Psy muszą mieć conajmniej 2 elementy
+Psy muszą mieć conajmniej 5 elementów
+Komputery muszą mieć conajmniej 0 elementów
+Komputery muszą mieć conajmniej 1 element
+Komputery muszą mieć conajmniej 2 elementy
+Komputery muszą mieć conajmniej 5 elementów
+Kobiety muszą mieć conajmniej 0 elementów
+Kobiety muszą mieć conajmniej 1 element
+Kobiety muszą mieć conajmniej 2 elementy
+Kobiety muszą mieć conajmniej 5 elementów
+Piwa muszą mieć conajmniej 0 elementów
+Piwa muszą mieć conajmniej 1 element
+Piwa muszą mieć conajmniej 2 elementy
+Piwa muszą mieć conajmniej 5 elementów
+Autor musi mieć maksymalnie 1 element
+Autor musi mieć maksymalnie 2 elementy
+Autor musi mieć maksymalnie 5 elementów
+Pies musi mieć maksymalnie 1 element
+Pies musi mieć maksymalnie 2 elementy
+Pies musi mieć maksymalnie 5 elementów
+Komputer musi mieć maksymalnie 1 element
+Komputer musi mieć maksymalnie 2 elementy
+Komputer musi mieć maksymalnie 5 elementów
+Kobieta musi mieć maksymalnie 1 element
+Kobieta musi mieć maksymalnie 2 elementy
+Kobieta musi mieć maksymalnie 5 elementów
+Piwo musi mieć maksymalnie 1 element
+Piwo musi mieć maksymalnie 2 elementy
+Piwo musi mieć maksymalnie 5 elementów
+Autorzy muszą mieć maksymalnie 1 element
+Autorzy muszą mieć maksymalnie 2 elementy
+Autorzy muszą mieć maksymalnie 5 elementów
+Psy muszą mieć maksymalnie 1 element
+Psy muszą mieć maksymalnie 2 elementy
+Psy muszą mieć maksymalnie 5 elementów
+Komputery muszą mieć maksymalnie 1 element
+Komputery muszą mieć maksymalnie 2 elementy
+Komputery muszą mieć maksymalnie 5 elementów
+Kobiety muszą mieć maksymalnie 1 element
+Kobiety muszą mieć maksymalnie 2 elementy
+Kobiety muszą mieć maksymalnie 5 elementów
+Piwa muszą mieć maksymalnie 1 element
+Piwa muszą mieć maksymalnie 2 elementy
+Piwa muszą mieć maksymalnie 5 elementów
+Autor musi mieć poprawny format
+Pies musi mieć poprawny format
+Komputer musi mieć poprawny format
+Kobieta musi mieć poprawny format
+Piwo musi mieć poprawny format
+Autorzy muszą mieć poprawny format
+Psy muszą mieć poprawny format
+Komputery muszą mieć poprawny format
+Kobiety muszą mieć poprawny format
+Piwa muszą mieć poprawny format
+Autor zawiera nieprawidłową wartość
+Pies zawiera nieprawidłową wartość
+Komputer zawiera nieprawidłową wartość
+Kobieta zawiera nieprawidłową wartość
+Piwo zawiera nieprawidłową wartość
+Autorzy zawierają nieprawidłową wartość
+Psy zawierają nieprawidłową wartość
+Komputery zawierają nieprawidłową wartość
+Kobiety zawierają nieprawidłową wartość
+Piwa zawierają nieprawidłową wartość
+Autor musi wynosić conajmniej 0
+Autor musi wynosić conajmniej 10
+Pies musi wynosić conajmniej 0
+Pies musi wynosić conajmniej 10
+Komputer musi wynosić conajmniej 0
+Komputer musi wynosić conajmniej 10
+Kobieta musi wynosić conajmniej 0
+Kobieta musi wynosić conajmniej 10
+Piwo musi wynosić conajmniej 0
+Piwo musi wynosić conajmniej 10
+Autorzy muszą wynosić conajmniej 0
+Autorzy muszą wynosić conajmniej 10
+Psy muszą wynosić conajmniej 0
+Psy muszą wynosić conajmniej 10
+Komputery muszą wynosić conajmniej 0
+Komputery muszą wynosić conajmniej 10
+Kobiety muszą wynosić conajmniej 0
+Kobiety muszą wynosić conajmniej 10
+Piwa muszą wynosić conajmniej 0
+Piwa muszą wynosić conajmniej 10
+Autor musi wynosić maksymalnie 1
+Autor musi wynosić maksymalnie 100
+Pies musi wynosić maksymalnie 1
+Pies musi wynosić maksymalnie 100
+Komputer musi wynosić maksymalnie 1
+Komputer musi wynosić maksymalnie 100
+Kobieta musi wynosić maksymalnie 1
+Kobieta musi wynosić maksymalnie 100
+Piwo musi wynosić maksymalnie 1
+Piwo musi wynosić maksymalnie 100
+Autorzy muszą wynosić maksymalnie 1
+Autorzy muszą wynosić maksymalnie 100
+Psy muszą wynosić maksymalnie 1
+Psy muszą wynosić maksymalnie 100
+Komputery muszą wynosić maksymalnie 1
+Komputery muszą wynosić maksymalnie 100
+Kobiety muszą wynosić maksymalnie 1
+Kobiety muszą wynosić maksymalnie 100
+Piwa muszą wynosić maksymalnie 1
+Piwa muszą wynosić maksymalnie 100
+Autor musi wynosić więcej niż 0
+Autor musi wynosić więcej niż 10
+Pies musi wynosić więcej niż 0
+Pies musi wynosić więcej niż 10
+Komputer musi wynosić więcej niż 0
+Komputer musi wynosić więcej niż 10
+Kobieta musi wynosić więcej niż 0
+Kobieta musi wynosić więcej niż 10
+Piwo musi wynosić więcej niż 0
+Piwo musi wynosić więcej niż 10
+Autorzy muszą wynosić więcej niż 0
+Autorzy muszą wynosić więcej niż 10
+Psy muszą wynosić więcej niż 0
+Psy muszą wynosić więcej niż 10
+Komputery muszą wynosić więcej niż 0
+Komputery muszą wynosić więcej niż 10
+Kobiety muszą wynosić więcej niż 0
+Kobiety muszą wynosić więcej niż 10
+Piwa muszą wynosić więcej niż 0
+Piwa muszą wynosić więcej niż 10
+Autor musi wynosić mniej niż 1
+Autor musi wynosić mniej niż 100
+Pies musi wynosić mniej niż 1
+Pies musi wynosić mniej niż 100
+Komputer musi wynosić mniej niż 1
+Komputer musi wynosić mniej niż 100
+Kobieta musi wynosić mniej niż 1
+Kobieta musi wynosić mniej niż 100
+Piwo musi wynosić mniej niż 1
+Piwo musi wynosić mniej niż 100
+Autorzy muszą wynosić mniej niż 1
+Autorzy muszą wynosić mniej niż 100
+Psy muszą wynosić mniej niż 1
+Psy muszą wynosić mniej niż 100
+Komputery muszą wynosić mniej niż 1
+Komputery muszą wynosić mniej niż 100
+Kobiety muszą wynosić mniej niż 1
+Kobiety muszą wynosić mniej niż 100
+Piwa muszą wynosić mniej niż 1
+Piwa muszą wynosić mniej niż 100
+Autor musi używać poprawnego kodowania
+Pies musi używać poprawnego kodowania
+Komputer musi używać poprawnego kodowania
+Kobieta musi używać poprawnego kodowania
+Piwo musi używać poprawnego kodowania
+Autorzy muszą używać poprawnego kodowania
+Psy muszą używać poprawnego kodowania
+Komputery muszą używać poprawnego kodowania
+Kobiety muszą używać poprawnego kodowania
+Piwa muszą używać poprawnego kodowania
+Autor nie może zawierać zabronionych znaków
+Pies nie może zawierać zabronionych znaków
+Komputer nie może zawierać zabronionych znaków
+Kobieta nie może zawierać zabronionych znaków
+Piwo nie może zawierać zabronionych znaków
+Autorzy nie mogą zawierać zabronionych znaków
+Psy nie mogą zawierać zabronionych znaków
+Komputery nie mogą zawierać zabronionych znaków
+Kobiety nie mogą zawierać zabronionych znaków
+Piwa nie mogą zawierać zabronionych znaków
+Autor musi mieć przynajmniej 0 znaków
+Autor musi mieć przynajmniej 1 znak
+Autor musi mieć przynajmniej 2 znaki
+Autor musi mieć przynajmniej 5 znaków
+Pies musi mieć przynajmniej 0 znaków
+Pies musi mieć przynajmniej 1 znak
+Pies musi mieć przynajmniej 2 znaki
+Pies musi mieć przynajmniej 5 znaków
+Komputer musi mieć przynajmniej 0 znaków
+Komputer musi mieć przynajmniej 1 znak
+Komputer musi mieć przynajmniej 2 znaki
+Komputer musi mieć przynajmniej 5 znaków
+Kobieta musi mieć przynajmniej 0 znaków
+Kobieta musi mieć przynajmniej 1 znak
+Kobieta musi mieć przynajmniej 2 znaki
+Kobieta musi mieć przynajmniej 5 znaków
+Piwo musi mieć przynajmniej 0 znaków
+Piwo musi mieć przynajmniej 1 znak
+Piwo musi mieć przynajmniej 2 znaki
+Piwo musi mieć przynajmniej 5 znaków
+Autorzy muszą mieć przynajmniej 0 znaków
+Autorzy muszą mieć przynajmniej 1 znak
+Autorzy muszą mieć przynajmniej 2 znaki
+Autorzy muszą mieć przynajmniej 5 znaków
+Psy muszą mieć przynajmniej 0 znaków
+Psy muszą mieć przynajmniej 1 znak
+Psy muszą mieć przynajmniej 2 znaki
+Psy muszą mieć przynajmniej 5 znaków
+Komputery muszą mieć przynajmniej 0 znaków
+Komputery muszą mieć przynajmniej 1 znak
+Komputery muszą mieć przynajmniej 2 znaki
+Komputery muszą mieć przynajmniej 5 znaków
+Kobiety muszą mieć przynajmniej 0 znaków
+Kobiety muszą mieć przynajmniej 1 znak
+Kobiety muszą mieć przynajmniej 2 znaki
+Kobiety muszą mieć przynajmniej 5 znaków
+Piwa muszą mieć przynajmniej 0 znaków
+Piwa muszą mieć przynajmniej 1 znak
+Piwa muszą mieć przynajmniej 2 znaki
+Piwa muszą mieć przynajmniej 5 znaków
+Autor musi mieć maksymalnie 1 znak
+Autor musi mieć maksymalnie 2 znaki
+Autor musi mieć maksymalnie 5 znaków
+Pies musi mieć maksymalnie 1 znak
+Pies musi mieć maksymalnie 2 znaki
+Pies musi mieć maksymalnie 5 znaków
+Komputer musi mieć maksymalnie 1 znak
+Komputer musi mieć maksymalnie 2 znaki
+Komputer musi mieć maksymalnie 5 znaków
+Kobieta musi mieć maksymalnie 1 znak
+Kobieta musi mieć maksymalnie 2 znaki
+Kobieta musi mieć maksymalnie 5 znaków
+Piwo musi mieć maksymalnie 1 znak
+Piwo musi mieć maksymalnie 2 znaki
+Piwo musi mieć maksymalnie 5 znaków
+Autorzy muszą mieć maksymalnie 1 znak
+Autorzy muszą mieć maksymalnie 2 znaki
+Autorzy muszą mieć maksymalnie 5 znaków
+Psy muszą mieć maksymalnie 1 znak
+Psy muszą mieć maksymalnie 2 znaki
+Psy muszą mieć maksymalnie 5 znaków
+Komputery muszą mieć maksymalnie 1 znak
+Komputery muszą mieć maksymalnie 2 znaki
+Komputery muszą mieć maksymalnie 5 znaków
+Kobiety muszą mieć maksymalnie 1 znak
+Kobiety muszą mieć maksymalnie 2 znaki
+Kobiety muszą mieć maksymalnie 5 znaków
+Piwa muszą mieć maksymalnie 1 znak
+Piwa muszą mieć maksymalnie 2 znaki
+Piwa muszą mieć maksymalnie 5 znaków
+Autor musi mieć przynajmniej 0 bajtów
+Autor musi mieć przynajmniej 1 bajt
+Autor musi mieć przynajmniej 2 bajty
+Autor musi mieć przynajmniej 5 bajtów
+Pies musi mieć przynajmniej 0 bajtów
+Pies musi mieć przynajmniej 1 bajt
+Pies musi mieć przynajmniej 2 bajty
+Pies musi mieć przynajmniej 5 bajtów
+Komputer musi mieć przynajmniej 0 bajtów
+Komputer musi mieć przynajmniej 1 bajt
+Komputer musi mieć przynajmniej 2 bajty
+Komputer musi mieć przynajmniej 5 bajtów
+Kobieta musi mieć przynajmniej 0 bajtów
+Kobieta musi mieć przynajmniej 1 bajt
+Kobieta musi mieć przynajmniej 2 bajty
+Kobieta musi mieć przynajmniej 5 bajtów
+Piwo musi mieć przynajmniej 0 bajtów
+Piwo musi mieć przynajmniej 1 bajt
+Piwo musi mieć przynajmniej 2 bajty
+Piwo musi mieć przynajmniej 5 bajtów
+Autorzy muszą mieć przynajmniej 0 bajtów
+Autorzy muszą mieć przynajmniej 1 bajt
+Autorzy muszą mieć przynajmniej 2 bajty
+Autorzy muszą mieć przynajmniej 5 bajtów
+Psy muszą mieć przynajmniej 0 bajtów
+Psy muszą mieć przynajmniej 1 bajt
+Psy muszą mieć przynajmniej 2 bajty
+Psy muszą mieć przynajmniej 5 bajtów
+Komputery muszą mieć przynajmniej 0 bajtów
+Komputery muszą mieć przynajmniej 1 bajt
+Komputery muszą mieć przynajmniej 2 bajty
+Komputery muszą mieć przynajmniej 5 bajtów
+Kobiety muszą mieć przynajmniej 0 bajtów
+Kobiety muszą mieć przynajmniej 1 bajt
+Kobiety muszą mieć przynajmniej 2 bajty
+Kobiety muszą mieć przynajmniej 5 bajtów
+Piwa muszą mieć przynajmniej 0 bajtów
+Piwa muszą mieć przynajmniej 1 bajt
+Piwa muszą mieć przynajmniej 2 bajty
+Piwa muszą mieć przynajmniej 5 bajtów
+Autor musi mieć maksymalnie 1 bajt
+Autor musi mieć maksymalnie 2 bajty
+Autor musi mieć maksymalnie 5 bajtów
+Pies musi mieć maksymalnie 1 bajt
+Pies musi mieć maksymalnie 2 bajty
+Pies musi mieć maksymalnie 5 bajtów
+Komputer musi mieć maksymalnie 1 bajt
+Komputer musi mieć maksymalnie 2 bajty
+Komputer musi mieć maksymalnie 5 bajtów
+Kobieta musi mieć maksymalnie 1 bajt
+Kobieta musi mieć maksymalnie 2 bajty
+Kobieta musi mieć maksymalnie 5 bajtów
+Piwo musi mieć maksymalnie 1 bajt
+Piwo musi mieć maksymalnie 2 bajty
+Piwo musi mieć maksymalnie 5 bajtów
+Autorzy muszą mieć maksymalnie 1 bajt
+Autorzy muszą mieć maksymalnie 2 bajty
+Autorzy muszą mieć maksymalnie 5 bajtów
+Psy muszą mieć maksymalnie 1 bajt
+Psy muszą mieć maksymalnie 2 bajty
+Psy muszą mieć maksymalnie 5 bajtów
+Komputery muszą mieć maksymalnie 1 bajt
+Komputery muszą mieć maksymalnie 2 bajty
+Komputery muszą mieć maksymalnie 5 bajtów
+Kobiety muszą mieć maksymalnie 1 bajt
+Kobiety muszą mieć maksymalnie 2 bajty
+Kobiety muszą mieć maksymalnie 5 bajtów
+Piwa muszą mieć maksymalnie 1 bajt
+Piwa muszą mieć maksymalnie 2 bajty
+Piwa muszą mieć maksymalnie 5 bajtów
+Autor w tej postaci nie jest poprawny
+Pies w tej postaci nie jest poprawny
+Komputer w tej postaci nie jest poprawny
+Kobieta w tej postaci nie jest poprawna
+Piwo w tej postaci nie jest poprawne
+Autorzy w tej postaci nie są poprawni
+Psy w tej postaci nie są poprawne
+Komputery w tej postaci nie są poprawne
+Kobiety w tej postaci nie są poprawne
+Piwa w tej postaci nie są poprawne
+Autor nie jest w poprawnej formie
+Pies nie jest w poprawnej formie
+Komputer nie jest w poprawnej formie
+Kobieta nie jest w poprawnej formie
+Piwo nie jest w poprawnej formie
+Autorzy nie są w poprawnej formie
+Psy nie są w poprawnej formie
+Komputery nie są w poprawnej formie
+Kobiety nie są w poprawnej formie
+Piwa nie są w poprawnej formie

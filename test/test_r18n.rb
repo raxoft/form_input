@@ -209,7 +209,7 @@ describe FormInput do
           end
         end
       end
-    end.map{ |x| x.code }.sort.should == %w[ cs en sk ]
+    end.map{ |x| x.code }.sort.should == %w[ cs en pl sk ]
   end
 
   should 'provide scope name for automatic translations' do
