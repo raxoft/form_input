@@ -33,7 +33,7 @@ form *form_attrs
           fieldset
             == render_snippet :form_hidden,
               params: @form.other_params
-            == render_snippet :form_panel,
+            == render_snippet :form_complex,
               params: @form.chunked_params( @form.current_params ),
               report: @state == :report,
               focus: true
