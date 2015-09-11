@@ -2,9 +2,9 @@
 
 // Fetch parameters.
 
-- params = @params || []
-- focus = @focus || @focus.nil?
-- report = @report
+- params ||= []
+- focus ||= focus.nil?
+- report ||= report.nil? && request.post?
 
 // Choose parameter to focus on if enabled.
 
@@ -16,7 +16,7 @@
   - case p.type
   - when :ignore
   - when :hidden
-    == render_snippet :form_hidden, params: [ p ]
+    input type='hidden' name=p.form_name value=p.form_value
   - else
     .form-group
       input.form-control type=p.type name=p.form_name value=p.form_value placeholder=p.form_title autofocus=(p == focused)

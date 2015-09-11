@@ -2,7 +2,7 @@
 
 - @title = "Press Release: #{@form.step_name}"
 
-edit_mode = ( page_action == 'edit' )
+- edit_mode = ( page_action == 'edit' )
 
 form *form_attrs
 
@@ -11,7 +11,7 @@ form *form_attrs
   button.invisible type='submit' name='next' tabindex='-1' value=@form.next_step
 
   .row
-    .col-md-3 role="navigation"
+    .col-md-3 role='navigation'
 
       == render_partial :sidebar,
         title: "#{edit_mode ? 'Edit' : 'Create'} Press Release",
@@ -21,7 +21,7 @@ form *form_attrs
         invalid: @form.bad_steps,
         current: @form.step
 
-    .col-md-9 role="main"
+    .col-md-9 role='main'
 
       .panel.panel-default
         .panel-heading
@@ -33,7 +33,7 @@ form *form_attrs
           fieldset
             == render_snippet :form_hidden,
               params: @form.other_params
-            == render_snippet :form_complex,
+            == render_snippet :form_chunked,
               params: @form.chunked_params( @form.current_params ),
               report: @state == :report,
               focus: true

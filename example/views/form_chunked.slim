@@ -1,0 +1,25 @@
+// Render chunked form parameters in panel style.
+
+// Fetch parameters.
+
+- chunked_params = params || []
+- params = chunked_params.flatten
+- focus ||= focus.nil?
+- report ||= report.nil? && request.post?
+
+// Choose parameter to focus on if enabled.
+
+- focused ||= params.find{ |x| x.invalid? } || params.find{ |x| x.blank? } || params.first if focus
+
+// Render each row of parameters.
+
+- for p in chunked_params
+  - if p.is_a?( Array )
+    .row
+      - for param in p
+        div class="col-sm-#{param[ :cols ] || 12 / p.count}"
+          == render_snippet :form_panel, params: [ param ], focus: focus, focused: focused, report: report
+  - else
+    == render_snippet :form_panel, params: [ p ], focus: focus, focused: focused, report: report
+
+// EOF //
