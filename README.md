@@ -51,10 +51,7 @@ Using them in your templates is as simple as this:
   .panel-body
     form *form_attrs
       fieldset
-        == render_snippet :form_panel,
-          params: @form.params,
-          report: request.post?,
-          focus: request.post?
+        == render_snippet :form_panel, params: @form.params
         button.btn.btn-default type='submit' Send
 ```
 
@@ -84,6 +81,8 @@ Sounds cool enough? Then read on.
   * [Creating Forms](#creating-forms)
   * [Errors and Validation](#errors-and-validation)
   * [Using Forms](#using-forms)
+  * [URL Helpers](#url-helpers)
+  * [Form Helpers](#form-helpers)
   * [Parameter Options](#parameter-options)
 * [Form Templates](#form-templates)
 * [Multi-Step Forms](#multi-step-forms)
@@ -441,7 +440,7 @@ the `FormInput` class comes with several time filters and formatters predefined:
   param :eu_date, EU_DATE_ARGS  # D.M.YYYY stored as Time.
   param :hours, HOURS_ARGS      # HH:MM stored as seconds since midnight.
 ```
- 
+
 You can use them as they are but feel free to create your own variants instead.
 
 #### Input Transform
@@ -463,7 +462,7 @@ The input filter is used to convert each individual element,
 whereas the input transformation operates on the entire parameter value,
 and can thus process the entire array or hash as a whole.
 
-What you use the input transformation for is up to you. 
+What you use the input transformation for is up to you.
 The `FormInput` class however comes with a predefined `PRUNED_ARGS` transformation
 which converts an empty string value to `nil` and prunes `nil` and empty elements from arrays and hashes,
 ensuring the resulting input is free of clutter.
@@ -546,9 +545,9 @@ so you will most likely only use them with URL based non-form input, if ever,
 the array parameters are pretty common.
 The examples above could be used for gathering list of input fields into single array,
 which is useful as well,
-but the most common use of array parameters is for multi-select fields.
+but the most common use of array parameters is for multi-select or multi-checkbox fields.
 
-To declare a select parameter, you can set the `:type` to `:select` and 
+To declare a select parameter, you can set the `:type` to `:select` and
 use the `:data` option to provide an array of values for the select menu.
 The array contains pairs of parameter values to use and the corresonding text to show to the user.
 For example, using a Sequel-like `Country` model:
@@ -564,28 +563,42 @@ To turn select into multi-select, basically just change `param` into `array` and
   array :countries, "Countries", type: :select, data: COUNTRIES
 ```
 
-Note that it also makes sense to change the parameter name into a plural form, so we did that.
+Note that it also makes sense to change the parameter name into the plural form, so we did that.
+
+Now if you want to render this as a list of radio buttons or checkboxes instead,
+all you need to do is to change the parameter type to `:radio:` or `:checkbox`, respectively:
+
+``` ruby
+  param :country, "Country", type: :radio, data: COUNTRIES
+  array :countries, "Countries", type: :checkbox, data: COUNTRIES
+```
+
+That's all it takes.
 
 To validate the input, you will likely want to make sure the code received is really a valid country code.
-In the first case, this can be done easily by using the `:check` callback,
-which is executed in context of the parameter itself and can do any checks it wants:
+In case of scalar parameters, this can be done easily by using the `:check` callback,
+which is executed in the context of the parameter itself and can examine the value and do any checks it wants:
 
 ``` ruby
   check: ->{ report( "%p is not valid" ) unless Country[ value ] }
 ```
 
-In both cases, it could be done by the `:test` callback,
-which is executed in context of the parameter itself as well,
-but receives the value to test as an argument:
+It can be also done by the `:test` callback,
+which is executed in the context of the parameter itself as well,
+but receives the value to test as an argument.
+In case of arrays and hashes, it is passed each element value in turn,
+for as long as no error is reported and the parameter remains valid:
 
 ``` ruby
   test: ->( value ){ report( "%p contain invalid code" ) unless Country[ value ] }
 ```
 
-As the latter works in both cases, it is preferable to use
-if you plan to factor this into `COUNTRY_ARGS` helper which works with both types of selects.
+The advantage of the `:test` callback is that it works the same way regardless of the parameter kind,
+scalar or not,
+so it is preferable to use it
+if you plan to factor this into a `COUNTRY_ARGS` helper which works with both kinds of parameters.
 
-In both cases, the `report` method is used to report any problems about the parameter,
+In either case, the `report` method is used to report any problems about the parameter,
 which marks the parameter as invalid at the same time.
 More on this will follow in the chapter [Errors and Validation](#errors-and-validation).
 
@@ -593,16 +606,20 @@ Alternatively, you may want to convert the country code into the `Country` objec
 which will take the care of validation as well:
 
 ``` ruby
-  param! :country, "Country", type: :select,
+  COUNTRY_ARGS = {
     data: ->{ Country.all.map{ |c| [ c, c.name ] } },
     filter: ->{ Country[ self ] },
     format: ->{ code },
     class: Country
+  }
+  param! :country, "Country", COUNTRY_ARGS, type: :select
 ```
 
 Either way is fine, so choose whichever suits you best.
 Just note that the data array now contains the `Country` objects themselves rather than their country codes,
 and that we have opted for creating that array dynamically instead of using a static one.
+And remember that it is really wise to factor reusable things like this
+into their own helper like the `COUNTRY_ARGS` above for easier reuse.
 
 Finally, a little bit of warning.
 Note that web request syntax supports arbitrarily nested hash and array attributes.
@@ -792,7 +809,7 @@ only as effective as the individual validation restrictions
 you place on your parameters.
 When defining your parameters,
 always think of how you can restrict them.
-It's always better to add too many than too little
+It's always better to add too many restrictions than too little
 and leave yourself open to exploits caused by unchecked input.
 
 So, what kind of validations are available?
@@ -800,6 +817,13 @@ We have already discussed the required vs optional parameters.
 The former are required to be present and non-empty.
 Empty or `nil` parameter values are allowed only if the parameters are optional.
 Unless it is `nil`, the value must also match the parameter kind (string, array or hash).
+Note that the `FormInput` provides default error messages for any problems detected,
+but you can set a custom error message for required parameters with the `:required_msg` option:
+
+``` ruby
+  param! :login, "Login Name",
+    required_msg: "Please fill in your Login Name"
+```
 
 We have also discussed the string character and byte size limits,
 which are controlled by `:min_size`, `:max_size`, `:min_bytesize`, and `:max_bytesize` options, respectively.
@@ -824,22 +848,30 @@ as well as anything which responds to the `to_f` method:
 
 Additionally, you may specify a regular expression or an array of regular expressions
 which the input values must match using the `:match` option.
-Custom error message if this fails can be set with the `:msg` or `:match_msg` options:
+If you intend to match the input in its entirety,
+make sure you use the `\A` and `\z` anchors rather than `^` and `$`,
+so a newline in the input doesn't let an unexpected input sneak in:
+
+``` ruby
+  param :nick, match: /\A[a-z]+\z/i
+```
+
+Custom error message if the match fails can be set with the `:msg` or `:match_msg` options:
 
 ``` ruby
   param :password,
     match: [ /[A-Z]/, /[a-z]/, /\d/ ],
-    msg: 'Password must contain one lowercase and one uppercase letter and one digit'
+    msg: "Password must contain one lowercase and one uppercase letter and one digit"
 ```
 
-Similarly, you may specify a regular expression or an array of regular expressions
+Similarly to `:match`, you may specify a regular expression or an array of regular expressions
 which the input values may not match using the `:reject` option.
 Custom error message if this fails can be set with the `:msg` or `:reject_msg` options:
 
 ``` ruby
   param :password,
     reject: /\P{ASCII}|[\t\r\n]/u,
-    reject_msg: 'Password may contain only ASCII characters and spaces',
+    reject_msg: "Password may contain only ASCII characters and spaces",
 ```
 
 Of course, prior to all this, the `FormInput` also ensures
@@ -858,14 +890,14 @@ and let them report any belated additional errors which might get detected durin
 for example:
 
 ``` ruby
-  form.report( :email, 'Email is already taken' ) unless unique_email?( form.email )
+  form.report( :email, "Email is already taken" ) unless unique_email?( form.email )
 ```
 
 As we have already seen, it is common to use the `report`
 method from within the `:check` or `:test` callback of the parameter itself as well:
 
 ``` ruby
-  check: ->{ report( '%p is already taken' ) unless unique_email?( value ) }
+  check: ->{ report( "%p is already taken" ) unless unique_email?( value ) }
 ```
 
 In this case the `%p` string is replaced by the `title` of the parameter.
@@ -876,16 +908,16 @@ You can get hash of all errors reported for each parameter from the `errors` met
 or list consisting of first error message for each parameter from the `error_messages` method:
 
 ``` ruby
-  form.errors          # => { email: [ 'Email address is already taken' ] }
-  form.error_messages  # => [ 'Email address is already taken' ]
+  form.errors          # => { email: [ "Email address is already taken" ] }
+  form.error_messages  # => [ "Email address is already taken" ]
 ```
 
 You can get all errors or first error for given parameter by using
 the `errors_for` or `error_for` method, respectively:
 
 ``` ruby
-  form.errors_for( :email )  # => [ 'Email address is already taken' ]
-  form.error_for( :email )   # => 'Email address is already taken'
+  form.errors_for( :email )  # => [ "Email address is already taken" ]
+  form.error_for( :email )   # => "Email address is already taken"
 ```
 
 As we have seen, you can test the validity of the entire form with `valid?` or `invalid?` methods.
@@ -922,22 +954,383 @@ Which finally brings us to the topic of accessing the parameter values themselve
 
 ### Using Forms
 
-// Covers parameter subsets, parameter testing, parameter access.
-// URL helpers?
+So, now when you have verified that the input is valid,
+let's finally use it.
 
-Sometimes, you may want to use several parameters as long as they are all valid,
-regardless of if the entire form is valid or not.
+The `FormInput` classes use standard instance variables
+for keeping the parameter values,
+along with standard read and write accessors.
+The simplest way is thus to access the parameters by their name as usual:
+
+``` ruby
+  form.email
+  form.message ||= "Default text"
+```
+
+Note that the standard accessors are defined for you when you declare the parameter,
+but you are free to provide your own if you want to.
+For example, if you want a parameter to always have some default value instead of the default `nil`,
+this is the simplest way to do it:
+
+``` ruby
+  param :sort_mode, :s
+
+  def sort_mode
+    @sort_mode || 'default'
+  end
+```
+
+Another way how to access the parameter values is to use the hash-like interface.
+Note that it can return an array of multiple attributes at once as well:
+
+``` ruby
+  form[ :email ]
+  form[ :name ] = user.name
+  form[ :first_name, :last_name ]
+```
+
+Of course, this interface is often used when you need to access the parameter values programatically,
+without knowing their exact name.
+The form provides all parameter names via its `param_names` or `parameter_names` methods,
+so you can do this:
+
+``` ruby
+  form.param_names.each{ |name| puts "#{name}: #{form[ name ].inspect}" }
+```
+
+Sometimes, you may want to use some chosen parameters as long as they are all valid,
+even if the entire form may be not.
 You can do this by using the `valid` method,
-which either gives you the valid values or `nil`:
+which returns the valid values only if they are all valid.
+Otherwise it returns `nil`.
 
 ``` ruby
   return unless email = form.valid( :email )
-  first_name, last_name = form( :first_name, :last_name )
+  first_name, last_name = form.valid( :first_name, :last_name )
 ```
+
+To find out if any parameter values are filled at all, you can use the `empty?` method:
+
+``` ruby
+  form.set( email: user.email ) if form.empty?
+```
+
+The parameters are more than their value, though,
+so the `FormInput` allows you to access the parameters themselves as well.
+You can get a single named parameter from the `param` or `parameter` methods,
+list of named parameters from the `named_params` or `named_parameters` methods,
+or all parameters from the `params` or `parameters` methods,
+respectively:
+
+``` ruby
+  p = form.param( :message )
+  p1, p2 = form.named_params( :email, :name )
+  list = form.params
+```
+
+Once you get hold of the parameter, you can query it about lot of things.
+First of all, you can ask it about its `name`, `code`, `title` or `value`:
+
+``` ruby
+  p = form.params.first
+  puts p.name
+  puts p.code
+  puts p.title
+  puts p.value
+```
+
+All parameter options are available via its `opts` hash.
+However, it is preferable to query them via the `[]` operator,
+which also resolves the dynamic options
+and can support localized variants as well:
+
+``` ruby
+  puts p[ :help ]       # Use this ...
+  puts p.opts[ :help ]  # ... rather than this.
+```
+
+The parameter also knows about the form it belongs to,
+so you can get back to it using the `form` method if you need to:
+
+``` ruby
+  fail unless p.form.valid?
+```
+
+As we have seen, you can report errors about the parameter using its `report` method.
+You can ask it about all its errors or just the first error using the `errors` or `error` methods, respectively:
+
+``` ruby
+  p.report( "This is invalid" )
+  p.errors        # => [ "This is invalid" ]
+  p.error         # => "This is invalid"
+```
+
+You can also simply ask whether the parameter is valid or not by using the `valid?` and `invalid?` methods.
+In fact, the parameter has a dozen of simple boolean getters like this which you can use to ask it about many things:
+
+``` ruby
+  p.valid?        # parameter has no errors reported?
+  p.invalid?      # parameter has some errors reported?
+
+  p.blank?        # value is nil or empty or whitespace only string?
+  p.empty?        # value is nil or empty?
+  p.filled?       # value is neither nil nor empty?
+
+  p.untitled?     # parameter has no title?
+  p.titled?       # parameter has a title?
+
+  p.required?     # parameter is required?
+  p.optional?     # parameter is not required?
+
+  p.disabled?     # parameter is disabled?
+  p.enabled?      # parameter is not disabled?
+
+  p.hidden?       # parameter type is :hidden?
+  p.ignored?      # parameter type is :ignore?
+  p.visible?      # parameter type is neither :hidden nor :ignore?
+
+  p.array?        # parameter was declared as an array?
+  p.hash?         # parameter was declared as a hash?
+  p.scalar?       # parameter was declared as a simple param?
+
+  p.correct?      # value matches param/array/hash kind?
+  p.incorrect?    # value doesn't match parameter kind?
+```
+
+Building upon these boolean getters,
+the `FormInput` instance lets you get a list of parameters of certain type.
+The following methods are available:
+
+``` ruby
+  form.valid_params       # parameters with no errors reported.
+  form.invalid_params     # parameters with some errors reported.
+  form.blank_params       # parameters with nil, empty, or blank value.
+  form.empty_params       # parameters with nil or empty value.
+  form.filled_params      # parameters with some non-empty value.
+  form.titled_params      # parameters with a title set.
+  form.untitled_params    # parameters without a title.
+  form.required_params    # parameters which are required and have to be filled.
+  form.optional_params    # parameters which are not required and can be nil or empty.
+  form.disabled_params    # parameters which are disabled and shall be rendered as such.
+  form.enabled_params     # parameters which are not disabled and are rendered normally.
+  form.hidden_params      # parameters to be rendered as hidden in the form.
+  form.ignored_params     # parameters not to be rendered at all in the form.
+  form.visible_params     # parameters rendered normally in the form.
+  form.array_params       # parameters declared as an array parameter.
+  form.hash_params        # parameters declared as a hash parameter.
+  form.scalar_params      # parameters declared as a simple scalar parameter.
+  form.correct_params     # parameters whose current value matches their kind.
+  form.incorrect_params   # parameters whose current value doesn't match their kind.
+```
+
+Each of them simply selects the paramaters using their boolean getter of the same name.
+Each of them is available in the `*_parameters` form for as well,
+for those who don't like the `params` shortcut.
+
+As you can see, this allows you to get many parameter subsets,
+but sometimes even that is not enough.
+For this reason, parameters also support the so-called tagging,
+which allows you to group them by any additional criteria you need.
+Simply tag a parameter with one or more tags using either the `:tag` or `:tags` option:
+
+``` ruby
+  param :age, tag: :indecent
+  param :ratio, tags: [ :physics, :limited ]
+```
+
+Note that the parameter tags can be also generated dynamically the same way as any other option,
+but once accessed, their value is frozen for that parameter instance afterwards,
+both for performance reasons and to prevent their inconsistent changes.
+
+You can ask the parameter for an array of its tags with the `tags` method.
+Note that it returns an empty array if the parameter was not tagged.
+Rather than using the tags array directly, though,
+it's easier to test parameter's tags using its `tagged?` and `untagged?` methods:
+
+``` ruby
+  p.tagged?                                   # tagged with some tag?
+  p.untagged?                                 # not tagged at all?
+  p.tagged?( :indecent )                      # tagged with this tag?
+  p.untagged?( :limited )                     # not tagged with this tag?
+  p.tagged?( :indecent, :limited )            # tagged with either of these tags?
+  p.untagged?( :indecent, :limited )          # tagged with neither of these tags?
+```
+
+You can get the desired parameters using the form's `tagged_params` and `untagged_params` methods, too:
+
+``` ruby
+  form.tagged_params                          # parameters with some tag.
+  form.untagged_params                        # parameters with no tag.
+  form.tagged_params( :indecent )             # parameters tagged with this tag.
+  form.untagged_params( :limited )            # parameters not tagged with this tag.
+  form.tagged_params( :indecent, :limited )   # parameters with either of these tags.
+  form.untagged_params( :indecent, :limited ) # parameters with neither of these tags.
+```
+
+What you use this for is up to you.
+We will see later that multistep forms for example use this for grouping parameters which belong to individual steps,
+but it has plenty other uses as well.
+
+#### URL Helpers
+
+The `FormInput` is primarily intended for use with forms,
+which we will discuss in detail in [Form Templates](#form-templates),
+but it can be used for processing any web request input,
+regardless of if it comes from a form post or from the URL query string.
+It is therefore quite natural that the `FormInput` provides helpers for generating
+URL query strings as well in addition to helpers used for form creation.
+
+You can get a hash of filled parameters suitable for use in the URL query by using the `url_params` method,
+or get them combined into the URL query string by using the `url_query` method.
+Note that the `url_params` result differs considerably from the result of the `to_hash` method,
+as it uses parameter code rather than name for keys and their external representation for the values:
+
+``` ruby
+  class MyInput < FormInput
+    param :query, :q
+    array :feeds, INTEGER_ARGS
+  end
+
+  input = MyInput.new( query: "abc", feeds: [ 1, 7 ] )
+
+  input.to_hash       # => { query: "abc", feeds: [ 1, 7 ] }
+  input.url_params    # => { q: "abc", feeds: [ "1", "7" ] }
+  input.url_query     # => "q=abc&feeds[]=1&feeds[]=7"
+```
+
+Unless you want to construct the URL yourself,
+you can use the `extend_url` method to let the `FormInput` create the URL for you:
+
+``` ruby
+  input.extend_url( "/search" )          # => "/search?q=abc&feeds[]=1&feeds[]=7"
+  input.extend_url( "/search?e=utf8" )   # => "/search?e=utf8&q=abc&feeds[]=1&feeds[]=7"
+```
+
+Note that this works well together with `only` and `except` methods,
+which allow you to control which arguments get included:
+
+``` ruby
+  input.only( :query ).extend_url( "/search" )    # => "/search?q=abc"
+  input.except( :query ).extend_url( "/search" )  # => "/search?feeds[]=1&feeds[]=7"
+```
+
+You can use this for example to create an URL suitable for redirection
+which retains only valid parameters when some parameters are not valid:
+
+``` ruby
+  # In your class:
+  def valid_url( url )
+    only( valid_params ).extend_url( url )
+  end
+
+  # In your route handler:
+  input = MyInput.new( request )
+  redirect input.valid_url( request.path ) unless input.valid?
+```
+
+If you want to temporarily adjust some parameters just for creation of single URL,
+you can use the `build_url` method, which combines current parameters with the provided ones:
+
+``` ruby
+  input.build_url( "/search", query: "xyz" )  # => "/search?q=xyz&feeds[]=1&feeds[]=7"
+```
+
+Finally, if you do not like the idea of parameter arrays in your URLs, you can use something like this instead:
+
+``` ruby
+  param :feeds,
+    filter: ->{ split.map( &:to_i ) },
+    format: ->{ join( ' ' ) },
+    class: Array
+
+  input.url_params    # => { q: "abc", feeds: "1 7" }
+  input.url_query     # => "q=abc&feeds=1+7"
+```
+
+Just note that none of the standard array parameter validations apply in this case,
+so make sure you apply your own validations using the `:check` callback if you need to.
+
+#### Form Helpers
+
+form_name
+form_title
+form_value
+selected?
+type
+data
 
 ### Parameter Options
 
-// Comprehensive summary.
+This is a brief but comprehensive summary of all parameter options:
+
+* `:name` - not really a parameter option, this can be used to change the parameter name and code name when copying form parameters,
+  see [Reusing Form Parameters](#reusing-form-parameters).
+* `:code` - not really a parameter option, this can be used to change the parameter code name when copying form parameters,
+  see [Reusing Form Parameters](#reusing-form-parameters).
+* `:title` - the title of the parameter, the default value shown in forms and error messages.
+* `:form_title` - the title of the parameter to show in forms. Overrides `:title` when present.
+* `:error_title` - the title of the parameter to use in error reports containing `%p`. Overrides `:title` when present.
+* `:required` - flag set when the parameter is required.
+* `:required_msg` - custom error message used when the required parameter is not filled in.
+* `:disabled` - flag set when the parameter shall be rendered as disabled.
+  Note that it doesn't affect it in any other way, in particular it doesn't prevent it from being set or being invalid.
+* `:array` - flag set for array parameters.
+* `:hash` - flag set for hash parameters.
+* `:type` - type of the form parameter used for form rendering. Defaults to `:text` if not set.
+  Other common values are `:password`, `:textarea`, `:select`, `:checkbox`, `:radio`.
+  Somewhat special values are `:hidden` and `:ignore`.
+* `:data` - array containing data for parameter types which need one, like select, multi-select, or multi-checkbox.
+   Shall contain the allowed parameter values paired with the corresponding text to display in forms.
+   Defaults to empty array if not set.
+* `:tag` or `:tags` - arbitrary symbol or array of symbols used to tag the parameter with arbitrary semtantics.
+  See `tagged?` in [Using Forms](#using-forms).
+* `:filter` - callback used to cleanup or convert the input values.
+  See [Input Filter](#input-filter).
+* `:transform` - optional callback used to further convert the input values.
+  See [Input Transform](#input-transform).
+* `:format` - optional callback used to format the output values.
+  See [Output Format](#output-format).
+* `:class` - object type (or array thereof) which the input filter is expected to convert the input value into.
+  See [Input Filter](#input-filter).
+* `:check` - optional callback used to perform arbitrary checks when testing the parameter validity.
+  See [Errors and Validation](#errors-and-validation).
+* `:test` - optional callback used to perform arbitrary tests when testing validity of each parameter value.
+  See [Errors and Validation](#errors-and-validation).
+* `:min_key` - minimum allowed value for keys of hash parameters. Defaults to 0.
+* `:max_key` - maximum allowed value for keys of hash parameters. Defaults to 2<sup>64</sup>-1.
+* `:match_key` - regular expression (or array thereof) which all hash keys must match. Disabled by default.
+* `:min_count` - minimum allowed number of elements for array or hash parameters.
+* `:max_count` - maximum allowed number of elements for array or hash parameters.
+* `:min` - when set, value(s) of that parameter must be greater than or equal to this.
+* `:max` - when set, value(s) of that parameter must be less than or equal to this.
+* `:inf` - when set, value(s) of that parameter must be greater than this.
+* `:sup` - when set, value(s) of that parameter must be less than this.
+* `:min_size` - when set, value(s) of that parameter must have at least this many characters.
+* `:max_size` - when set, value(s) of that parameter may have at most this many characters.
+  Defaults to 255.
+* `:min_bytesize` - when set, value(s) of that parameter must have at least this many bytes.
+* `:max_bytesize` - when set, value(s) of that parameter may have at most this many bytes.
+  Defaults to 255 if `:max_size` is dynamic option or less than 256.
+* `:reject` - regular expression (or array thereof) which the parameter value(s) may not match.
+* `:reject_msg` - custom error message used when the `:reject` check fails.
+  Defaults to `:msg` message.
+* `:match` - regular expression (or array thereof) which the parameter value(s) must match.
+* `:match_msg` - custom error message used when the `:match` check fails.
+  Defaults to `:msg` message.
+* `:msg` - default custom error message used when either of `:match` or `:reject` checks fails.
+* `:row` - used for grouping several parameters together, usually to render them in single row.
+  See `chunked_params` in [Form Templates](#form-templates).
+* `:cols` - optional custom option used to set span of parameter in single row.
+  See `chunked_params` in [Form Templates](#form-templates).
+* `:size` - custom option used set size of `:select` and `:textarea` parameters.
+* `:subtitle` - custom option used to render additional subtitle after form title.
+* `:placeholder` - custom option used for setting the placeholder attribute of the parameter.
+* `:help` - custom option used to render help block explaining the parameter.
+* `:text` - custom option used to render arbitrary text associated with the parameter.
+
+Note that the last few options listed above are not used by the `FormInput` class itself,
+but are instead used to pass additional data to snippets used for form rendering.
+Feel free to extend this further if you need to pass additional data this way yourself.
 
 ## Form Templates
 
@@ -945,7 +1338,8 @@ which either gives you the valid values or `nil`:
 
 ## Multi-Step Forms
 
-define_steps, etc.
+// define_steps, etc.
 
 ## Localization
 
+// R18n, [], inflection, plural, gender, pt, ft, steps
