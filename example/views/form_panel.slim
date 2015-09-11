@@ -31,9 +31,9 @@
           = p.form_title
           - if subtitle = p[ :subtitle ]
             small =< subtitle
-        select.form-control name=p.form_name multiple=p.array? autofocus=(p == focused) disabled=p.disabled? size=p[:size]
-          - for value, name in p.data
-            option selected=p.selected?( value ) value=p.format_value( value ) = name
+          select.form-control name=p.form_name multiple=p.array? autofocus=(p == focused) disabled=p.disabled? size=p[:size]
+            - for value, name in p.data
+              option selected=p.selected?( value ) value=p.format_value( value ) = name
         - if report and error = p.error
           .help-block
             span.text-danger = error
@@ -45,7 +45,7 @@
           = p.form_title
           - if subtitle = p[ :subtitle ]
             small =< subtitle
-        textarea.form-control name=p.form_name autofocus=(p == focused) disabled=p.disabled? rows=p[:size] = p.form_value
+          textarea.form-control name=p.form_name autofocus=(p == focused) disabled=p.disabled? rows=p[:size] = p.form_value
         - if report and error = p.error
           .help-block
             span.text-danger = error
@@ -58,22 +58,23 @@
           - if subtitle = p[ :subtitle ]
             small =< subtitle
 
-        - if p.array?
-          - for value in p.form_value
-            .form-group
-              input.form-control type=p.type name=p.form_name value=value autofocus=(p.invalid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
-          - unless limit = p[ :max_count ] and p.form_value.count >= limit
-            input.form-control type=p.type name=p.form_name autofocus=(p.valid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
+          - if p.array?
+            - for value in p.form_value
+              .form-group
+                input.form-control type=p.type name=p.form_name value=value autofocus=(p.invalid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
+            - unless limit = p[ :max_count ] and p.form_value.count >= limit
+              input.form-control type=p.type name=p.form_name autofocus=(p.valid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
 
-        - elsif p.hash?
-          - for key, value in p.form_value
-            .form-group
-              input.form-control type=p.type name=p.form_name( key ) value=value autofocus=(p.invalid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
-          - unless limit = p[ :max_count ] and p.form_value.count >= limit
-            input.form-control type=p.type name=p.form_name( p.form_value.count ) autofocus=(p.valid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
+          - elsif p.hash?
+            - for key, value in p.form_value
+              .form-group
+                input.form-control type=p.type name=p.form_name( key ) value=value autofocus=(p.invalid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
+            - unless limit = p[ :max_count ] and p.form_value.count >= limit
+              input.form-control type=p.type name=p.form_name( p.form_value.count ) autofocus=(p.valid? and p == focused) disabled=p.disabled? placeholder=p[:placeholder]
 
-        - else
-          input.form-control type=p.type name=p.form_name value=p.form_value autofocus=(p == focused) disabled=p.disabled? placeholder=p[:placeholder]
+          - else
+            input.form-control type=p.type name=p.form_name value=p.form_value autofocus=(p == focused) disabled=p.disabled? placeholder=p[:placeholder]
+
         - if report and error = p.error
           .help-block
             span.text-danger = error
