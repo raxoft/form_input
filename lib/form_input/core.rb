@@ -120,9 +120,7 @@ class FormInput
         array?
       when Hash
         hash?
-      else
-        scalar? and [ *self[ :class ] ].any?{ |x| v.is_a?( x ) }
-      end
+      end or ( scalar? && [ *self[ :class ] ].any?{ |x| v.is_a?( x ) } )
     end
 
     # Test if given parameter has value of incorrect type.

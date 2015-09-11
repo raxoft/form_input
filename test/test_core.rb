@@ -368,8 +368,10 @@ describe FormInput do
     c.param :time, filter: ->{ Time.parse( self ) rescue self }, format: ->{ strftime( '%Y-%m-%d %H:%M:%S' ) }, class: Time
     c.param :bool, filter: ->{ self == 'true' unless empty? }, class: [ TrueClass, FalseClass ]
     c.param :str2, filter: ->{ downcase.reverse }, format: ->{ reverse.upcase rescue self }
+    c.param :arr, filter: ->{ split( ',' ) }, format: ->{ join( ',' ) rescue self }, class: Array
+    c.param :hsh, filter: ->{ Hash[ scan( /(\d+):(\d+)/ ) ] }, format: ->{ map{ |k,v| "#{k}:#{v}" }.join( ',' ) rescue self }, class: Hash
 
-    f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05&bool=true&str2=Abc" ) )
+    f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05&bool=true&str2=Abc&arr=a,b&hsh=1:2,3:4" ) )
     f.should.be.valid
     f.to_h.should == f.to_hash
     f.to_hash.should == {
@@ -380,6 +382,8 @@ describe FormInput do
       time: Time.new( 2000, 12, 31, 10, 24, 05 ),
       bool: true,
       str2: "cba",
+      arr: [ "a", "b" ],
+      hsh: { "1" => "2", "3" => "4" },
     }
     f.url_params.should == {
       str: "1.5",
@@ -389,8 +393,10 @@ describe FormInput do
       time: "2000-12-31 10:24:05",
       bool: "true",
       str2: "ABC",
+      arr: "a,b",
+      hsh: "1:2,3:4",
     }
-    f.url_query.should == "str=1.5&int=1&float=1.5&date=12%2F31%2F2011&time=2000-12-31+10%3A24%3A05&bool=true&str2=ABC"
+    f.url_query.should == "str=1.5&int=1&float=1.5&date=12%2F31%2F2011&time=2000-12-31+10%3A24%3A05&bool=true&str2=ABC&arr=a%2Cb&hsh=1%3A2%2C3%3A4"
 
     f = c.new( request( "?str=a&int=b&float=c&date=d&time=e&bool=f" ) )
     f.should.be.invalid
@@ -414,6 +420,15 @@ describe FormInput do
       bool: "false",
     }
     f.url_query.should == "str=a&int=0&float=0.0&date=d&time=e&bool=false"
+
+    f = c.new( request( "?arr=&hsh=" ) )
+    f.arr.should == []
+    f.hsh.should == {}
+    names( f.incorrect_params ).should == []
+    names( f.invalid_params ).should == []
+    f.to_hash.should == {}
+    f.url_params.should == {}
+    f.url_query.should == ""
 
     f = c.new( request( "?int=1&int2=1&float=1.5&float2=1.5" ) )
     f.should.be.valid
@@ -487,6 +502,24 @@ describe FormInput do
     p.format_value( 10 ).should == "10"
     p.format_value( 10.0 ).should == "10.0"
     p.format_value( "abc" ).should == "CBA"
+
+    p = c[ :arr ]
+    p.format_value( nil ).should == ""
+    p.format_value( [] ).should == ""
+    p.format_value( true ).should == "true"
+    p.format_value( false ).should == "false"
+    p.format_value( 10 ).should == "10"
+    p.format_value( 10.0 ).should == "10.0"
+    p.format_value( "abc" ).should == "abc"
+
+    p = c[ :hsh ]
+    p.format_value( nil ).should == ""
+    p.format_value( {} ).should == ""
+    p.format_value( true ).should == "true"
+    p.format_value( false ).should == "false"
+    p.format_value( 10 ).should == "10"
+    p.format_value( 10.0 ).should == "10.0"
+    p.format_value( "abc" ).should == "abc"
   end
 
   should 'support input transformation' do
