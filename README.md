@@ -367,8 +367,8 @@ That's why the `FormInput` class comes with plenty standard filters predefined:
 ``` ruby
   param :int, INTEGER_ARGS
   param :float, FLOAT_ARGS
-  param :bool, BOOL_ARGS # pulldown style.
-  param :check, CHECKBOX_ARGS # checkbox style.
+  param :bool, BOOL_ARGS       # pulldown style.
+  param :check, CHECKBOX_ARGS  # checkbox style.
 ```
 
 You can check the `form_input/types.rb` source file to see how they are defined
@@ -1135,7 +1135,7 @@ Simply tag a parameter with one or more tags using either the `:tag` or `:tags` 
 
 ``` ruby
   param :age, tag: :indecent
-  param :ratio, tags: [ :physics, :limited ]
+  param :ratio, tags: [ :knob, :limited ]
 ```
 
 Note that the parameter tags can be also generated dynamically the same way as any other option,
@@ -1152,8 +1152,8 @@ it's easier to test parameter's tags using its `tagged?` and `untagged?` methods
   p.untagged?                                 # not tagged at all?
   p.tagged?( :indecent )                      # tagged with this tag?
   p.untagged?( :limited )                     # not tagged with this tag?
-  p.tagged?( :indecent, :limited )            # tagged with either of these tags?
-  p.untagged?( :indecent, :limited )          # tagged with neither of these tags?
+  p.tagged?( :indecent, :limited )            # tagged with any of these tags?
+  p.untagged?( :indecent, :limited )          # not tagged with any of these tags?
 ```
 
 You can get the desired parameters using the form's `tagged_params` and `untagged_params` methods, too:
@@ -1252,12 +1252,86 @@ so make sure you apply your own validations using the `:check` callback if you n
 
 #### Form Helpers
 
-form_name
-form_title
-form_value
-selected?
-type
-data
+It may come as a surprise, but `FormInput` provides no helpers for creating HTML tags.
+That's because doing so would be a completely futile effort.
+No tag helper will suit all your needs when it comes to form creation.
+
+Instead, `FormInput` provides several helpers
+which allow you to easily create the forms in the templating engine of your choice.
+This has many advantages.
+In particular, it allows you to nest the HTML tags exactly the way you want,
+style it using whatever classes you want, and include any extra bits the way you want.
+Furthermore, it allows you to have templates for rendering the parameters in several styles
+and choose among them as you need.
+All this and more will be discussed in detail in [Form Templates](#form-templates), though.
+This section just describes the form helpers themselves.
+
+You can ask each form parameter about how it should be rendered by using its `type` method,
+which defaults to `:text` if the option `:type` is not set.
+Furthermore,
+you can ask each form parameter for the appropriate name and value attributes
+to use in form elements by using the `form_name` and `form_value` methods.
+The simplest form parameters can be thus rendered in Slim like this:
+
+``` slim
+  input type=p.type name=p.form_name value=p.form_value
+```
+
+For array parameters, the `form_value` returns an array of values,
+so it is rendered like this:
+
+``` slim
+  - for value in p.form_value
+    input type=p.type name=p.form_name value=value
+```
+
+Finally, for hash parameters, the `form_value` returns an array of keys and values,
+and keys are passed to `form_name` to create the actual name:
+
+``` slim
+  - for key, value in p.form_value
+    input type=p.type name=p.form_name( key ) value=value
+```
+
+For parameters which require additional data,
+like select, multi-select, or multi-checkbox parameters,
+you can ask for the data using the `data` method.
+It returns pairs of allowed parameter values together with their names.
+If the `:data` option is not set, it returns an empty array.
+The values can be passed to the `selected?` method to test if they are currently selected,
+and then must be passed to the `format_value` method to turn them into their external representation.
+To illustrate all this, a select parameter can be rendered like this:
+
+``` slim
+  select name=p.form_name multiple=p.array?
+    - for value, name in p.data
+      option selected=p.selected?( value ) value=p.format_value( value ) = name
+```
+
+Finally, you will likely want to render the parameter name in some way.
+For this, each parameter has the `form_title` method,
+which returns the title to show in the form.
+It defaults to its title, but can be overriden with `:form_title` option.
+If neither is set, the code name will be used instead.
+To render it, you will use something like this:
+
+``` slim
+  label
+    = p.form_title
+    input type=p.type name=p.form_name value=p.form_value
+```
+
+Of course, you are free to use any other parameter method as well.
+Want to render the parameter disabled?
+Add some placeholder text?
+It's as simple as adding this to your template:
+
+``` slim
+  input ... disabled=p.disabled? placeholder=p[:placeholder]
+```
+
+And that's about it.
+Check out [Form Templates](#form-templates) if you want to see more form related tips and tricks.
 
 ### Parameter Options
 
