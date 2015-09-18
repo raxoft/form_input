@@ -51,7 +51,7 @@ Using them in your templates is as simple as this:
   .panel-body
     form *form_attrs
       fieldset
-        == render_snippet :form_panel, params: @form.params
+        == snippet :form_panel, params: @form.params
         button.btn.btn-default type='submit' Send
 ```
 

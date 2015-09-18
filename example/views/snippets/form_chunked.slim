@@ -18,8 +18,8 @@
     .row
       - for param in p
         div class="col-sm-#{param[ :cols ] || 12 / p.count}"
-          == render_snippet :form_panel, params: [ param ], focus: focus, focused: focused, report: report
+          == snippet :form_panel, params: [ param ], focus: focus, focused: focused, report: report
   - else
-    == render_snippet :form_panel, params: [ p ], focus: focus, focused: focused, report: report
+    == snippet :form_panel, params: [ p ], focus: focus, focused: focused, report: report
 
 // EOF //

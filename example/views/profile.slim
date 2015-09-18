@@ -19,7 +19,7 @@
           We apologize for such inconvenience. Please try again later.
 
       fieldset
-        == render_snippet :form_panel,
+        == snippet :form_panel,
           params: @form.params,
           report: @state == :report
           focus: @state == :report

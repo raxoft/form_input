@@ -31,9 +31,9 @@ form *form_attrs
           // Additional info derived from @state or @form.step will usually go here.
 
           fieldset
-            == render_snippet :form_hidden,
+            == snippet :form_hidden,
               params: @form.other_params
-            == render_snippet :form_chunked,
+            == snippet :form_chunked,
               params: @form.chunked_params( @form.current_params ),
               report: @state == :report,
               focus: true
