@@ -14,6 +14,7 @@ forms:
       title: Druhá zpráva
       error_title: Parametr druhá zpráva
     msg3:
+      title: Třetí zpráva
       test_msg: Argument %1
       inflected_msg: !!inflect
         s: Singular

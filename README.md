@@ -1387,6 +1387,14 @@ This is a brief but comprehensive summary of all parameter options:
 * `:match_msg` - custom error message used when the `:match` check fails.
   Defaults to `:msg` message.
 * `:msg` - default custom error message used when either of `:match` or `:reject` checks fails.
+* `:inflect` - explicit inflection string used for localization.
+  Defaults to combination of `:plural` and `:gender` options,
+  see [Localization](#localization) for details.
+* `:plural` - explicit gramatical number used for localization.
+  See [Localization](#localization) for details.
+  Defaults to `false` for scalar parameters and to `true` for array and hash parameters.
+* `:gender` - gramatical gender used for localization.
+  See [Localization](#localization) for details.
 * `:row` - used for grouping several parameters together, usually to render them in single row.
   See `chunked_params` in [Form Templates](#form-templates).
 * `:cols` - optional custom option used to set span of parameter in single row.

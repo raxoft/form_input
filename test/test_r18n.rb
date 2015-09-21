@@ -246,6 +246,11 @@ describe FormInput do
   should 'provide R18n translation helpers' do
     set_locale( 'en' )
     f = TestR18nForm.new
+    p = f.param( :msg3 )
+    p.title.should.be.nil
+    p.form_title.should == 'msg3'
+    p.error_title.should == 'msg3'
+
     p = f.param( :msg2 )
     p.title.should == 'Second Message'
     p.form_title.should == 'Another Message'
@@ -268,6 +273,10 @@ describe FormInput do
     p.pt( :foo ).to_s.should == 'forms.test_r18n_form.msg2.[foo]'
 
     p = f.param( :msg3 )
+    p.title.should.be == 'Třetí zpráva'
+    p.form_title.should.be == 'Třetí zpráva'
+    p.error_title.should.be == 'Třetí zpráva'
+
     f.ft.texts.test.should == 'Test'
     f.ft[ :texts ].test.should == 'Test'
     f.ft( :texts ).test.should == 'Test'
