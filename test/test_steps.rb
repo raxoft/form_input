@@ -61,7 +61,6 @@ describe FormInput do
 
   should 'provide parameters for keeping track of step state' do
     f = Class.new( FormInput ).define_steps( a: "A" ).new
-    names( f.untitled_params ).should == [ :step, :next, :last, :seen ]
     names( f.optional_params ).should == [ :step, :next, :last, :seen ]
     names( f.enabled_params ).should == [ :step, :next, :last, :seen ]
     names( f.hidden_params ).should == [ :step, :last, :seen ]

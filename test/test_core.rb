@@ -708,9 +708,6 @@ describe FormInput do
     names( f.tagged_params( [ :float, :foo ] ) ).should == [ :rate ]
     names( f.untagged_params( [ :float, :foo ] ) ).should == [ :query, :email, :age, :text, :password, :opts, :on ]
 
-    names( f.titled_params ).should == [ :email, :password ]
-    names( f.untitled_params ).should == [ :query, :age, :rate, :text, :opts, :on ]
-
     names( f.required_params ).should == [ :query ]
     names( f.optional_params ).should == [ :email, :age, :rate, :text, :password, :opts, :on ]
 
@@ -750,8 +747,6 @@ describe FormInput do
     p.should.not.be.blank
     p.should.not.be.empty
     p.should.be.filled
-    p.should.not.be.titled
-    p.should.be.untitled
     p.should.be.valid
     p.should.not.be.invalid
     p.should.be.required
@@ -785,8 +780,6 @@ describe FormInput do
     p.should.be.blank
     p.should.not.be.empty
     p.should.be.filled
-    p.should.be.titled
-    p.should.not.be.untitled
     p.should.not.be.valid
     p.should.be.invalid
     p.should.not.be.required

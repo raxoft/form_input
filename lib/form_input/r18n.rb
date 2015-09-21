@@ -17,8 +17,7 @@ class FormInput
     module R18nMethods
 
       # Parameter options known to be often localized.
-      # Note that :title is intentionally missing - parameter should respond to titled? consistently regardless of locale.
-      LOCALIZED_OPTIONS = [ :form_title, :error_title, :msg, :match_msg, :reject_msg, :required_msg, :inflect, :gender, :plural ]
+      LOCALIZED_OPTIONS = [ :title, :form_title, :error_title, :msg, :match_msg, :reject_msg, :required_msg, :inflect, :gender, :plural ]
 
       # Automatically attempt to translate available parameter options.
       def []( name )

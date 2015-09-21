@@ -199,16 +199,6 @@ class FormInput
       self[ :error_title ] || title || code.to_s
     end
 
-    # Test if given parameter has no title.
-    def untitled?
-      title.nil?
-    end
-
-    # Test if given parameter has title.
-    def titled?
-      not untitled?
-    end
-
     # Get list of errors reported for this paramater. Always empty for unbound parameters.
     def errors
       form ? form.errors_for( name ) : []
@@ -925,18 +915,6 @@ class FormInput
     @params.values_at( *names )
   end
   alias named_parameters named_params
-
-  # Get list of parameters with titles.
-  def titled_params
-    params.select{ |x| x.titled? }
-  end
-  alias titled_parameters titled_params
-
-  # Get list of parameters with no titles.
-  def untitled_params
-    params.select{ |x| x.untitled? }
-  end
-  alias untitled_parameters untitled_params
 
   # Get list of parameters with correct value types.
   def correct_params

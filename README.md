@@ -1076,9 +1076,6 @@ In fact, the parameter has a dozen of simple boolean getters like this which you
   p.empty?        # value is nil or empty?
   p.filled?       # value is neither nil nor empty?
 
-  p.untitled?     # parameter has no title?
-  p.titled?       # parameter has a title?
-
   p.required?     # parameter is required?
   p.optional?     # parameter is not required?
 
@@ -1107,8 +1104,6 @@ The following methods are available:
   form.blank_params       # parameters with nil, empty, or blank value.
   form.empty_params       # parameters with nil or empty value.
   form.filled_params      # parameters with some non-empty value.
-  form.titled_params      # parameters with a title set.
-  form.untitled_params    # parameters without a title.
   form.required_params    # parameters which are required and have to be filled.
   form.optional_params    # parameters which are not required and can be nil or empty.
   form.disabled_params    # parameters which are disabled and shall be rendered as such.
