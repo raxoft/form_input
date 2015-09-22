@@ -16,9 +16,6 @@ class FormInput
     # R18n specific methods.
     module R18nMethods
 
-      # Parameter options which are known to be often localized.
-      LOCALIZED_OPTIONS = [ :title, :form_title, :error_title, :msg, :match_msg, :reject_msg, :required_msg, :inflect, :gender, :plural ]
-
       # Parameter options which are known to be not localized.
       UNLOCALIZED_OPTIONS = [
         :required, :disabled, :array, :hash, :type, :data, :tag, :tags, :filter, :transform, :format, :class, :check, :test, :reject, :match,
@@ -29,7 +26,7 @@ class FormInput
       def []( name )
         if form and r18n
           value = opts[ name ]
-          if value.is_a?( String ) or ( value.nil? ? ! UNLOCALIZED_OPTIONS.include?( name ) : LOCALIZED_OPTIONS.include?( name ) )
+          if value.is_a?( String ) or ( value.nil? and not UNLOCALIZED_OPTIONS.include?( name ) )
             text = pt( name )
             return text.to_s if text.translated?
           end
