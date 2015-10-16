@@ -91,7 +91,7 @@ class FormInput
 
     # Format given value for form/URL output, applying the formatting filter as necessary.
     def format_value( value )
-      if format.nil? or value.nil? or ( value.is_a?( String ) and type = opts[ :class ] and type != String )
+      if format.nil? or value.nil? or ( value.is_a?( String ) and type = self[ :class ] and type != String )
         value.to_s
       else
         value.instance_exec( &format ).to_s
@@ -481,7 +481,7 @@ class FormInput
 
       # First apply the type tests.
 
-      if type = opts[ :class ] and type != String
+      if type = self[ :class ] and type != String
         unless [ *type ].any?{ |x| value.is_a?( x ) }
           report( scalar? ? :value_type : :element_type )
           return
