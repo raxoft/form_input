@@ -135,10 +135,10 @@ describe FormInput do
     f = TestTimeTypesForm.new( request( "?time=1999-12-31+23:59:48&us_date=1/2/3&uk_date=1/2/3&eu_date=1.2.3&hours=23:59" ) )
     f.should.be.valid
     f.to_hash.should == {
-      time: Time.new( 1999, 12, 31, 23, 59, 48 ),
-      us_date: Time.new( 3, 1, 2 ),
-      uk_date: Time.new( 3, 2, 1 ),
-      eu_date: Time.new( 3, 2, 1 ),
+      time: Time.utc( 1999, 12, 31, 23, 59, 48 ),
+      us_date: Time.utc( 3, 1, 2 ),
+      uk_date: Time.utc( 3, 2, 1 ),
+      eu_date: Time.utc( 3, 2, 1 ),
       hours: ( 23 * 60 + 59 ) * 60,
     }
     f.url_params.should == { time: "1999-12-31 23:59:48", us_date: "01/02/0003", uk_date: "01/02/0003", eu_date: "1.2.0003", hours: "23:59" }
@@ -147,10 +147,10 @@ describe FormInput do
     f = TestTimeTypesForm.new( request( "?time=3-2-1+0:0:0&us_date=12/31/1999&uk_date=31/12/1999&eu_date=31.12.1999&hours=0:0" ) )
     f.should.be.valid
     f.to_hash.should == {
-      time: Time.new( 3, 2, 1, 0, 0, 0 ),
-      us_date: Time.new( 1999, 12, 31 ),
-      uk_date: Time.new( 1999, 12, 31 ),
-      eu_date: Time.new( 1999, 12, 31 ),
+      time: Time.utc( 3, 2, 1, 0, 0, 0 ),
+      us_date: Time.utc( 1999, 12, 31 ),
+      uk_date: Time.utc( 1999, 12, 31 ),
+      eu_date: Time.utc( 1999, 12, 31 ),
       hours: 0,
     }
     f.url_params.should == { time: "0003-02-01 00:00:00", us_date: "12/31/1999", uk_date: "31/12/1999", eu_date: "31.12.1999", hours: "00:00" }
@@ -159,10 +159,10 @@ describe FormInput do
     f = TestTimeTypesForm.new( request( "?time=1+Feb+3+13:15&us_date=1+Feb+3&uk_date=3-2-1&eu_date=Feb+1st+3&hours=1:2" ) )
     f.should.be.valid
     f.to_hash.should == {
-      time: Time.new( 2003, 2, 1, 13, 15, 0 ),
-      us_date: Time.new( 2003, 2, 1 ),
-      uk_date: Time.new( 2003, 2, 1 ),
-      eu_date: Time.new( 2003, 2, 1 ),
+      time: Time.utc( 2003, 2, 1, 13, 15, 0 ),
+      us_date: Time.utc( 2003, 2, 1 ),
+      uk_date: Time.utc( 2003, 2, 1 ),
+      eu_date: Time.utc( 2003, 2, 1 ),
       hours: ( 1 * 60 + 2 ) * 60,
     }
     f.url_params.should == { time: "2003-02-01 13:15:00", us_date: "02/01/2003", uk_date: "01/02/2003", eu_date: "1.2.2003", hours: "01:02" }

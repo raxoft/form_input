@@ -473,12 +473,12 @@ describe FormInput do
 
     p = c[ :date ]
     p.format_value( nil ).should == ""
-    p.format_value( Time.at( 123456789 ) ).should == "11/29/1973"
+    p.format_value( Time.at( 123456789 ).utc ).should == "11/29/1973"
     p.format_value( "foo" ).should == "foo"
 
     p = c[ :time ]
     p.format_value( nil ).should == ""
-    p.format_value( Time.at( 123456789 ) ).should == "1973-11-29 21:33:09"
+    p.format_value( Time.at( 123456789 ).utc ).should == "1973-11-29 21:33:09"
     p.format_value( "foo" ).should == "foo"
 
     p = c[ :bool ]

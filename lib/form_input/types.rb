@@ -82,7 +82,7 @@ class FormInput
   TIME_ARGS = {
     placeholder: TIME_FORMAT_EXAMPLE,
     filter: ->{ ( FormInput.parse_time( self, TIME_FORMAT ) rescue DateTime.parse( self ).to_time rescue self ) unless empty? },
-    format: ->{ strftime( TIME_FORMAT ) rescue self },
+    format: ->{ utc.strftime( TIME_FORMAT ) rescue self },
     class: Time,
   }
 
@@ -94,8 +94,8 @@ class FormInput
   # Time in US date format.
   US_DATE_ARGS = {
     placeholder: US_DATE_FORMAT_EXAMPLE,
-    filter: ->{ ( FormInput.parse_time( self, US_DATE_FORMAT ) rescue Date.parse( self ).to_time rescue self ) unless empty? },
-    format: ->{ strftime( US_DATE_FORMAT ) rescue self },
+    filter: ->{ ( FormInput.parse_time( self, US_DATE_FORMAT ) rescue DateTime.parse( self ).to_time rescue self ) unless empty? },
+    format: ->{ utc.strftime( US_DATE_FORMAT ) rescue self },
     class: Time,
   }
 
@@ -107,8 +107,8 @@ class FormInput
   # Time in UK date format.
   UK_DATE_ARGS = {
     placeholder: UK_DATE_FORMAT_EXAMPLE,
-    filter: ->{ ( FormInput.parse_time( self, UK_DATE_FORMAT ) rescue Date.parse( self ).to_time rescue self ) unless empty? },
-    format: ->{ strftime( UK_DATE_FORMAT ) rescue self },
+    filter: ->{ ( FormInput.parse_time( self, UK_DATE_FORMAT ) rescue DateTime.parse( self ).to_time rescue self ) unless empty? },
+    format: ->{ utc.strftime( UK_DATE_FORMAT ) rescue self },
     class: Time,
   }
 
@@ -120,8 +120,8 @@ class FormInput
   # Time in EU date format.
   EU_DATE_ARGS = {
     placeholder: EU_DATE_FORMAT_EXAMPLE,
-    filter: ->{ ( FormInput.parse_time( self, EU_DATE_FORMAT ) rescue Date.parse( self ).to_time rescue self ) unless empty? },
-    format: ->{ strftime( EU_DATE_FORMAT ) rescue self },
+    filter: ->{ ( FormInput.parse_time( self, EU_DATE_FORMAT ) rescue DateTime.parse( self ).to_time rescue self ) unless empty? },
+    format: ->{ utc.strftime( EU_DATE_FORMAT ) rescue self },
     class: Time,
   }
 
@@ -134,7 +134,7 @@ class FormInput
   HOURS_ARGS = {
     placeholder: HOURS_FORMAT_EXAMPLE,
     filter: ->{ ( FormInput.parse_time( self, HOURS_FORMAT ).to_i % 86400 rescue self ) unless empty? },
-    format: ->{ Time.at( self ).strftime( HOURS_FORMAT ) rescue self },
+    format: ->{ Time.at( self ).utc.strftime( HOURS_FORMAT ) rescue self },
     class: Integer,
   }
 
@@ -145,7 +145,7 @@ class FormInput
     # Rather than using _strptime and checking the leftover field,
     # add required trailing character to both the string and format parameters.
     suffix = ( string[ -1 ] == "\1" ? "\2" : "\1" )
-    Time.strptime( string + suffix, format + suffix )
+    time = Time.strptime( "+0000 #{string}#{suffix}", "%z #{format}#{suffix}" )
   end
 
   # Transformation which drops empty values from hashes and arrays and turns empty string into nil.
