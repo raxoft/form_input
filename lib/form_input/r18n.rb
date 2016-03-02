@@ -40,7 +40,7 @@ class FormInput
         if limit = count and singular
           limit = t.form_input.units[ singular, count ].to_s
         end
-        text = t.form_input.errors[ msg, *limit, self ]
+        text = t.form_input.errors[ msg, *limit, self ].to_s
         super( text )
       end
 
