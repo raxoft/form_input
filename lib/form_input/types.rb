@@ -81,7 +81,7 @@ class FormInput
   # Full time.
   TIME_ARGS = {
     placeholder: TIME_FORMAT_EXAMPLE,
-    filter: ->{ ( FormInput.parse_time( self, TIME_FORMAT ) rescue DateTime.parse( self ).to_time rescue self ) unless empty? },
+    filter: ->{ ( FormInput.parse_time!( self, TIME_FORMAT ) rescue self ) unless empty? },
     format: ->{ utc.strftime( TIME_FORMAT ) rescue self },
     class: Time,
   }
@@ -94,7 +94,7 @@ class FormInput
   # Time in US date format.
   US_DATE_ARGS = {
     placeholder: US_DATE_FORMAT_EXAMPLE,
-    filter: ->{ ( FormInput.parse_time( self, US_DATE_FORMAT ) rescue DateTime.parse( self ).to_time rescue self ) unless empty? },
+    filter: ->{ ( FormInput.parse_time!( self, US_DATE_FORMAT ) rescue self ) unless empty? },
     format: ->{ utc.strftime( US_DATE_FORMAT ) rescue self },
     class: Time,
   }
@@ -107,7 +107,7 @@ class FormInput
   # Time in UK date format.
   UK_DATE_ARGS = {
     placeholder: UK_DATE_FORMAT_EXAMPLE,
-    filter: ->{ ( FormInput.parse_time( self, UK_DATE_FORMAT ) rescue DateTime.parse( self ).to_time rescue self ) unless empty? },
+    filter: ->{ ( FormInput.parse_time!( self, UK_DATE_FORMAT ) rescue self ) unless empty? },
     format: ->{ utc.strftime( UK_DATE_FORMAT ) rescue self },
     class: Time,
   }
@@ -120,7 +120,7 @@ class FormInput
   # Time in EU date format.
   EU_DATE_ARGS = {
     placeholder: EU_DATE_FORMAT_EXAMPLE,
-    filter: ->{ ( FormInput.parse_time( self, EU_DATE_FORMAT ) rescue DateTime.parse( self ).to_time rescue self ) unless empty? },
+    filter: ->{ ( FormInput.parse_time!( self, EU_DATE_FORMAT ) rescue self ) unless empty? },
     format: ->{ utc.strftime( EU_DATE_FORMAT ) rescue self },
     class: Time,
   }
@@ -145,7 +145,14 @@ class FormInput
     # Rather than using _strptime and checking the leftover field,
     # add required trailing character to both the string and format parameters.
     suffix = ( string[ -1 ] == "\1" ? "\2" : "\1" )
-    time = Time.strptime( "+0000 #{string}#{suffix}", "%z #{format}#{suffix}" )
+    Time.strptime( "+0000 #{string}#{suffix}", "%z #{format}#{suffix}" ).utc
+  end
+
+  # Like parse_time, but falls back to DateTime.parse heuristics when the date/time can't be parsed.
+  def self.parse_time!( string, format )
+    parse_time( string, format )
+  rescue
+    DateTime.parse( string ).to_time.utc
   end
 
   # Transformation which drops empty values from hashes and arrays and turns empty string into nil.
