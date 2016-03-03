@@ -42,6 +42,26 @@ class TestPrunedTypesForm < FormInput
 
 end
 
+class Bacon::Context
+
+  def each_timezone
+    yield nil
+    ( -14 .. 12 ).each{ |x| yield "Etc/GMT%+d" % x }
+  end
+
+  def with_timezone( zone )
+    saved, ENV[ 'TZ' ] = ENV[ 'TZ' ], zone
+    yield
+  ensure
+    ENV[ 'TZ' ] = saved
+  end
+
+  def with_each_timezone( &block )
+    each_timezone{ |zone| with_timezone( zone, &block ) }
+  end
+
+end
+
 describe FormInput do
 
   def request( query )
@@ -132,60 +152,64 @@ describe FormInput do
     f.param( :eu_date )[ :placeholder ].should == "D.M.YYYY"
     f.param( :hours )[ :placeholder ].should == "HH:MM"
 
-    f = TestTimeTypesForm.new( request( "?time=1999-12-31+23:59:48&us_date=1/2/3&uk_date=1/2/3&eu_date=1.2.3&hours=23:59" ) )
-    f.should.be.valid
-    f.to_hash.should == {
-      time: Time.utc( 1999, 12, 31, 23, 59, 48 ),
-      us_date: Time.utc( 3, 1, 2 ),
-      uk_date: Time.utc( 3, 2, 1 ),
-      eu_date: Time.utc( 3, 2, 1 ),
-      hours: ( 23 * 60 + 59 ) * 60,
-    }
-    f.url_params.should == { time: "1999-12-31 23:59:48", us_date: "01/02/0003", uk_date: "01/02/0003", eu_date: "1.2.0003", hours: "23:59" }
-    f.url_query.should == "time=1999-12-31+23%3A59%3A48&us_date=01%2F02%2F0003&uk_date=01%2F02%2F0003&eu_date=1.2.0003&hours=23%3A59"
+    with_each_timezone do
 
-    f = TestTimeTypesForm.new( request( "?time=3-2-1+0:0:0&us_date=12/31/1999&uk_date=31/12/1999&eu_date=31.12.1999&hours=0:0" ) )
-    f.should.be.valid
-    f.to_hash.should == {
-      time: Time.utc( 3, 2, 1, 0, 0, 0 ),
-      us_date: Time.utc( 1999, 12, 31 ),
-      uk_date: Time.utc( 1999, 12, 31 ),
-      eu_date: Time.utc( 1999, 12, 31 ),
-      hours: 0,
-    }
-    f.url_params.should == { time: "0003-02-01 00:00:00", us_date: "12/31/1999", uk_date: "31/12/1999", eu_date: "31.12.1999", hours: "00:00" }
-    f.url_query.should == "time=0003-02-01+00%3A00%3A00&us_date=12%2F31%2F1999&uk_date=31%2F12%2F1999&eu_date=31.12.1999&hours=00%3A00"
+      f = TestTimeTypesForm.new( request( "?time=1999-12-31+23:59:48&us_date=1/2/3&uk_date=1/2/3&eu_date=1.2.3&hours=23:59" ) )
+      f.should.be.valid
+      f.to_hash.should == {
+        time: Time.utc( 1999, 12, 31, 23, 59, 48 ),
+        us_date: Time.utc( 3, 1, 2 ),
+        uk_date: Time.utc( 3, 2, 1 ),
+        eu_date: Time.utc( 3, 2, 1 ),
+        hours: ( 23 * 60 + 59 ) * 60,
+      }
+      f.url_params.should == { time: "1999-12-31 23:59:48", us_date: "01/02/0003", uk_date: "01/02/0003", eu_date: "1.2.0003", hours: "23:59" }
+      f.url_query.should == "time=1999-12-31+23%3A59%3A48&us_date=01%2F02%2F0003&uk_date=01%2F02%2F0003&eu_date=1.2.0003&hours=23%3A59"
 
-    f = TestTimeTypesForm.new( request( "?time=1+Feb+3+13:15&us_date=1+Feb+3&uk_date=3-2-1&eu_date=Feb+1st+3&hours=1:2" ) )
-    f.should.be.valid
-    f.to_hash.should == {
-      time: Time.utc( 2003, 2, 1, 13, 15, 0 ),
-      us_date: Time.utc( 2003, 2, 1 ),
-      uk_date: Time.utc( 2003, 2, 1 ),
-      eu_date: Time.utc( 2003, 2, 1 ),
-      hours: ( 1 * 60 + 2 ) * 60,
-    }
-    f.url_params.should == { time: "2003-02-01 13:15:00", us_date: "02/01/2003", uk_date: "01/02/2003", eu_date: "1.2.2003", hours: "01:02" }
-    f.url_query.should == "time=2003-02-01+13%3A15%3A00&us_date=02%2F01%2F2003&uk_date=01%2F02%2F2003&eu_date=1.2.2003&hours=01%3A02"
+      f = TestTimeTypesForm.new( request( "?time=3-2-1+0:0:0&us_date=12/31/1999&uk_date=31/12/1999&eu_date=31.12.1999&hours=0:0" ) )
+      f.should.be.valid
+      f.to_hash.should == {
+        time: Time.utc( 3, 2, 1, 0, 0, 0 ),
+        us_date: Time.utc( 1999, 12, 31 ),
+        uk_date: Time.utc( 1999, 12, 31 ),
+        eu_date: Time.utc( 1999, 12, 31 ),
+        hours: 0,
+      }
+      f.url_params.should == { time: "0003-02-01 00:00:00", us_date: "12/31/1999", uk_date: "31/12/1999", eu_date: "31.12.1999", hours: "00:00" }
+      f.url_query.should == "time=0003-02-01+00%3A00%3A00&us_date=12%2F31%2F1999&uk_date=31%2F12%2F1999&eu_date=31.12.1999&hours=00%3A00"
 
-    f = TestTimeTypesForm.new( request( "?time=50+Feb&us_date=foo&uk_date=32+1&eu_date=1+x&hours=25:45" ) )
-    f.should.be.invalid
-    names( f.invalid_params ).should == [ :time, :us_date, :uk_date, :eu_date, :hours ]
-    f.to_hash.should == { time: "50 Feb", us_date: "foo", uk_date: "32 1", eu_date: "1 x", hours: "25:45" }
-    f.url_params.should == { time: "50 Feb", us_date: "foo", uk_date: "32 1", eu_date: "1 x", hours: "25:45" }
-    f.url_query.should == "time=50+Feb&us_date=foo&uk_date=32+1&eu_date=1+x&hours=25%3A45"
+      f = TestTimeTypesForm.new( request( "?time=1+Feb+3+13:15&us_date=1+Feb+3&uk_date=3-2-1&eu_date=Feb+1st+3&hours=1:2" ) )
+      f.should.be.valid
+      f.to_hash.should == {
+        time: Time.utc( 2003, 2, 1, 13, 15, 0 ),
+        us_date: Time.utc( 2003, 2, 1 ),
+        uk_date: Time.utc( 2003, 2, 1 ),
+        eu_date: Time.utc( 2003, 2, 1 ),
+        hours: ( 1 * 60 + 2 ) * 60,
+      }
+      f.url_params.should == { time: "2003-02-01 13:15:00", us_date: "02/01/2003", uk_date: "01/02/2003", eu_date: "1.2.2003", hours: "01:02" }
+      f.url_query.should == "time=2003-02-01+13%3A15%3A00&us_date=02%2F01%2F2003&uk_date=01%2F02%2F2003&eu_date=1.2.2003&hours=01%3A02"
 
-    f = TestTimeTypesForm.new( request( "?time=&us_date=&uk_date=&eu_date=&hours=" ) )
-    f.should.be.valid
-    f[ :time, :us_date, :uk_date, :eu_date, :hours ].should == [ nil, nil, nil, nil, nil ]
-    f.to_hash.should == {}
-    f.url_params.should == {}
-    f.url_query.should == ""
+      f = TestTimeTypesForm.new( request( "?time=50+Feb&us_date=foo&uk_date=32+1&eu_date=1+x&hours=25:45" ) )
+      f.should.be.invalid
+      names( f.invalid_params ).should == [ :time, :us_date, :uk_date, :eu_date, :hours ]
+      f.to_hash.should == { time: "50 Feb", us_date: "foo", uk_date: "32 1", eu_date: "1 x", hours: "25:45" }
+      f.url_params.should == { time: "50 Feb", us_date: "foo", uk_date: "32 1", eu_date: "1 x", hours: "25:45" }
+      f.url_query.should == "time=50+Feb&us_date=foo&uk_date=32+1&eu_date=1+x&hours=25%3A45"
+
+      f = TestTimeTypesForm.new( request( "?time=&us_date=&uk_date=&eu_date=&hours=" ) )
+      f.should.be.valid
+      f[ :time, :us_date, :uk_date, :eu_date, :hours ].should == [ nil, nil, nil, nil, nil ]
+      f.to_hash.should == {}
+      f.url_params.should == {}
+      f.url_query.should == ""
+
+    end
   end
 
   describe 'Time parsing helper' do
 
-    should 'should raise when string is not parsed entirely' do
+    should 'raise when string is not parsed entirely' do
       for c in ( 0..255 ).map( &:chr )
         FormInput.parse_time( "2000", "%Y" ).year.should == 2000
         FormInput.parse_time( "2000" + c, "%Y" + c ).year.should == 2000
@@ -209,6 +233,21 @@ describe FormInput do
       for string, format in [ "2000 %- 2", "%Y %%- %-m", "99  3", "%y %_m", "1/12", "%-d/%m", "FEBRUARY", "%^B" ].each_slice( 2 )
         FormInput.parse_time( string, format ).strftime( format ).should == string
       end
+    end
+
+    should 'work regardless of the timezone' do
+      offsets = []
+      with_each_timezone do
+        offsets << Time.now.utc_offset
+        FormInput.parse_time( "2000-12-01 00:00:00", "%Y-%m-%d %H:%M:%S" ).should == Time.utc( 2000, 12, 1, 0, 0, 0 )
+        FormInput.parse_time( "2000-12-01 12:13:14", "%Y-%m-%d %H:%M:%S" ).should == Time.utc( 2000, 12, 1, 12, 13, 14 )
+        FormInput.parse_time( "2000-12-01 23:59:59", "%Y-%m-%d %H:%M:%S" ).should == Time.utc( 2000, 12, 1, 23, 59, 59 )
+
+        FormInput.parse_time!( "2000 Dec 1 00:00:00", "%Y-%m-%d %H:%M:%S" ).should == Time.utc( 2000, 12, 1, 0, 0, 0 )
+        FormInput.parse_time!( "2000 Dec 1 12:13:14", "%Y-%m-%d %H:%M:%S" ).should == Time.utc( 2000, 12, 1, 12, 13, 14 )
+        FormInput.parse_time!( "2000 Dec 1 23:59:59", "%Y-%m-%d %H:%M:%S" ).should == Time.utc( 2000, 12, 1, 23, 59, 59 )
+      end
+      offsets.uniq.count.should.be >= 24
     end
 
   end
