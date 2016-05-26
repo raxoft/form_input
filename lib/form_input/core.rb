@@ -740,7 +740,7 @@ class FormInput
       if arg.is_a? Hash
         set( arg )
       else
-        set_from_request( arg )
+        import( arg )
       end
     end
   end
@@ -799,9 +799,9 @@ class FormInput
   end
   private :sanitize_value
 
-  # Set parameter values from given request. Applies parameter input filters and transforms as well.
+  # Import parameter values from given request or hash. Applies parameter input filters and transforms as well.
   # Returns self for chaining.
-  def set_from_request( request )
+  def import( request )
     for name, param in @params
       if value = request[ param.code ]
         value = sanitize_value( value, param.filter )
