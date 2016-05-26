@@ -898,16 +898,25 @@ describe FormInput do
     f.url_query.should == ""
 
     f = TestForm.new( { age: 2, query: "x" }, { rate: 1, query: "y" } )
-    f.should.not.be.empty
     f.url_query.should == "q=y&age=2&rate=1"
 
     f = TestForm.new( request( "?q=10&age=3" ), query: "y", rate: 0 )
-    f.should.not.be.empty
     f.url_query.should == "q=y&age=3&rate=0"
 
     f = TestForm.new( { query: "x", age: 5 }, request( "?rate=1&q=10" ) )
-    f.should.not.be.empty
     f.url_query.should == "q=10&age=5&rate=1"
+
+    f = TestForm.from_request( request( "?q=+%30&age=0" ) )
+    f.to_hash.should == { query: "0", age: 0 }
+    f.url_query.should == "q=0&age=0"
+
+    f = TestForm.from_params( q: "+%30", age: "0" )
+    f.to_hash.should == { query: "+%30", age: 0 }
+    f.url_query.should == "q=%2B%2530&age=0"
+
+    f = TestForm.from_hash( query: "+%30", age: "0" )
+    f.to_hash.should == { query: "+%30", age: "0" }
+    f.url_query.should == "q=%2B%2530&age=0"
   end
 
   should 'provide direct access to values' do

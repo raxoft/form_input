@@ -720,6 +720,21 @@ class FormInput
       param!( name, *args, hash: true, &block )
     end
 
+    # Create new form from request with external values.
+    def from_request( request )
+      new.import( request )
+    end
+
+    # Create new form from hash with external values.
+    def from_params( params )
+      new.import( params )
+    end
+
+    # Create new form from hash with internal values.
+    def from_hash( hash )
+      new.set( hash )
+    end
+
   end
 
   # Instantiation and access.
