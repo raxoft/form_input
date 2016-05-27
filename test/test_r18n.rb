@@ -296,6 +296,31 @@ describe FormInput do
     p.pt( :inflected_msg ).should == 'Plural'
   end
 
+  should 'fail properly when the locale is not set when needed' do
+    R18n.get.should.be.nil
+    f = TestR18nForm.new
+    p = f.param( :msg3 )
+    p.title.should.be.nil
+    p.form_title.should == 'msg3'
+    p.error_title.should == 'msg3'
+
+    p = f.param( :msg2 )
+    p.title.should == 'Second Message'
+    ->{ p.form_title }.should.raise( RuntimeError )
+    ->{ p.error_title }.should.raise( RuntimeError )
+
+    ->{ f.t.foo }.should.raise( NoMethodError )
+    ->{ p.t.foo }.should.raise( NoMethodError )
+
+    ->{ f.ft.foo }.should.raise( RuntimeError )
+    ->{ p.ft.foo }.should.raise( RuntimeError )
+    ->{ p.pt.foo }.should.raise( RuntimeError )
+
+    ->{ f.ft( :foo ) }.should.raise( RuntimeError )
+    ->{ p.ft( :foo ) }.should.raise( RuntimeError )
+    ->{ p.pt( :foo ) }.should.raise( RuntimeError )
+  end
+
   should 'automatically localize the boolean helper' do
     R18n.get.should.be.nil
     f = TestR18nForm.new

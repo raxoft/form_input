@@ -118,7 +118,7 @@ class FormInput
   # Like t helper, except that the translation is looked up in the forms.<form_name> scope.
   # Supports both ft.name( args ) and ft( :name, args ) forms.
   def ft( *args )
-    # If you get a crash here, you forgot to set the locale with R18n.set('en') or similar. No locale, no helper. Sorry.
+    fail "You need to set the locale with R18n.set('en') or similar. No locale, no helper. Sorry." unless r18n
     translation = t.forms[ self.class.translation_name ]
     args.empty? ? translation : translation[ *args ]
   end
