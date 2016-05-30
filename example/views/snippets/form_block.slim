@@ -8,7 +8,7 @@
 
 // Choose parameter to focus on if enabled.
 
-- focused = params.find{ |x| x.invalid? } || params.find{ |x| x.blank? } || params.first if focus
+- focused ||= params.find{ |x| x.invalid? } || params.find{ |x| x.blank? } || params.first if focus
 
 // Render each parameter, reporting errors as necessary.
 
