@@ -398,20 +398,45 @@ describe FormInput do
     t.unfinished_steps.should == [ :address, :message, :post ]
     t.accessible_steps.should == [ :intro, :email, :name, :address ]
     t.inaccessible_steps.should == [ :message, :post ]
-    t.complete_steps.should == [ :name ]
+    t.complete_steps.should == [ :intro, :name ]
     t.incomplete_steps.should == [ :email ]
     t.good_steps.should == [ :name ]
     t.bad_steps.should == [ :email ]
+
+    check = ->( form ){
+      %w[ finished_step unfinished_step accessible_step inaccessible_step complete_step incomplete_step good_step bad_step ].each do |name|
+        method = "#{name}?"
+        form.steps.each{ |x| form.send( method, x ).should == form.send( "#{name}s" ).include?( x ) }
+        ->{ form.send( method, nil ) }.should.raise ArgumentError
+        ->{ form.send( method, :foo ) }.should.raise ArgumentError
+      end
+    }
+
+    check.call(t)
+
+    t = TestStepsForm.new
+    t.finished_steps.should == []
+    t.unfinished_steps.should == [ :intro, :email, :name, :address, :message, :post ]
+    t.accessible_steps.should == [ :intro ]
+    t.inaccessible_steps.should == [ :email, :name, :address, :message, :post ]
+    t.complete_steps.should == []
+    t.incomplete_steps.should == []
+    t.good_steps.should == []
+    t.bad_steps.should == []
+
+    check.call(t)
 
     t = TestStepsForm.new.unlock_steps
     t.finished_steps.should == [ :intro, :email, :name, :address, :message, :post ]
     t.unfinished_steps.should == []
     t.accessible_steps.should == [ :intro, :email, :name, :address, :message, :post ]
     t.inaccessible_steps.should == []
-    t.complete_steps.should == [ :name, :address ]
+    t.complete_steps.should == [ :intro, :name, :address, :post ]
     t.incomplete_steps.should == [ :email, :message ]
     t.good_steps.should == []
     t.bad_steps.should == [ :email, :message ]
+
+    check.call(t)
   end
 
 end
