@@ -92,6 +92,16 @@ class FormInput
       steps.index( step ) or fail( ArgumentError, "invalid step name #{step}" )
     end
 
+    # Test if current step is before given step.
+    def step_before?( step )
+      step_index < step_index( step )
+    end
+
+    # Test if current step is after given step.
+    def step_after?( step )
+      step_index > step_index( step )
+    end
+
     # Get first step, or first step among given list of steps, if any.
     def first_step( *args )
       if args.empty?

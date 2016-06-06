@@ -219,6 +219,18 @@ describe FormInput do
     ->{ t.step_index( :foo ) }.should.raise ArgumentError
     ->{ t.step_index( nil ) }.should.raise ArgumentError
 
+    t.step_before?( :intro ).should.be.false
+    t.step_before?( :name ).should.be.false
+    t.step_before?( :address ).should.be.false
+    t.step_before?( :message ).should.be.true
+    t.step_before?( :post ).should.be.true
+
+    t.step_after?( :intro ).should.be.true
+    t.step_after?( :name ).should.be.true
+    t.step_after?( :address ).should.be.false
+    t.step_after?( :message ).should.be.false
+    t.step_after?( :post ).should.be.false
+
     t.first_step.should == :intro
     t.first_step( nil ).should == nil
     t.first_step( nil, nil ).should == nil
