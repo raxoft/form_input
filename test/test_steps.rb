@@ -406,6 +406,7 @@ describe FormInput do
     check = ->( form ){
       %w[ finished_step unfinished_step accessible_step inaccessible_step complete_step incomplete_step good_step bad_step ].each do |name|
         method = "#{name}?"
+        form.send( method ).should == form.send( method, form.step )
         form.steps.each{ |x| form.send( method, x ).should == form.send( "#{name}s" ).include?( x ) }
         ->{ form.send( method, nil ) }.should.raise ArgumentError
         ->{ form.send( method, :foo ) }.should.raise ArgumentError

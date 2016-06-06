@@ -257,14 +257,14 @@ class FormInput
       steps - unfinished_steps
     end
 
-    # Test if given step was not yet visited or was visited for the first time.
-    def unfinished_step?( step )
+    # Test if given/current step was not yet visited or was visited for the first time.
+    def unfinished_step?( step = self.step )
       index = seen ? step_index( seen ) : -1
       step_index( step ) > index
     end
 
-    # Test if given step was visited or skipped over before.
-    def finished_step?( step )
+    # Test if given/current step was visited or skipped over before.
+    def finished_step?( step = self.step )
       not unfinished_step?( step )
     end
 
@@ -278,13 +278,13 @@ class FormInput
       steps - inaccessible_steps
     end
 
-    # Test if given step is inaccessible.
-    def inaccessible_step?( step )
+    # Test if given/current step is inaccessible.
+    def inaccessible_step?( step = self.step )
       step_index( step ) > step_index( last )
     end
 
-    # Test if given step is accessible.
-    def accessible_step?( step )
+    # Test if given/current step is accessible.
+    def accessible_step?( step = self.step )
       not inaccessible_step?( step )
     end
 
@@ -298,33 +298,33 @@ class FormInput
       finished_steps.select{ |step| incorrect_step?( step ) }
     end
 
-    # Test if given step is one of the complete steps.
-    def complete_step?( step )
+    # Test if given/current step is one of the complete steps.
+    def complete_step?( step = self.step )
       finished_step?( step ) and correct_step?( step )
     end
 
-    # Test if given step is one of the incomplete steps.
-    def incomplete_step?( step )
+    # Test if given/current step is one of the incomplete steps.
+    def incomplete_step?( step = self.step )
       finished_step?( step ) and incorrect_step?( step )
     end
 
-    # Get steps which shell be checked off as ok in the sidebar/masthead.
+    # Get steps which shell be displayed as correct.
     def good_steps
       steps.select{ |step| good_step?( step ) }
     end
 
-    # Get steps which shell be marked as having errors in the sidebar/masthead.
+    # Get steps which shell be displayed as incorrect.
     def bad_steps
       steps.select{ |step| bad_step?( step ) }
     end
 
-    # Test if given step shell be checked off as ok in the sidebar/masthead.
-    def good_step?( step )
+    # Test if given/current step shell be displayed as correct.
+    def good_step?( step = self.step )
       complete_step?( step ) and filled_step?( step ) and regular_step?( step )
     end
 
-    # Test if given step shell be marked as having errors in the sidebar/masthead.
-    def bad_step?( step )
+    # Test if given/current step shell be displayed as incorrect.
+    def bad_step?( step = self.step )
       incomplete_step?( step )
     end
 
