@@ -301,6 +301,9 @@ describe FormInput do
     t.next_step( :post ).should == nil
     t.next_step( :foo ).should == :intro
 
+    t.previous_step_name.should == "Name"
+    t.next_step_name.should == "Message"
+
     t.extra_step?.should.be.false
     t.extra_step?( :intro ).should.be.true
     t.extra_step?( :email ).should.be.false

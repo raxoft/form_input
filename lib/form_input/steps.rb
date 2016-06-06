@@ -142,14 +142,24 @@ class FormInput
       steps[ index + 1 .. -1 ]
     end
 
-    # Get the next step, or nil.
+    # Get the next step, or nil if there is none.
     def next_step( step = self.step )
       next_steps( step ).first
     end
 
-    # Get the previous step, or nil.
+    # Get the previous step, or nil if there is none.
     def previous_step( step = self.step )
       previous_steps( step ).last
+    end
+
+    # Get name of the next step, if any.
+    def next_step_name
+      step_name( next_step )
+    end
+
+    # Get name of the previous step, if any.
+    def previous_step_name
+      step_name( previous_step )
     end
 
     # Test if the current/given step has no parameters defined.
