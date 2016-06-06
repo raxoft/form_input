@@ -80,24 +80,23 @@ class PRController < Controller
 
     # Report errors whenever there are some in the currently finished step.
 
-    @state = :report if form.invalid_step? and form.finished_step?
+    @state = :report if form.incomplete_step?
 
     # That's all until the last steps are reached.
 
-    step = form.step
-    return unless step == :summary or step == :post
+    return if form.step_before?( :summary )
 
     # In case the form is still invalid, return to the appropriate step.
 
     unless form.valid?
-      form.step = form.invalid_step
+      form.step = form.incorrect_step
       @state = :report
       return
     end
 
     # That's all until the last step is reached.
 
-    return step == :post
+    return form.last_step?
   end
 
 end
