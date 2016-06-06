@@ -13,7 +13,7 @@ form *form_attrs
   .row
     .col-md-3 role='navigation'
 
-      == render_partial :sidebar,
+      == snippet :sidebar,
         title: "#{edit_mode ? 'Edit' : 'Create'} Press Release",
         items: @form.sidebar_items,
         accessible: @form.accessible_steps,
