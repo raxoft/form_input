@@ -241,6 +241,26 @@ describe FormInput do
     ->{ t.last_step( :email, :foo ) }.should.raise ArgumentError
     ->{ t.last_step( [ nil, :foo, :address] ) }.should.raise ArgumentError
 
+    t.first_step?.should.be.false
+    t.first_step?( :intro ).should.be.true
+    t.first_step?( :email ).should.be.false
+    t.first_step?( :name ).should.be.false
+    t.first_step?( :address ).should.be.false
+    t.first_step?( :message ).should.be.false
+    t.first_step?( :post ).should.be.false
+    t.first_step?( nil ).should.be.false
+    t.first_step?( :foo ).should.be.false
+
+    t.last_step?.should.be.false
+    t.last_step?( :intro ).should.be.false
+    t.last_step?( :email ).should.be.false
+    t.last_step?( :name ).should.be.false
+    t.last_step?( :address ).should.be.false
+    t.last_step?( :message ).should.be.false
+    t.last_step?( :post ).should.be.true
+    t.last_step?( nil ).should.be.false
+    t.last_step?( :foo ).should.be.false
+
     t.previous_steps.should == [ :intro, :email, :name ]
     t.previous_steps( nil ).should == []
     t.previous_steps( :intro ).should == []

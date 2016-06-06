@@ -110,6 +110,16 @@ class FormInput
       end
     end
 
+    # Test if given/current step is the first step.
+    def first_step?( step = self.step )
+      step == first_step
+    end
+
+    # Test if given/current step is the last step.
+    def last_step?( step = self.step )
+      step == last_step
+    end
+
     # Get steps before given/current step.
     def previous_steps( step = self.step )
       index = steps.index( step ) || 0
