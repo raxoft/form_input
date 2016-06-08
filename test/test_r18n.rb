@@ -1,6 +1,5 @@
 # encoding: UTF-8
 
-require 'form_input'
 require 'form_input/r18n'
 
 class TestR18nForm < FormInput

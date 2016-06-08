@@ -1,5 +1,6 @@
 # R18n localization support.
 
+require 'form_input'
 require 'r18n-core'
 
 class FormInput
