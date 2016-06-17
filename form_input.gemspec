@@ -4,8 +4,8 @@ require File.expand_path( '../lib/form_input/version', __FILE__ )
 
 Gem::Specification.new do |s|
   s.name        = 'form_input'
-  s.version     = FormInput::Version::STRING.dup
-  s.summary     = 'Form helper which sanitizes, transforms, validates and encapsulates request input.'
+  s.version     = FormInput::Version::STRING
+  s.summary     = 'Form helper which sanitizes, transforms, validates and encapsulates web request input.'
   s.description = <<EOT
 This gem allows you to describe your forms using a simple DSL
 and then takes care of sanitizing, transforming, and validating the input for you,
