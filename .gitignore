@@ -1,1 +1,5 @@
 *~
+/form_input-*.gem
+/coverage
+/doc
+/.yardoc
