@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+require_relative 'helper'
+
 require 'form_input/localize'
 
 class TestLocalizeForm < FormInput

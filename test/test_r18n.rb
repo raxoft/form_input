@@ -1,5 +1,7 @@
 # encoding: UTF-8
 
+require_relative 'helper'
+
 require 'form_input/r18n'
 
 class TestR18nForm < FormInput
