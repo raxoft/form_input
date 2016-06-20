@@ -446,6 +446,14 @@ describe FormInput do
     f.url_params.should == { int: "1", int2: "1.5", float: "0.0", float2: "foo" }
     f.url_query.should == "int=1&int2=1.5&float=0.0&float2=foo"
 
+    f = c.new( request( "?int=&int2=&float=&float2=" ) )
+    f.should.be.valid
+    names( f.invalid_params ).should == []
+    f.error_messages.should == []
+    f.to_hash.should == { int: 0, float: 0 }
+    f.url_params.should == { int: "0", float: "0.0" }
+    f.url_query.should == "int=0&float=0.0"
+
     f = c.new( request( "?int=0x0a&int2=0x0a" ) )
     f.should.be.invalid
     names( f.invalid_params ).should == [ :int2 ]
