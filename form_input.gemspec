@@ -4,7 +4,7 @@ require File.expand_path( '../lib/form_input/version', __FILE__ )
 
 Gem::Specification.new do |s|
   s.name        = 'form_input'
-  s.version     = FormInput::Version::STRING
+  s.version     = FormInput::Version::STRING + '.pre1'
   s.summary     = 'Form helper which sanitizes, transforms, validates and encapsulates web request input.'
   s.description = <<EOT
 This gem allows you to describe your forms using a simple DSL
@@ -23,6 +23,7 @@ EOT
 
   s.files       = `git ls-files`.split( "\n" )
 
+  s.required_ruby_version = '>= 2.0.0'
   s.add_runtime_dependency 'rack', '~> 1.5'
   s.add_development_dependency 'bacon', '~> 1.2'
   s.add_development_dependency 'r18n-core', '~> 2.0'
