@@ -40,7 +40,7 @@ describe FormInput do
     text = FormInput.default_translation( [ TestLocalizeForm ] )
     name = File.expand_path( "#{__FILE__}/../localize/en.yml" )
     if File.exists?( name )
-      text.should == File.read( name )
+      YAML.load( text ).should == YAML.load( File.read( name ) )
     else
       File.write( name, text )
     end
