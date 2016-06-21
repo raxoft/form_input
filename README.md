@@ -1,5 +1,7 @@
 # Form input
 
+[![Gem Version](https://img.shields.io/gem/v/form_input.svg)](http://rubygems.org/gems/form_input) [![Build Status](https://travis-ci.org/raxoft/form_input.svg?branch=master)](http://travis-ci.org/raxoft/form_input) [![Dependency Status](https://img.shields.io/gemnasium/raxoft/form_input.svg)](https://gemnasium.com/raxoft/form_input) [![Code Climate](https://img.shields.io/codeclimate/github/raxoft/form_input.svg)](https://codeclimate.com/github/raxoft/form_input) [![Coverage](https://img.shields.io/codeclimate/coverage/github/raxoft/form_input.svg)](https://codeclimate.com/github/raxoft/form_input)
+
 Form input is a gem which helps dealing with web request input and with the creation of HTML forms.
 
 Install the gem:
