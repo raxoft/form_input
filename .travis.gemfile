@@ -8,4 +8,8 @@ gem 'rack-test'
 gem 'bacon', '~> 1.2'
 gem 'r18n-core', '~> 2.0'
 
+if ENV[ 'CODECLIMATE_REPO_TOKEN' ]
+  gem 'codeclimate-test-reporter'
+end
+
 # EOF #
