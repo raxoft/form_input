@@ -1,0 +1,18 @@
+# TravisCI config.
+
+language: ruby
+rvm:
+  - ruby-head
+  - 2.3.1
+  - 2.2.5
+  - 2.1.10
+  - 2.0.0
+  - rbx-2
+  - jruby-head
+gemfile: .travis.gemfile
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: jruby-head
+
+# EOF #

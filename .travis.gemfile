@@ -1,0 +1,9 @@
+# Gemfile for TravisCI integration.
+
+source 'https://rubygems.org'
+
+gem 'rake'
+gem 'bacon', '~> 1.2'
+gem 'r18n-core', '~> 2.0'
+
+# EOF #
