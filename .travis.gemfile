@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 gem 'rake'
+gem 'rack', '~> 1.5'
 gem 'bacon', '~> 1.2'
 gem 'r18n-core', '~> 2.0'
 
