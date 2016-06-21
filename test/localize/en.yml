@@ -1,63 +1,24 @@
 ---
 forms:
-  test_form:
-    email:
-      title: Email
-      form_title: Your email
-      error_title: email address
-    password:
-      title: Password
-      msg: Password must contain one lowercase and one uppercase letter and one digit
-  test_inflection_form:
-    name:
-      title: Name
-    address:
-      title: Address
-    state:
-      title: State
-    author:
-      title: Author
-    friends:
-      title: Friends
-    chars:
-      title: Characters
-    keywords:
-      title: Keywords
-    notes:
-      title: Notes
   test_localize_form:
     simple:
       title: String
+    complex:
+      title: Title
+      form_title: Form Title
+      error_title: Error Title
+      required_msg: "%p is required!"
+      msg: "%p must contain at least one letter"
+      reject_msg: "%p must not contain a digit"
+      help: Help
+      placeholder: Placeholder
+      subtitle: Subtitle
     utf:
       title: "ěščřžýáíéúůďťň"
     yaml:
       title: "%"
       msg: "{}"
-  test_localized_steps_form:
     steps:
       one: First
       two: Second
       three: Third
-  test_r18n_form:
-    msg:
-      title: Message
-    msg2:
-      title: Second Message
-  test_steps_form:
-    steps:
-      intro: Intro
-      email: Email
-      name: Name
-      address: Address
-      message: Message
-  test_time_types_form:
-    time:
-      placeholder: YYYY-MM-DD HH:MM:SS
-    us_date:
-      placeholder: MM/DD/YYYY
-    uk_date:
-      placeholder: DD/MM/YYYY
-    eu_date:
-      placeholder: D.M.YYYY
-    hours:
-      placeholder: HH:MM
