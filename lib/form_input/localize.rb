@@ -36,12 +36,12 @@ class FormInput
 
   # Get list of all classes inherited from FormInput.
   def self.forms
-    ObjectSpace.each_object( Class ).select{ |x| x < FormInput }
+    ObjectSpace.each_object( Class ).to_a.select{ |x| x < FormInput }.sort_by{ |x| x.name }
   end
 
   # Get string containing YAML representation of the default R18n translation for current project.
   def self.default_translation
-    hash = forms.sort_by{ |x| x.name }.map{ |x| [ x.translation_name, x.translation_hash ] }.reject{ |k, v| v.empty? }.to_h
+    hash = forms.map{ |x| [ x.translation_name, x.translation_hash ] }.reject{ |k, v| v.empty? }.to_h
     YAML::dump( { forms: hash }.stringify_keys )
   end
 end

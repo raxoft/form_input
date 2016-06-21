@@ -12,6 +12,21 @@ end
 
 describe FormInput do
 
+  should 'provide helper which returns all form classes' do
+    FormInput.forms.should == [
+      TestAddressTypesForm,
+      TestBasicTypesForm,
+      TestForm,
+      TestInflectionForm,
+      TestLocalizeForm,
+      TestLocalizedStepsForm,
+      TestPrunedTypesForm,
+      TestR18nForm,
+      TestStepsForm,
+      TestTimeTypesForm,
+    ]
+  end
+
   should 'provide helper to create default translation file' do
     text = FormInput.default_translation
     name = File.expand_path( "#{__FILE__}/../localize/en.yml" )
