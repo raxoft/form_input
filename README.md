@@ -1,6 +1,6 @@
 # Form input
 
-Form input is a gem which helps dealing with a web request input and with the creation of HTML forms.
+Form input is a gem which helps dealing with web request input and with the creation of HTML forms.
 
 Install the gem:
 
@@ -3139,6 +3139,11 @@ Thanks for that.
 ## Credits
 
 Copyright &copy; 2015-2016 Patrik Rak
+
+Translations contributed by
+Maroš Rovňák (Slovak)
+and
+Eryk Dwornicki (Polish).
 
 The `FormInput` is released under the MIT license.
 
