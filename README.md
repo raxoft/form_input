@@ -3120,14 +3120,14 @@ Trivial indeed, isn't it?
 
 ### Supported Locales
 
-The `FormInput` currently includes translations of builtin error messages for the following locales:
+The `FormInput` currently includes translations of builtin error messages for the following languages:
 
 * English
 * Czech
 * Slovak
 * Polish
 
-To add support for another locale,
+To add support for another language,
 simply copy the content of one of the most similar files found in the `form_input/r18n` directory
 to the appropriate translation file in your project,
 and translate it as you see fit.

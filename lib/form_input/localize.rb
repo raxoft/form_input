@@ -40,7 +40,7 @@ class FormInput
   end
 
   # Get string containing YAML representation of the default R18n translation for all/given FormInput classes.
-  def self.default_translation(forms = self.forms)
+  def self.default_translation( forms = self.forms )
     hash = Hash[ forms.map{ |x| [ x.translation_name, x.translation_hash ] }.reject{ |k, v| v.empty? } ]
     YAML::dump( { forms: hash }.stringify_keys )
   end
