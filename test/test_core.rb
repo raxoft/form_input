@@ -190,6 +190,28 @@ describe FormInput do
     end
   end
 
+  should 'allow defining parameters by several means' do
+    c = Class.new( FormInput )
+    c.param :p
+    c.param! :rp
+    c.array :a
+    c.array! :ra
+    c.hash :h
+    c.hash! :rh
+    c.param :p2, hash: false
+    c.param :rp2, array: false, required: true
+    c.param :a2, array: true
+    c.param :ra2, array: true, required: true
+    c.param :h2, hash: true
+    c.param :rh2, hash: true, required: true
+    f = c.new
+    names( f.scalar_params ).should == [ :p, :rp, :p2, :rp2 ]
+    names( f.array_params ).should == [ :a, :ra, :a2, :ra2 ]
+    names( f.hash_params ).should == [ :h, :rh, :h2, :rh2 ]
+    names( f.optional_params ).should == [ :p, :a, :h, :p2, :a2, :h2 ]
+    names( f.required_params ).should == [ :rp, :ra, :rh, :rp2, :ra2, :rh2 ]
+  end
+
   should 'complain about incorrect parameter definition' do
     ->{ TestForm.param :x, "test", "test" }.should.raise( ArgumentError )
     ->{ TestForm.param :x, { type: :email }, :extra }.should.raise( ArgumentError )
@@ -375,6 +397,7 @@ describe FormInput do
 
     f = c.new( request( "?str=1.5&int=1.5&float=1.5&date=2011-12-31&time=31.12.2000+10:24:05&bool=true&str2=Abc&arr=a,b&hsh=1:2,3:4" ) )
     f.should.be.valid
+    names( f.blank_params ).should == [ :int2, :float2 ]
     f.to_h.should == f.to_hash
     f.to_hash.should == {
       str: "1.5",
@@ -428,6 +451,8 @@ describe FormInput do
     f.hsh.should == {}
     names( f.incorrect_params ).should == []
     names( f.invalid_params ).should == []
+    f.empty_params.should == f.params
+    f.blank_params.should == f.params
     f.to_hash.should == {}
     f.url_params.should == {}
     f.url_query.should == ""
@@ -612,6 +637,7 @@ describe FormInput do
     c.param :single, data: ->{ 2.times.map{ |i| [ i, ( 65 + i ).chr ] } }, class: Integer do to_i end
     c.array :multi, data: ->{ 4.times.map{ |i| [ i, ( 65 + i ).chr ] } }, class: Integer do to_i end
     c.param :x, filter: ->{ to_i }, class: Integer
+    c.hash :h
 
     f = c.new( single: 1, multi: [ 1, 3 ], x: 5 )
     f.should.be.valid
@@ -646,23 +672,46 @@ describe FormInput do
     p.form_name.should == "x"
     p.form_value.should == "5"
 
-    f = c.new( request( "?single=0&multi[]=0&multi[]=2&x=3" ) ) ;
+    f = c.new( request( "?single=0&multi[]=0&multi[]=2&x=3" ) )
     f.should.be.valid
     f.to_hash.should == { single: 0, multi: [ 0, 2 ], x: 3 }
     f.url_params.should == { single: "0", multi: [ "0", "2" ], x: "3" }
     f.url_query.should == "single=0&multi[]=0&multi[]=2&x=3"
 
-    f = c.new( request( "?single=5&multi[]=5" ) ) ;
+    f = c.new( request( "?single=5&multi[]=5" ) )
     f.should.be.valid
     f.to_hash.should == { single: 5, multi: [ 5 ] }
     f.url_params.should == { single: "5", multi: [ "5" ] }
     f.url_query.should == "single=5&multi[]=5"
 
-    f = c.new( request( "" ) ) ;
+    f = c.new( request( "" ) )
     f.should.be.valid
     f.to_hash.should == {}
     f.url_params.should == {}
     f.url_query.should == ""
+
+    p = f.param( :single )
+    p.selected?( nil ).should.be.false
+    p.selected?( 0 ).should.be.false
+    p.selected?( 1 ).should.be.false
+    p.selected?( 2 ).should.be.false
+    p.selected?( 3 ).should.be.false
+
+    f = c.new( request( "?h[0]=" ) )
+    f.should.be.valid
+    f.to_hash.should == { h: { 0 => "" } }
+    f.url_params.should == { h: { "0" => "" } }
+    f.url_query.should == "h[0]="
+
+    p = f.param( :h )
+    p.data.should == []
+    p.code.should == :h
+    ->{ p.form_name }.should.raise ArgumentError
+    p.form_name( 0 ).should == "h[0]"
+    p.form_value.should == { "0" => "" }
+    p.selected?( nil ).should.be.false
+    p.selected?( 0 ).should.be.false
+    p.selected?( "" ).should.be.false
   end
 
   should 'classify parameters' do
@@ -1075,7 +1124,7 @@ describe FormInput do
     f.url_params.should == { q: s }
     f.url_query.should == "q=%FF"
 
-    f = TestForm.new( Rack::Request.new( Rack::MockRequest.env_for( "?q=%ff" ) ) )
+    f = TestForm.new( request( "?q=%ff" ) )
     ->{ f.validate }.should.not.raise
     f.should.not.be.valid
     f.error_messages.should == [ "q must use valid encoding" ]
@@ -1083,6 +1132,15 @@ describe FormInput do
     f.to_hash.should == { query: s.dup.force_encoding( 'BINARY' ) }
     f.url_params.should == { q: s.dup.force_encoding( 'BINARY' ) }
     f.url_query.should == "q=%FF"
+  end
+
+  should 'reject unexpected values in request input' do
+    ->{ TestForm.new.import( q: "", opts: [], on: {} ) }.should.not.raise
+    ->{ TestForm.new.import( q: [], opts: {}, on: "" ) }.should.not.raise
+    ->{ TestForm.new.import( q: {}, opts: "", on: [] ) }.should.not.raise
+    ->{ TestForm.new.import( q: 1 ) }.should.raise TypeError
+    ->{ TestForm.new.import( q: :x ) }.should.raise TypeError
+    ->{ TestForm.new.import( q: TestForm ) }.should.raise TypeError
   end
 
   should 'make it easy to create URLs' do
