@@ -100,10 +100,10 @@ Sounds cool enough? Then read on.
   * [Grouped Parameters](#grouped-parameters)
   * [Chunked Parameters](#chunked-parameters)
 * [Multi-Step Forms](#multi-step-forms)
-    * [Defining Multi-Step Forms](#defining-multi-step-forms)
-    * [Multi-Step Form Functionality](#multi-step-form-functionality)
-    * [Using Multi-Step Forms](#using-multi-step-forms)
-    * [Rendering Multi-Step Forms](#rendering-multi-step-forms)
+  * [Defining Multi-Step Forms](#defining-multi-step-forms)
+  * [Multi-Step Form Functionality](#multi-step-form-functionality)
+  * [Using Multi-Step Forms](#using-multi-step-forms)
+  * [Rendering Multi-Step Forms](#rendering-multi-step-forms)
 * [Localization](#localization)
   * [Error Messages and Inflection](#error-messages-and-inflection)
   * [Localizing Forms](#localizing-forms)
@@ -112,7 +112,7 @@ Sounds cool enough? Then read on.
   * [Inflection Filter](#inflection-filter)
   * [Localizing Form Steps](#localizing-form-steps)
   * [Supported Locales](#supported-locales)
-
+* [Credits](#credits)
 
 ## Form Basics
 
@@ -143,12 +143,12 @@ The _name_ is how you will address the parameter in your code,
 while the optional _title_ is the string which will be displayed to the user by default.
 
 The `param!` method works the same way but creates a required parameter.
-Such parameters are required to appear in the input and have non-empty value.
+Such parameters are required to appear in the input and to have a non-empty value.
 Failure to do so will be automatically reported as an error
 (discussed further in [Errors and Validation](#errors-and-validation)).
 
-Both methods actually take the optional _options_ as their last argument, too.
-The _options_ is a hash which is used to control
+Both methods actually take an optional _options_ as their last argument, too.
+The _options_ argument is a hash which is used to control
 most aspects of the parameter.
 In fact, using the _title_ argument is just a shortcut identical to
 setting the parameter option `:title` to the same value.
@@ -164,9 +164,9 @@ Parameters support many more parameter options,
 and we will discuss each in turn as we go.
 Comprehensive summary for an avid reader is however available in [Parameter Options](#parameter-options).
 
-The value of each parameter is a string by default (or `nil` if the parameter is not set).
+The value of each parameter is a string by default (or `nil` if the parameter is not set at all).
 The string size is implicitly limited to 255 characters and bytes by default.
-To limit the size explictly, you can use an optional _size_ parameter like this:
+To limit the size explicitly, you can use an optional _size_ parameter like this:
 
 ``` ruby
   param! :title, "Title", 100
@@ -213,7 +213,7 @@ We could do that by simply setting the `:filter` option to `nil`.
 However, at the same time we want to get rid of the trailing newline character
 which is often appended by the browser
 when the user cuts and pastes the password from somewhere.
-Not doing this would make the password fail for no apparent reason,
+Not doing this would make the password eventually fail for no apparent reason,
 resulting in poor user experience.
 That's why we use `chomp` as the filter above.
 The filter block is executed in the context of the string value itself,
@@ -237,7 +237,7 @@ and it will be called to obtain the actual value.
 The block is called in context of the form parameter itself,
 so it can access any of its methods and its form's methods easily.
 For example, you can let the form automatically disable some fields
-based on available user permissions by defining `is_forbidden?` accordingly:
+based on available user permissions by defining the `is_forbidden?` method accordingly:
 
 ``` ruby
   param :avatar, "Avatar",
@@ -255,7 +255,7 @@ you can factor them out and share them like this:
   param :comment, "Comment", FEATURED_ARGS, type: :textarea
 ```
 
-This works since you can actually pass several hashes in place of the _options_ parameter
+This works since you can actually pass several hashes in place of the _options_ argument
 and they all get merged together from left to right.
 This allows you to mix various options presets together and then tweak them further as needed.
 
@@ -270,7 +270,7 @@ The internal representation, as you might have guessed,
 are the parameter values which you will use in your application.
 The external representation is how the parameters are present
 to the browser via HTML forms or URLs
-and passed back to the the server.
+and passed back to the server.
 
 Normally, both representations are the same.
 The parameters are named the same way in both cases
@@ -376,6 +376,9 @@ The complete filter for converting numbers to integers should thus look like thi
   class: Integer
 ```
 
+You can even consider using `strip.empty?`
+if you want to allow an all-whitespace input to be consumed silently.
+
 Of course, all that would be a lot of typing for something as common as integer parameters.
 That's why the `FormInput` class comes with plenty standard filters predefined:
 
@@ -416,14 +419,15 @@ But you can easily change this by providing your own `:format` filter instead:
 The provided block will be called in the context of the parameter value itself
 and its result will be passed to the `to_s` conversion to create the final external value.
 
-But the use of a formatter is more than just mere cosmetics.
+The use of a formatter is more than just mere cosmetics.
 You will often use the formatter to complement your input filter.
-For example, this is one possible way how to map arbitrary external values
+For example, this is one possible way of how to map arbitrary external values
 to their internal representation and back:
 
 ``` ruby
   SORT_MODES = { id: 'n', views: 'v', age: 'a', likes: 'l' }
   SORT_MODE_PARAMETERS = SORT_MODES.invert
+
   param :sort_mode, :s,
     filter: ->{ SORT_MODE_PARAMETERS[ self ] || self },
     format: ->{ SORT_MODES[ self ] },
@@ -433,7 +437,7 @@ to their internal representation and back:
 Note that once again the original value is preserved in case of error,
 so it can be passed back to the user for fixing.
 
-Another example shows how to process credit card expiration field:
+Another example shows how to process a credit card expiration field:
 
 ``` ruby
   EXPIRY_ARGS = {
@@ -488,7 +492,7 @@ So, what's the difference between `:filter` and `:transform`?
 For scalar values, like normal string or integer parameters, there is none.
 In that case the `:transform` is just an additional filter,
 and you are free to use either or both.
-But `FormInput` class supports also array and hash parameters,
+But `FormInput` class also supports array and hash parameters,
 as we will learn in the very next chapter,
 and that's where it makes the difference.
 The input filter is used to convert each individual element,
@@ -525,7 +529,7 @@ rather than becoming an empty array.
 
 All the parameter options of scalar parameters can be used with array parameters as well.
 In this case, however, they apply to the individual elements of the array.
-The array parameters additionaly support the `:min_count` and `:max_count` options,
+The array parameters additionally support the `:min_count` and `:max_count` options,
 which restrict the number of elements the array can have.
 For example, to limit the keywords both in string size and element count, you can do this:
 
@@ -539,7 +543,7 @@ whereas the input `:transform` is applied to the array as a whole.
 For example, to get sorted array of integers you can do this:
 
 ``` ruby
-  array :ids, INTEGER_ARGS, transform: ->{ compact.sort }
+  array :ids, INTEGER_ARGS, transform: ->{ compact.sort rescue self }
 ```
 
 The `compact` method above takes care of removing any unfilled entries from the array prior sorting.
@@ -571,18 +575,17 @@ which should specify a regular expression
 which all hash keys must match.
 This may not be the wisest move, but it's your call.
 Just make sure you use the `\A` and `\z` anchors rather than `^` and `$`,
-so you don't leave yourself open to nasty suprises.
+so you don't leave yourself open to nasty surprises.
 
-While practical use of hash parameters with forms is fairly limited,
-so you will most likely only use them with URL based non-form input, if ever,
+While practical use of hash parameters with forms is relatively limited,
 the array parameters are pretty common.
-The examples above could be used for gathering list of input fields into single array,
+The examples above could be used for gathering list of input fields into a single array,
 which is useful as well,
 but the most common use of array parameters is for multi-select or multi-checkbox fields.
 
 To declare a select parameter, you can set the `:type` to `:select` and
 use the `:data` option to provide an array of values for the select menu.
-The array contains pairs of parameter values to use and the corresonding text to show to the user.
+The array contains pairs of parameter values to use and the corresponding text to show to the user.
 For example, using a [Sequel]-like `Country` model:
 
 ``` ruby
@@ -999,7 +1002,7 @@ All this ensures you automatically get consistent validation results anytime you
 The only exception is when you set the parameter values explicitly using their setter methods.
 This intentionally leaves the errors reported intact,
 allowing you to adjust the parameter values
-without interferring with the validation results.
+without interfering with the validation results.
 Which finally brings us to the topic of accessing the parameter values themselves.
 
 ### Using Forms
@@ -1168,7 +1171,7 @@ The following methods are available:
   form.incorrect_params   # Parameters whose current value doesn't match their kind.
 ```
 
-Each of them simply selects the paramaters using their boolean getter of the same name.
+Each of them simply selects the parameters using their boolean getter of the same name.
 Each of them is available in the `*_parameters` form for as well,
 for those who don't like the `params` shortcut.
 
@@ -1216,7 +1219,7 @@ What you use this for is up to you.
 We will see later that for example the [Multi-Step Forms](#multi-step-forms) use this for grouping parameters which belong to individual steps,
 but it has plenty other uses as well.
 
-#### URL Helpers
+### URL Helpers
 
 The `FormInput` is primarily intended for use with HTML forms,
 which we will discuss in detail in the [Form Templates](#form-templates) chapter,
@@ -1295,7 +1298,7 @@ Finally, if you do not like the idea of parameter arrays in your URLs, you can u
 Just note that none of the standard array parameter validations apply in this case,
 so make sure to apply your own validations using the `:check` callback if you need to.
 
-#### Form Helpers
+### Form Helpers
 
 It may come as a surprise, but `FormInput` provides no helpers for creating HTML tags.
 That's because doing so would be a completely futile effort.
@@ -1356,7 +1359,7 @@ To illustrate all this, a select parameter can be rendered like this:
 Finally, you will likely want to render the parameter name in some way.
 For this, each parameter has the `form_title` method,
 which returns the title to show in the form.
-It defaults to its title, but can be overriden with the `:form_title` option.
+It defaults to its title, but can be overridden with the `:form_title` option.
 If neither is set, the code name will be used instead.
 To render it, you will use something like this:
 
@@ -1385,7 +1388,7 @@ you will eventually want to extend it further to better fit your project.
 To do this, it's common to define the `Form` class inherited from `FormInput`,
 put various helpers there, and base your own forms on that.
 This is also the place where you can include your own `FormInput` types extensions.
-This chapter merely shows some ideas you may want to built upon to get you started.
+This chapter shows some ideas you may want to built upon to get you started.
 
 Adding custom boolean getters which you may need:
 
@@ -1427,6 +1430,16 @@ Keeping track of additional form state:
   end
 ```
 
+Adding support for your [own types](https://gist.github.com/raxoft/1e717d7dcaab6949ab03):
+
+``` ruby
+  MONEY_ARGS = {
+    filter: ->{ ( Money( self ) rescue self ) unless empty? },
+    format: ->{ Money( self ) },
+    class: Money
+  }
+```
+
 The list could go on and on, as everyone might need slightly different tweaks.
 Eventually, though, you will come up with your own set of extensions which you will keep using across projects.
 Once you do, consider sharing them with the rest of the world. Thanks.
@@ -1455,8 +1468,8 @@ This is a brief but comprehensive summary of all parameter options:
 * `:data` - array containing data for parameter types which need one, like select, multi-select, or multi-checkbox.
    Shall contain the allowed parameter values paired with the corresponding text to display in forms.
    Defaults to empty array if not set.
-* `:tag` or `:tags` - arbitrary symbol or array of symbols used to tag the parameter with arbitrary semtantics.
-  See `tagged?` method in the [Using Forms](#using-forms) chapter.
+* `:tag` or `:tags` - arbitrary symbol or array of symbols used to tag the parameter with arbitrary semantics.
+  See the `tagged?` method in the [Using Forms](#using-forms) chapter.
 * `:filter` - callback used to cleanup or convert the input values.
   See [Input Filter](#input-filter).
 * `:transform` - optional callback used to further convert the input values.
@@ -1483,7 +1496,7 @@ This is a brief but comprehensive summary of all parameter options:
   Defaults to 255.
 * `:min_bytesize` - when set, value(s) of that parameter must have at least this many bytes.
 * `:max_bytesize` - when set, value(s) of that parameter may have at most this many bytes.
-  Defaults to 255 if `:max_size` is dynamic option or less than 256.
+  Defaults to 255 if `:max_size` is a dynamic option or less than 256.
 * `:reject` - regular expression (or array thereof) which the parameter value(s) may not match.
 * `:reject_msg` - custom error message used when the `:reject` check fails.
   Defaults to `:msg` message.
@@ -1501,11 +1514,11 @@ This is a brief but comprehensive summary of all parameter options:
 * `:gender` - grammatical gender used for localization.
   See [Localization](#localization) for details.
 * `:row` - used for grouping several parameters together, usually to render them in a single row.
-  See [Chunked parameters](#chunked-parameters) chapter.
+  See [Chunked Parameters](#chunked-parameters).
 * `:cols` - optional custom option used to set span of the parameter in a single row.
-  See [Chunked parameters](#chunked-parameters).
+  See [Chunked Parameters](#chunked-parameters).
 * `:group` - custom option used for grouping parameters in arbitrary ways.
-  See [Grouped parameters](#grouped-parameters).
+  See [Grouped Parameters](#grouped-parameters).
 * `:size` - custom option used to set size of `:select` and `:textarea` parameters.
 * `:subtitle` - custom option used to render an additional subtitle after the form title.
 * `:placeholder` - custom option used for setting the placeholder attribute of the parameter.
@@ -1556,7 +1569,7 @@ Also note that you can find the example templates discussed here in the `form_in
 ### Form Template
 
 To put the form on a page, you use the stock HTML `form` tag.
-The snippets will be used for rendering the form content,
+The snippets will be used for rendering of the form content,
 but the form itself and the submission buttons used are usually form specific anyway,
 so it is rarely worth factoring it out.
 Assuming the controller passes the form to the view in the `@form` variable,
@@ -1704,7 +1717,7 @@ You may want to review it after you have seen them used in some context:
 
 Having seen the basics, we are now ready to start expanding them towards more complex snippets.
 
-### Complex parameters
+### Complex Parameters
 
 Forms are often more than just few simple text input fields,
 so it is necessary to render more complex parameters as well.
@@ -1784,7 +1797,7 @@ we use normal select for scalar parameters and multi-select for array parameters
 The data to render comes from the `data` attribute of the parameter,
 see the [Array and Hash Parameters](#array-and-hash-parameters) chapter for details.
 Also note how the value is passed to the `selected?` method
-and how it is formated by the `format_value` method.
+and how it is formatted by the `format_value` method.
 
 #### Radio Buttons
 
@@ -1816,10 +1829,10 @@ The `selected?` and `format_value` methods are used the same way, too.
 
 Checkboxes can be used in two ways.
 You can either use them as individual on/off checkboxes,
-or use them as an alternative to multiselect.
+or use them as an alternative to multi-select.
 Their rendering follows this -
 we use the on/off approach for scalar parameters,
-and the multiselect one for array parameters:
+and the multi-select one for array parameters:
 
 ``` slim
 - when :checkbox
@@ -1851,7 +1864,7 @@ and the multiselect one for array parameters:
       = p[:text]
 ```
 
-As you can see, the multiselect case is basically identical to rendering of radio buttons,
+As you can see, the multi-select case is basically identical to rendering of radio buttons,
 only the input type attribute changes.
 For on/off checkboxes, though, there are more changes.
 
@@ -1868,7 +1881,7 @@ like any other parameter option it can be evaluated at runtime if needed,
 see [Defining Parameters](#defining-parameters) for details.
 And the [Localization](#localization) chapter will explain how to get the text localized easily.
 
-### Inflatable parameters
+### Inflatable Parameters
 
 We have seen how to render array parameters as multi-select or multi-checkbox fields.
 Sometimes, however, you really want to render them as an array of text input fields.
@@ -1908,9 +1921,9 @@ which will just update the form,
 in addition to the standard submit button.
 This button will allow the user to add as many items as needed before submitting the form.
 
-### Extending parameters
+### Extending Parameters
 
-The examples above show rendering of parameters which shall take care of most your needs,
+The examples above show rendering of parameters which shall take care of most of your needs,
 but it doesn't need to end there. Do you need some extra functionality?
 It's trivial to pass additional parameter options along and
 render them in the template the way you need.
@@ -1960,7 +1973,7 @@ You can put them in a hash and add them using a splat operator like this:
 And so on and on.
 As you can see, the templates make it really easy to adjust them any way you may need.
 
-### Grouped parameters
+### Grouped Parameters
 
 Sometimes you may want to group some parameters together and render the groups accordingly,
 say in their own subframe.
@@ -1985,7 +1998,7 @@ The example above uses the `group_name` method which is supposed to return the n
 You would have to provide that,
 but check out the [Localization Helpers](#localization-helpers) chapter for a tip how it can be done easily.
 
-### Chunked parameters
+### Chunked Parameters
 
 Occasionally,
 you may want to render some input fields on the same line.
@@ -2112,7 +2125,7 @@ class PostForm < FormInput
   param :zip, "ZIP Code", tag: :address
 
   param! :message, "Your Message", tag: :message
-  param :comment, "Optional Commment", tag: :message
+  param :comment, "Optional Comment", tag: :message
 
   param :url, type: :hidden
 end
@@ -2127,7 +2140,7 @@ the user starts at the first step and finishes at the last
 (at least that's the most typical flow).
 
 The `:tag` option is then used to assign each parameter to particular step.
-If you would need additional tags, remember that you can use the `:tags` array as well.
+If you would need additional tags, remember that you can use the `:tags` array instead as well.
 Also note that the hidden parameter doesn't have to belong to any step,
 as it will be always rendered as a hidden field anyway.
 
@@ -2141,7 +2154,7 @@ Similarly, you could have an initial `:intro` step or some other intermediate st
 The final `:post` step serves as a terminator which we will use to actually process the form data.
 Note that it doesn't have a name,
 so it won't appear among the list of step names if we decide to display them somewhere
-(see [Rendering Multi-Step Form](#rendering-multi-step-form) for example of that).
+(see [Rendering Multi-Step Forms](#rendering-multi-step-forms) for example of that).
 
 We will soon delve into how to use such forms, but first let's discuss their enhanced functionality.
 
@@ -2155,12 +2168,12 @@ The most important of those parameters is the `step` parameter.
 It is always set to the name of the current step,
 starting with the first step defined by default.
 If you need to, you can change the current step by simply assigning to it,
-we will see examples of that later in the [Using Multi-Step Form](#using-multi-step-form) chapter.
+we will see examples of that later in the [Using Multi-Step Forms](#using-multi-step-forms) chapter.
 
 The second important parameter is the `next` parameter.
 It contains the desired step which the user wants to go to whenever he posts the form.
 This parameter is used to let the user progress throughout the form -
-we will see examples of that in the [Rendering Multi-Step Form](#rendering-multi-step-form) chapter.
+we will see examples of that in the [Rendering Multi-Step Forms](#rendering-multi-step-forms) chapter.
 If it is set and there are no problems with the parameters of the currently submitted step,
 it will be used to update the value of the `step` parameter,
 effectively changing the current step to whatever the user wanted.
@@ -2172,8 +2185,8 @@ The `seen` parameter contains the highest step among the steps seen by the user 
 Unlike the `last` parameter, which is always set, the `seen` parameter can be `nil` if no steps were displayed before yet.
 The current step is not included when it is displayed for the first time,
 it will become included only if it is displayed more than once.
-Neither of these parameters is used directly
-They are used by several helper methods for classifying the already visited steps,
+Neither of these parameters is usually used directly, though.
+Instead, they are used by several helper methods for classifying the already visited steps,
 which we will see shortly.
 
 There are three methods added which extend the list of methods
@@ -2298,7 +2311,7 @@ from all these methods (except the `extra_steps` method itself, of course):
 ```
 
 The first of the incorrect steps is of particular interest,
-so there is the shortcut method `incorrect_step` just for that:
+so there is a shortcut method `incorrect_step` just for that:
 
 ``` ruby
   form.incorrect_step     # :email
@@ -2464,7 +2477,7 @@ See how the submit button uses the `next` value to proceed to the next step.
 Without it, the form would be merely updated when submitted.
 
 Also note how we control when to display the errors -
-we use the `finished_step?` method to supress the errors whenever
+we use the `finished_step?` method to suppress the errors whenever
 the user sees certain step for the first time.
 
 Note that it is also possible to divert the form rendering for individual steps if you need to.
@@ -2512,7 +2525,7 @@ To allow users to go back to the previous step, prepend something like this:
 ```
 
 Note that browsers nowadays automatically use the first submit button when the user hits the enter in the text field.
-If you have multiple buttons in the form and the first one is not guarnateed to be the one you want,
+If you have multiple buttons in the form and the first one is not guaranteed to be the one you want,
 you can add the following invisible button as the first button in the form to make the browser go to the step you want:
 
 ``` slim
@@ -2654,7 +2667,7 @@ the [Inflection Filter](#inflection-filter) chapter will explain the gory detail
 For English, the inflection rules are pretty simple.
 You only need to distinguish between singular and plural grammatical number.
 By default,
-`FormInput` uses plural for scalar parameters and singular for array and hash parameters.
+`FormInput` uses singular for scalar parameters and plural for array and hash parameters.
 With localization enabled,
 you can override it by setting the `:plural` parameter option to `true` or `'p'` for plural,
 and to `false` or `'s'` for singular, respectively:
@@ -2840,7 +2853,7 @@ forms:
 Note the use of the `:gender` option to get properly inflected error messages.
 
 Now let's say we decide to use a custom error message when the user forgets to fill in the content of the message field.
-To do this, we add the value of the `:required_msg` option of the `message` parameter directly to `en.yml` like this:
+To do this, we add the value of the `:required_msg` option of the `message` parameter directly to the `en.yml` file like this:
 
 ``` yaml
     message:
@@ -2849,7 +2862,7 @@ To do this, we add the value of the `:required_msg` option of the `message` para
 ```
 
 Note that this works even if you don't add the `:required_msg` option to the parameter
-within the `ContactForm` definition itself.
+within the `ContactForm` class definition itself.
 That's because as long as you have the locale support enabled,
 all applicable parameter options are automatically looked up in the translation files first.
 If the corresponding translation is found,
@@ -2864,7 +2877,7 @@ However note that R18n normally provides its own default translation based on it
 usually falling back to English in the end.
 This means that once you add some translation to the `en.yml` file,
 the parameter option will get this English translation for all other locales as well,
-until you add the corresponding translation it to the other translations files as well.
+until you add the corresponding translation to the other translations files as well.
 
 So, to make sure we get the Czech version of the `:required_msg` for the example above,
 the `cs.yml` file should be updated as well like this:
@@ -2953,7 +2966,7 @@ rather than the global namespace.
 ```
 
 Like the `ft` method, it provides three syntax alternatives for getting the desired translation.
-It's worth mentioning that the `()` syntax automatically appends the parameter itself as the last arguments,
+It's worth mentioning that the `()` syntax automatically appends the parameter itself as the last argument,
 making it available for the [Inflection Filter](#inflection-filter), which will be discussed later.
 
 The `pt` method is typically used in parameter callbacks and
@@ -3005,7 +3018,7 @@ like this:
 
 In either case,
 if set correctly,
-the inflection filter will pick up the last argument provided and choose the appropriatelly inflected message.
+the inflection filter will pick up the last argument provided and choose the appropriately inflected message.
 Now let's see how exactly is this done.
 
 ### Inflection Filter
@@ -3035,7 +3048,7 @@ used to choose the desired translation.
 Now what is this inflection string and where does it come from?
 
 Each parameter has the `inflection` method which returns
-the desired string used to choose the appropriatelly inflected error message.
+the desired string used to choose the appropriately inflected error message.
 By default, it returns the grammatical number and grammatical gender strings combined,
 as returned by the `plural` and `gender` methods of the parameter, respectively.
 If needed, it can be also set directly by the `:inflect` parameter option.
@@ -3070,7 +3083,7 @@ Here is an excerpt from the Czech translation file which demonstrates this:
 ```
 
 As you can see, there are three distinct variants in the singular case, one for each gender.
-The plural case on the other hand used the same variant for most genders, with only two specific exceptions defined.
+The plural case on the other hand uses the same variant for most genders, with only two specific exceptions defined.
 
 Defining translations like this may seem complex,
 but it should feel fairly natural to people fluent in given language.
@@ -3107,7 +3120,7 @@ would look like:
     message:
       title: Your Message
     comment:
-      title: Optional Commment
+      title: Optional Comment
     steps:
       email: Email
       name: Name
