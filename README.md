@@ -62,6 +62,9 @@ validating it, and making it available in a model-like structure.
 The provided template snippets will take care of rendering the form parameters
 as well as any errors detected back to the user.
 You just get to use the input and control the flow the way you want.
+In fact, it's not limited to form input only either -
+it can be used with any web request input,
+including that of [AJAX] or [REST] API end points.
 The gem is completely framework agnostic,
 comes with full test coverage,
 and even supports multi-step forms and localization out of the box.
@@ -121,9 +124,16 @@ what's the difference between internal and external representation,
 how to create form instances and how to deal with errors,
 and, finally, how to access the form input itself.
 
+And note that while forms get mentioned a lot,
+it can be all applied to any other web request input just as well.
+Even [AJAX] end points or [REST] API end points
+can describe their input and let it have converted and validated for them
+by the same means,
+which is worth keeping in mind.
+
 ### Defining Parameters
 
-To create a form, simply inherit from `FormInput` and then
+To define a form, simply inherit from `FormInput` and then
 use the `param` or `param!` methods to define form parameters like this:
 
 ``` ruby
@@ -3164,6 +3174,8 @@ The `FormInput` is released under the MIT license.
 
 
 [DSL]: http://en.wikipedia.org/wiki/Domain-specific_language
+[REST]: https://en.wikipedia.org/wiki/Representational_state_transfer
+[AJAX]: https://en.wikipedia.org/wiki/Ajax_(programming)
 [Sinatra]: http://www.sinatrarb.com/
 [Ramaze]: http://ramaze.net/
 [Slim]: https://github.com/slim-template/slim
