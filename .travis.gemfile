@@ -3,7 +3,13 @@
 source 'https://rubygems.org'
 
 gem 'rake'
-gem 'rack', '>= 1.5', '< 3.0'
+
+if defined? Gem::Version and Gem::Version.new( RUBY_VERSION ) >= Gem::Version.new( '2.2.2' )
+  gem 'rack', '>= 1.5', '< 3.0'
+else
+  gem 'rack', '~> 1.5'
+end
+
 gem 'rack-test'
 gem 'bacon', '~> 1.2'
 gem 'r18n-core', '~> 2.0'
