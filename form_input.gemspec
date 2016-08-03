@@ -21,7 +21,7 @@ EOT
   s.homepage    = 'https://github.com/raxoft/form_input'
   s.license     = 'MIT'
 
-  s.files       = `git ls-files`.split( "\n" )
+  s.files       = %w[ LICENSE README.md Rakefile .yardopts form_input.gemspec ] + Dir[ '{lib,test,example}/**/*.{rb,yml,txt,slim}' ]
 
   s.required_ruby_version = '>= 2.0.0'
   s.add_runtime_dependency 'rack', '~> 1.5'
