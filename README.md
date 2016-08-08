@@ -171,7 +171,7 @@ The following two declarations are therefore the same:
 ```
 
 Parameters support many more parameter options,
-and we will discuss each in turn as we go.
+and we will discuss each one in turn as we go.
 Comprehensive summary for an avid reader is however available in [Parameter Options](#parameter-options).
 
 The value of each parameter is a string by default (or `nil` if the parameter is not set at all).
@@ -2683,7 +2683,7 @@ you can override it by setting the `:plural` parameter option to `true` or `'p'`
 and to `false` or `'s'` for singular, respectively:
 
 ``` ruby
-  param :keywords, "Keywords, plural: true
+  param :keywords, "Keywords", plural: true
   array :countries, "List of countries", plural: false
 ```
 
