@@ -954,6 +954,13 @@ for example:
   form.report( :email, "Email is already taken" ) unless unique_email?( form.email )
 ```
 
+If you want the error message to have priority over anything else what might have been reported before,
+you can use the `report!` method instead:
+
+``` ruby
+  form.filled_params.each{ |p| p.report!( "Fill only one of these" ) } unless form.filled_params.one?
+```
+
 As we have already seen, it is common to use the `report`
 method from within the `:check` or `:test` callback of the parameter itself as well:
 
@@ -1119,13 +1126,17 @@ so you can get back to it using the `form` method if you need to:
   fail unless p.form.valid?
 ```
 
-As we have seen, you can report errors about the parameter using its `report` method.
+As we have seen, you can report errors about the parameter using its `report` or `report!` methods.
 You can ask it about all its errors or just the first error using the `errors` or `error` methods, respectively:
 
 ``` ruby
   p.report( "This is invalid" )
   p.errors        # [ "This is invalid" ]
   p.error         # "This is invalid"
+
+  p.report!( "Do not fill this!" )
+  p.errors        # [ "Do not fill this!", "This is invalid" ]
+  p.error         # "Do not fill this!"
 ```
 
 You can also simply ask whether the parameter is valid or not by using the `valid?` and `invalid?` methods.

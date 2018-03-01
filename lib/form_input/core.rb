@@ -336,9 +336,19 @@ class FormInput
 
       # Report an error concerning this parameter.
       # String %p in the message is automatically replaced with error title.
+      # In case of multiple errors, the message is added to the end of the list, making it less important than the other errors.
       # Returns self for chaining.
       def report( msg, *args )
         form.report( name, format_error_message( msg, *args ) ) if form
+        self
+      end
+
+      # Report an error concerning this parameter.
+      # String %p in the message is automatically replaced with error title.
+      # In case of multiple errors, the message is added to the beginning of the list, making it more important than the other errors.
+      # Returns self for chaining.
+      def report!( msg, *args )
+        form.report!( name, format_error_message( msg, *args ) ) if form
         self
       end
 
@@ -1099,10 +1109,20 @@ class FormInput
   end
 
   # Remember error concerning given parameter.
+  # In case of multiple errors, the message is added to the end of the list, making it less important than the other errors.
   # Returns self for chaining.
   def report( name, msg )
     validate?
     ( @errors[ name ] ||= [] ) << msg.to_s.dup.freeze
+    self
+  end
+
+  # Remember error concerning given parameter.
+  # In case of multiple errors, the message is added to the beginning of the list, making it more important than the other errors.
+  # Returns self for chaining.
+  def report!( name, msg )
+    validate?
+    ( @errors[ name ] ||= [] ).unshift( msg.to_s.dup.freeze )
     self
   end
 

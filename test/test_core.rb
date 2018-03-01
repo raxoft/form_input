@@ -1224,6 +1224,19 @@ describe FormInput do
     f[].errors_for( :password ).should == [ "bad" ]
     f[].error_for( :password ).should == "bad"
 
+    f = TestForm.new.report!( :query, "important" ).report( :query, "less important" )
+    f.errors.should == { query: [ "important", "q is required", "less important" ] }
+    f.error_messages.should == [ "important" ]
+    f.errors_for( :query ).should == [ "important", "q is required", "less important" ]
+    f.error_for( :query ).should == "important"
+
+    f = TestForm.new
+    f.param( :query ).report( "less important" ).report!( "important" )
+    f.errors.should == { query: [ "important", "q is required", "less important" ] }
+    f.error_messages.should == [ "important" ]
+    f.errors_for( :query ).should == [ "important", "q is required", "less important" ]
+    f.error_for( :query ).should == "important"
+
     f = TestForm.new
     f.should.be.invalid
     f.set( query: "x" ).should.be.valid
