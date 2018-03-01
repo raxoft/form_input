@@ -338,22 +338,22 @@ class FormInput
       finished_step?( step ) and incorrect_step?( step )
     end
 
-    # Get steps which shell be displayed as correct.
+    # Get steps which shall be displayed as correct.
     def good_steps
       steps.select{ |step| good_step?( step ) }
     end
 
-    # Get steps which shell be displayed as incorrect.
+    # Get steps which shall be displayed as incorrect.
     def bad_steps
       steps.select{ |step| bad_step?( step ) }
     end
 
-    # Test if given/current step shell be displayed as correct.
+    # Test if given/current step shall be displayed as correct.
     def good_step?( step = self.step )
       complete_step?( step ) and filled_step?( step ) and regular_step?( step )
     end
 
-    # Test if given/current step shell be displayed as incorrect.
+    # Test if given/current step shall be displayed as incorrect.
     def bad_step?( step = self.step )
       incomplete_step?( step )
     end
