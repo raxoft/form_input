@@ -1398,7 +1398,7 @@ you will eventually want to extend it further to better fit your project.
 To do this, it's common to define the `Form` class inherited from `FormInput`,
 put various helpers there, and base your own forms on that.
 This is also the place where you can include your own `FormInput` types extensions.
-This chapter shows some ideas you may want to built upon to get you started.
+This chapter shows some ideas you may want to build upon to get you started.
 
 Adding custom boolean getters which you may need:
 
@@ -1554,8 +1554,7 @@ For example, this is a `snippet` helper based on [Sinatra]'s partials:
 
 ``` ruby
   # Render partial, our style.
-  def snippet( name, opts = {}, locals = nil )
-    opts, locals = {}, opts unless locals
+  def snippet( name, opts = {}, **locals )
     partial( "snippets/#{name}", opts.merge( locals: locals ) )
   end
 ```
@@ -2959,7 +2958,7 @@ might look like:
 
 The `pt` method is usable only in the parameter context.
 It works similar to the `ft` method,
-except that all translations are automatically looked up in the parameter's own ``forms.<form_translation_name>.<parameter_name>` namespace,
+except that all translations are automatically looked up in the parameter's own `forms.<form_translation_name>.<parameter_name>` namespace,
 rather than the global namespace.
 
 ``` ruby
