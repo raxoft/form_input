@@ -643,6 +643,10 @@ The advantage of the `:test` callback is that it works the same way regardless o
 scalar or not,
 so it is preferable to use it
 if you plan to factor this into a `COUNTRY_ARGS` helper which works with both kinds of parameters.
+If you do this,
+you should also know that each parameter can support multiple `:check` and `:test` callbacks,
+and when the parameter options are merged together, all of them are preserved by default
+(unless you set it to `nil`, which resets all previously defined ones).
 
 In either case, the `report` method is used to report any problems about the parameter,
 which marks the parameter as invalid at the same time.
@@ -951,7 +955,7 @@ and let them report any belated additional errors which might get detected durin
 for example:
 
 ``` ruby
-  form.report( :email, "Email is already taken" ) unless unique_email?( form.email )
+  form.report( :email, "Email address is already taken" ) unless unique_email?( form.email )
 ```
 
 If you want the error message to have priority over anything else what might have been reported before,
@@ -961,11 +965,12 @@ you can use the `report!` method instead:
   form.filled_params.each{ |p| p.report!( "Fill only one of these" ) } unless form.filled_params.one?
 ```
 
-As we have already seen, it is common to use the `report`
+As we have already seen [before](#array-and-hash-parameters), it is common to use the `report`
 method from within the `:check` or `:test` callback of the parameter itself as well:
 
 ``` ruby
-  check: ->{ report( "%p is already taken" ) unless unique_email?( value ) }
+  check: ->{ report( "%p is odd number" ) unless value.to_i.even? }
+  test: ->( value ){ report( "%p contain odd number" ) unless value.to_i.even? }
 ```
 
 In this case the `%p` string is replaced by the `title` of the parameter.
@@ -1499,9 +1504,9 @@ This is a brief but comprehensive summary of all parameter options:
   See [Output Format](#output-format).
 * `:class` - object type (or array thereof) which the input filter is expected to convert the input value into.
   See [Input Filter](#input-filter).
-* `:check` - optional callback used to perform arbitrary checks when testing the parameter validity.
+* `:check` - optional callback (or array thereof) used to perform arbitrary checks when testing the parameter validity.
   See [Errors and Validation](#errors-and-validation).
-* `:test` - optional callback used to perform arbitrary tests when testing validity of each parameter value.
+* `:test` - optional callback (or array thereof) used to perform arbitrary tests when testing validity of each parameter value.
   See [Errors and Validation](#errors-and-validation).
 * `:min_key` - minimum allowed value for keys of hash parameters. Defaults to 0.
 * `:max_key` - maximum allowed value for keys of hash parameters. Defaults to 2<sup>64</sup>-1.

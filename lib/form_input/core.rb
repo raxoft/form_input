@@ -49,6 +49,9 @@ class FormInput
     match_msg: "%p like this is not valid",
   }
 
+  # Parameter options which can be merged together into an array when multiple option hashes are merged.
+  MERGEABLE_OPTIONS = [ :check, :test ]
+
   # Form parameter.
   class Parameter
 
@@ -383,10 +386,10 @@ class FormInput
         validate_value( value )
       end
 
-      # Finally, invoke the custom check callback if there is any.
+      # Finally, invoke the custom check callbacks if there are any.
 
-      if check = opts[ :check ]
-        instance_exec( &check )
+      if checks = opts[ :check ]
+        [ *checks ].each{ |x| instance_exec( &x ) }
       end
     end
 
@@ -522,10 +525,10 @@ class FormInput
         return
       end
 
-      # Finally, invoke the custom callback if there is any.
+      # Finally, invoke the custom callbacks if there are any.
 
-      if test = opts[ :test ]
-        instance_exec( value, &test )
+      if tests = opts[ :test ]
+        [ *tests ].each{ |x| instance_exec( value, &x ) }
         return unless valid?
       end
 
@@ -672,7 +675,7 @@ class FormInput
       size = args.shift if args.first.is_a? Numeric
 
       opts = {}
-      opts.merge!( args.shift ) while args.first.is_a? Hash
+      opts.merge!( args.shift ){ |k, o, n| ( n && MERGEABLE_OPTIONS.include?( k ) ) ? [ *o, *n ] : n } while args.first.is_a? Hash
 
       fail ArgumentError, "invalid arguments #{args}" unless args.empty?
 

@@ -380,6 +380,55 @@ describe FormInput do
     f.error_messages.should == [ "s may have at most 5 characters" ]
   end
 
+  should 'support reasonable option merging' do
+    c = Class.new( FormInput )
+    c.param :p, { max_size: 2 }, { min_size: 2, max_size: 3 }, { max_size: 4 }
+    c[ :p ][ :min_size ].should == 2
+    c[ :p ][ :max_size ].should == 4
+
+    c = Class.new( FormInput )
+    c.param :p, { tag: :foo }, { tag: :bar }, { tags: [ :x, :y ] }
+    c.param :q, { tag: :foo }, { tag: :bar }, { tag: nil }, { tags: [ :x, :y ] }
+    c.param :r, { tag: :foo }, { tag: :bar }, { tags: [ :x, :y ] }, { tags: nil }
+    c[ :p ].tags.should == [ :bar, :x, :y ]
+    c[ :q ].tags.should == [ :x, :y ]
+    c[ :r ].tags.should == [ :bar ]
+
+    c = Class.new( FormInput )
+    c.param :p, { tags: :foo }, { tags: :bar }, { tags: [ :x, :y ] }
+    c.param :q, { tags: :foo }, { tags: :bar }, { tags: nil }, { tags: [ :x, :y ] }
+    c.param :r, { tags: :foo }, { tags: :bar }, { tags: [ :x, :y ] }, { tags: nil }
+    c[ :p ].tags.should == [ :x, :y ]
+    c[ :q ].tags.should == [ :x, :y ]
+    c[ :r ].tags.should == []
+
+    c = Class.new( FormInput )
+    c.param :p, { check: ->{ report( "A" ) } }, { check: ->{ report( "B" ) } }
+    c.param :q, { check: ->{ report( "A" ) } }, { check: nil }, { check: ->{ report( "B" ) } }
+    c.param :r, { check: ->{ report( "A" ) } }, { check: ->{ report( "B" ) } }, { check: nil }
+    c.new( p: "x" ).errors_for( :p ).should == [ "A", "B" ]
+    c.new( q: "x" ).errors_for( :q ).should == [ "B" ]
+    c.new( r: "x" ).errors_for( :q ).should == []
+
+    c = Class.new( FormInput )
+    c.param :p, { test: ->( value ){ report( "A" ) } }, { test: ->( value ){ report( "B" ) } }
+    c.param :q, { test: ->( value ){ report( "A" ) } }, { test: nil }, { test: ->( value ){ report( "B" ) } }
+    c.param :r, { test: ->( value ){ report( "A" ) } }, { test: ->( value ){ report( "B" ) } }, { test: nil }
+    c.new( p: "x" ).errors_for( :p ).should == [ "A", "B" ]
+    c.new( q: "x" ).errors_for( :q ).should == [ "B" ]
+    c.new( r: "x" ).errors_for( :q ).should == []
+
+    for name in [:reject, :match, :match_key]
+      c = Class.new( FormInput )
+      c.param :p, { name => /\d/ }, { name => /[A-Z]/ }
+      c.param :q, { name => /\d/ }, { name => nil }, { name => /[A-Z]/ }
+      c.param :r, { name => /\d/ }, { name => /[A-Z]/ }, { name => nil }
+      c[ :p ][ name ].should == /[A-Z]/
+      c[ :q ][ name ].should == /[A-Z]/
+      c[ :r ][ name ].should == nil
+    end
+  end
+
   should 'convert to/from internal value format' do
     c = Class.new( FormInput )
     c.param :str
