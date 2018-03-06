@@ -16,6 +16,8 @@ env:
   global:
     # travis encrypt -r raxoft/form_input CODECLIMATE_REPO_TOKEN=???
     secure: "OGkm2MO8oBOsE6qQ95gca6z3pi8m5UN6vtoD+hlvR6dJpj6n4nlfWOsKq0MJWC5j1260p6EQCfKkfXA0s/rtYbdHpgb4Qhtm9/wKwwyOItyMMdXfaazNhKhLRLnib9RSSxXxjpZY40Lcsb3HWjZbjeIEgu03gn8RtXkmJFG4gqxnpmzw4Xloq8AWl0tO3ItP07VGhbJjCEftweGlICiNZ9XQPq87Bnqr5D9NqBkHAUJm9SpG15y9Dt9by3OPq/PXnh/juXybP7V2IMGhFu1WudLVDy2Bd1VQVbFb7uk51Mko8esDFr5WK0E675CJ2CCm8AaoA+Uwk5cpSB2HCbZ80OSE+Jl60F8NqBfxMvpw/pY0xb/tdGLnXAureU9eWted3XTwtZoq+k/7TdirFCU5u48VxszrJs96QoVi2rh1iPwBXZmGO4aEfkCT/wmqL0Tbi0s69XjjjtNINvXwynXmYG3PbPKG0iDKIJAvwdh+KmBLLd+cKeZp5jJ5npgmsWRcgMm2HHGskb8etv4AFSVvHA8PDQR7E/GalKhSZclUjLlOq+qhGklCi/Mhy8XlAIn+yIXzL3Rlw/bWL56iC/PHzi5vNC4ia8PwlPB+FqOS5T5vwtj4NcDc+6k6yTWRNZZ9cEBeS2xO0TOAFe3qE//PkztW7tJ0Qlgc0aS9Q2+uH9Y="
+after_success:
+  - bundle exec codeclimate-test-reporter
 matrix:
   allow_failures:
     - rvm: rbx-2
