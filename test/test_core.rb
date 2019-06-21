@@ -459,6 +459,7 @@ describe FormInput do
       arr: [ "a", "b" ],
       hsh: { "1" => "2", "3" => "4" },
     }
+    f.url_params.should == f.to_params
     f.url_params.should == {
       str: "1.5",
       int: "1",
@@ -485,6 +486,7 @@ describe FormInput do
       time: "e",
       bool: false,
     }
+    f.url_params.should == f.to_params
     f.url_params.should == {
       str: "a",
       int: "0",

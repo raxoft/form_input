@@ -1093,6 +1093,7 @@ class FormInput
     result
   end
   alias url_parameters url_params
+  alias to_params url_params
 
   # Create string containing URL query from all current non-empty parameters.
   def url_query
