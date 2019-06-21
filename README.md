@@ -86,6 +86,7 @@ Sounds cool enough? Then read on.
   * [Errors and Validation](#errors-and-validation)
   * [Using Forms](#using-forms)
   * [URL Helpers](#url-helpers)
+  * [JSON Helpers](#json-helpers)
   * [Form Helpers](#form-helpers)
   * [Extending Forms](#extending-forms)
   * [Parameter Options](#parameter-options)
@@ -798,13 +799,22 @@ to include parts of the URL as the form input:
   end
 ```
 
+Similarly, you want to use `import` when feeding form input with JSON data (see [JSON Helpers](#json-helpers) for details):
+
+``` ruby
+  post '/api/v1/contact' do
+    form = ContactForm.new.import( json_data )
+  end
+```
+
 If you are worried that you might make a mistake,
-you can use one of the three helper shortcuts
+you can use one of the four helper shortcuts
 which make it easier to remember which one to use when:
 
 ``` ruby
   form = ContactForm.from_request( request )     # Like new.import, for Rack request with external values.
   form = ContactForm.from_params( params )       # Like new.import, for params hash of external values.
+  form = ContactForm.from_data( json_data )      # Like new.import, for JSON hash of external values.
   form = ContactForm.from_hash( some_hash )      # Like new.set, for hash of internal values.
 ```
 
@@ -1254,7 +1264,7 @@ regardless of if it comes from a form post or from the URL query string.
 It is therefore quite natural that the `FormInput` provides helpers for generating
 URL query strings as well in addition to helpers used for form creation.
 
-You can get a hash of filled parameters suitable for use in the URL query by using the `url_params` method,
+You can get a hash of filled parameters suitable for use in the URL query by using the `url_params` (AKA `to_params`) method,
 or get them combined into the URL query string by using the `url_query` method.
 Note that the `url_params` result differs considerably from the result of the `to_hash` method,
 as it uses parameter code rather than name for keys and their external representation for the values:
@@ -1323,6 +1333,74 @@ Finally, if you do not like the idea of parameter arrays in your URLs, you can u
 
 Just note that none of the standard array parameter validations apply in this case,
 so make sure to apply your own validations using the `:check` callback if you need to.
+
+### JSON Helpers
+
+The `Form Input` can also help a great deal with validating JSON data commonly used in REST API endpoints.
+There are two methods which are quite useful in this case, `from_data` and `to_data`.
+The former imports the data from an external input hash,
+which may contain data in either internal or external form,
+while the latter creates the hash containing the data in their canonic internal form.
+
+When you create a form input from request or params, the external parameter values are always strings.
+But in case of JSON data, the values can be also numbers, booleans or `nil`.
+Fortunately, the `import` and `from_data` methods can deal with such input as well.
+The only difference is that the [input filter](#input-filter) is not run in such case.
+The [input transform](#input-transform) is run as usual,
+and so are all the [validation methods](#errors-and-validation).
+
+Among other things this means that you can declare a parameter as integer using the `INTEGER_ARGS` macro,
+and pass in the value as either string or integer, and you end up with integer in both cases, which is pretty convenient.
+
+``` ruby
+  class NumericInput < FormInput
+    param :int, INTEGER_ARGS
+    param :float, FLOAT_ARGS
+  end
+
+  NumericInput.from_data( int: '10', float: 3.0 ).to_data   # { int: 10, float: 3.0 }
+  NumericInput.from_data( int: 10, float: '3.0' ).to_data   # { int: 10, float: 3.0 }
+```
+
+Another difference when dealing with JSON data is that
+the empty strings have completely different significance than in case of web forms.
+For this reason, the result of the `to_data` method includes even empty strings, arrays, and hashes
+(unlike the `to_hash` and `to_params` methods).
+The `nil` values are still filtered out, though.
+
+``` ruby
+  class OptionalInput < FormInput
+    param :string
+    array :array
+    hash :hash
+  end
+
+  OptionalInput.from_data( string: '' ).to_data     # { string: '' }
+  OptionalInput.from_data( array: [] ).to_data      # { array: [] }
+  OptionalInput.from_data( hash: {} ).to_data       # { hash: {} }
+```
+
+The whole JSON processing may in the end look something like this:
+
+``` ruby
+  require 'oj'
+  def json_data
+    data = Oj.load( request.body, symbolize_keys: true )
+    halt( 422, 'Invalid data' ) unless Hash === data
+    data
+  rescue Oj::Error
+    halt( 422, 'Invalid JSON' )
+  end
+
+  post '/api/v1/contact' do
+    input = ContactForm.from_data( json_data )
+    halt( 422, "Invalid data: #{input.error_messages.first}" ) unless input.valid?
+    # Somehow use the input.
+    Contact.create( input.to_data )
+  end
+```
+
+Not bad for having completely validated and converted input data, is it?
 
 ### Form Helpers
 
