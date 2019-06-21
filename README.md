@@ -3256,7 +3256,7 @@ Thanks for that.
 
 ## Credits
 
-Copyright &copy; 2015-2016 Patrik Rak
+Copyright &copy; 2015-2019 Patrik Rak
 
 Translations contributed by
 Maroš Rovňák (Slovak)
