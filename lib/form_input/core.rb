@@ -742,6 +742,7 @@ class FormInput
     def from_params( params )
       new.import( params )
     end
+    alias from_data from_params
 
     # Create new form from hash with internal values.
     def from_hash( hash )
@@ -882,13 +883,24 @@ class FormInput
   end
 
   # Return all non-empty parameters as a hash.
-  # See also url_params, which creates a hash suitable for url output.
+  # See also #to_data, which creates a hash of non-nil parameters,
+  # and #url_params, which creates a hash suitable for url output.
   def to_hash
     result = {}
     filled_params.each{ |x| result[ x.name ] = x.value }
     result
   end
   alias to_h to_hash
+
+  # Return all non-nil parameters as a hash.
+  # Note that the keys are external names of the parameters (should they differ),
+  # so the keys created by `from_data(data).to_data` remain consistent.
+  # See also #to_hash, which creates a hash of non-empty parameters.
+  def to_data
+    result = {}
+    params.each{ |x| result[ x.code ] = x.value unless x.value.nil? }
+    result
+  end
 
   # Convert parameters to names and fail if we encounter unknown one.
   def validate_names( names )

@@ -1195,6 +1195,33 @@ describe FormInput do
     ->{ TestForm.new.import( q: TestForm ) }.should.raise TypeError
   end
 
+  should 'support importing and exporting JSON payloads without modification' do
+    data = {
+      q: 'x',
+      email: 'foo@bar.com',
+      age: 10,
+      rate: 0.5,
+      text: '',
+      # password: nil,
+      opts: [],
+      on: {},
+    }
+    f = TestForm.from_data(data)
+    f.to_data.should == data
+
+    f = TestForm.from_data(data.merge(password: nil))
+    f.to_data.should == data
+
+    f.to_hash.should == {
+      query: 'x',
+      email: 'foo@bar.com',
+      age: 10,
+      rate: 0.5,
+    }
+    f.valid?(:age).should.be.true	# has filter and correct class
+    f.valid?(:rate).should.be.false	# has no filter and class
+  end
+
   should 'make it easy to create URLs' do
     f = TestForm.new( query: "x", opts: [ 0, 0, 1 ], on: { 0 => 1 }, age: 10, email: nil, password: "", text: " " )
     f.url_params.should == { q: "x", age: "10", text: " ", opts: [ "0", "0", "1" ], on: { "0" => "1" } }
