@@ -821,6 +821,10 @@ class FormInput
       # The validation done later ensures that the keys are valid, within range,
       # and that only flat hashes are allowed.
       Hash[ value.map{ |k, v| [ ( Integer( k, 10 ) rescue k ), sanitize_value( v, filter ) ] } ]
+    when Numeric, TrueClass, FalseClass, NilClass
+      # For convenience of importing JSON payloads, allow each of these simple scalar types as they are.
+      # The validation done later will ensure that the type class matches the parameter.
+      value
     else
       fail TypeError, "unexpected parameter type"
     end

@@ -1184,10 +1184,13 @@ describe FormInput do
   end
 
   should 'reject unexpected values in request input' do
-    ->{ TestForm.new.import( q: "", opts: [], on: {} ) }.should.not.raise
-    ->{ TestForm.new.import( q: [], opts: {}, on: "" ) }.should.not.raise
-    ->{ TestForm.new.import( q: {}, opts: "", on: [] ) }.should.not.raise
-    ->{ TestForm.new.import( q: 1 ) }.should.raise TypeError
+    ->{ TestForm.new.import( q: "", opts: [], on: {} ).valid?(:query).should.be.false }.should.not.raise
+    ->{ TestForm.new.import( q: [], opts: {}, on: "" ).valid?(:query).should.be.false }.should.not.raise
+    ->{ TestForm.new.import( q: {}, opts: "", on: [] ).valid?(:query).should.be.false }.should.not.raise
+    ->{ TestForm.new.import( q: 1 ).valid?(:query).should.be.false }.should.not.raise
+    ->{ TestForm.new.import( q: true ).valid?(:query).should.be.false }.should.not.raise
+    ->{ TestForm.new.import( q: false ).valid?(:query).should.be.false }.should.not.raise
+    ->{ TestForm.new.import( q: nil ).valid?(:query).should.be.false }.should.not.raise
     ->{ TestForm.new.import( q: :x ) }.should.raise TypeError
     ->{ TestForm.new.import( q: TestForm ) }.should.raise TypeError
   end
