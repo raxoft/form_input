@@ -1,6 +1,6 @@
 # Form input
 
-[![Gem Version](https://img.shields.io/gem/v/form_input.svg)](http://rubygems.org/gems/form_input) [![Build Status](https://travis-ci.org/raxoft/form_input.svg?branch=master)](http://travis-ci.org/raxoft/form_input) [![Dependency Status](https://img.shields.io/gemnasium/raxoft/form_input.svg)](https://gemnasium.com/raxoft/form_input) [![Code Climate](https://img.shields.io/codeclimate/github/raxoft/form_input.svg)](https://codeclimate.com/github/raxoft/form_input) [![Coverage](https://img.shields.io/codeclimate/coverage/github/raxoft/form_input.svg)](https://codeclimate.com/github/raxoft/form_input)
+[![Gem Version](https://img.shields.io/gem/v/form_input.svg)](http://rubygems.org/gems/form_input) [![Build Status](https://travis-ci.org/raxoft/form_input.svg?branch=master)](http://travis-ci.org/raxoft/form_input) [![Maintainability](https://api.codeclimate.com/v1/badges/ea19d227eb1285d59860/maintainability)](https://codeclimate.com/github/raxoft/form_input/maintainability) [![Coverage](https://api.codeclimate.com/v1/badges/ea19d227eb1285d59860/test_coverage)](https://codeclimate.com/github/raxoft/form_input/test_coverage)
 
 Form input is a gem which helps dealing with web request input and with the creation of HTML forms.
 
@@ -794,16 +794,19 @@ to include parts of the URL as the form input:
 
 ``` ruby
   get '/contact/:email' do
-    form = ContactForm.new( params )             # NEVER EVER DO THIS!
-    form = ContactForm.new.import( params )      # Do this instead if you need to.
+    form = ContactForm.new( params )            # NEVER EVER DO THIS!
+    form = ContactForm.new.import( params )     # Do this instead (or use from_params).
+    ...
   end
 ```
 
 Similarly, you want to use `import` when feeding form input with JSON data (see [JSON Helpers](#json-helpers) for details):
 
 ``` ruby
-  post '/api/v1/contact' do
-    form = ContactForm.new.import( json_data )
+  post '/api/v1/contacts' do
+    form = ContactForm.new( json_data )         # NEVER EVER DO THIS!
+    form = ContactForm.new.import( json_data )  # Do this instead (or use from_data).
+    ...
   end
 ```
 
@@ -1385,18 +1388,20 @@ The whole JSON processing may in the end look something like this:
 ``` ruby
   require 'oj'
   def json_data
-    data = Oj.load( request.body, symbolize_keys: true )
+    data = Oj.load( request.body, mode: :strict, symbolize_keys: true )
     halt( 422, 'Invalid data' ) unless Hash === data
     data
   rescue Oj::Error
     halt( 422, 'Invalid JSON' )
   end
 
-  post '/api/v1/contact' do
+  post '/api/v1/contacts' do
     input = ContactForm.from_data( json_data )
     halt( 422, "Invalid data: #{input.error_messages.first}" ) unless input.valid?
     # Somehow use the input.
-    Contact.create( input.to_data )
+    entry = Contact.create( input.to_data )
+    content_type :json
+    [ 201, Oj.dump( entry.to_hash ) ]
   end
 ```
 
