@@ -903,7 +903,7 @@ class FormInput
   end
 
   # Return all non-empty parameters as a hash.
-  # See also #to_data, which creates a hash of non-nil parameters,
+  # See also #to_data, which creates a hash of set parameters,
   # and #url_params, which creates a hash suitable for url output.
   def to_hash
     result = {}
@@ -912,13 +912,13 @@ class FormInput
   end
   alias to_h to_hash
 
-  # Return all non-nil parameters as a hash.
+  # Return all set parameters as a hash.
   # Note that the keys are external names of the parameters (should they differ),
   # so the keys created by `from_data(data).to_data` remain consistent.
   # See also #to_hash, which creates a hash of non-empty parameters.
   def to_data
     result = {}
-    params.each{ |x| result[ x.code ] = x.value unless x.value.nil? }
+    set_params.each{ |x| result[ x.code ] = x.value }
     result
   end
 
