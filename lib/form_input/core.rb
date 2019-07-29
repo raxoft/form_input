@@ -845,8 +845,10 @@ class FormInput
   # Import parameter values from given request or hash. Applies parameter input filters and transforms as well.
   # Returns self for chaining.
   def import( request )
+    hash = request.respond_to?( :params ) ? request.params : request.to_hash
     for name, param in @params
-      if value = request[ param.code ]
+      value = hash.fetch( param.code ) { hash.fetch( param.code.to_s, self ) }
+      unless value == self
         value = sanitize_value( value, param.filter )
         if transform = param.transform
           value = value.instance_exec( &transform )
