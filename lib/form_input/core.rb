@@ -162,6 +162,16 @@ class FormInput
       not empty?
     end
 
+    # Test if value of given parameter was set.
+    def set?
+      form ? form.instance_variable_defined?( "@#{name}" ) : false
+    end
+
+    # Test if value of given parameter is not set.
+    def unset?
+      not set?
+    end
+
     # Get the proper name for use in form names, adding [] to array and [key] to hash parameters.
     def form_name( key = nil )
       if array?
@@ -856,12 +866,20 @@ class FormInput
     self
   end
 
+  # Unset values of given parameters. Both names and parameters are accepted.
+  # Returns self for chaining.
+  def unset( name, *names )
+    clear( name, *names )
+  end
+
   # Clear all/given parameter values. Both names and parameters are accepted.
   # Returns self for chaining.
   def clear( *names )
     names = names.empty? ? params_names : validate_names( names )
     for name in names
+      # Set the value to nil first so it triggers anything necessary.
       self[ name ] = nil
+      remove_instance_variable( "@#{name}" )
     end
     self
   end
@@ -914,11 +932,7 @@ class FormInput
 
   # Create copy of itself, with given parameters unset. Both names and parameters are accepted.
   def except( *names )
-    result = dup
-    for name in validate_names( names )
-      result[ name ] = nil
-    end
-    result
+    dup.clear( names )
   end
 
   # Create copy of itself, with only given parameters set. Both names and parameters are accepted.
@@ -926,11 +940,7 @@ class FormInput
     # It would be easier to create new instance here and only copy selected values,
     # but we want to use dup instead of new here, as the derived form can use
     # different parameters in its construction.
-    result = dup
-    for name in params_names - validate_names( names )
-      result[ name ] = nil
-    end
-    result
+    dup.clear( params_names - validate_names( names ) )
   end
 
   # Parameter lists.
@@ -989,6 +999,18 @@ class FormInput
     params.select{ |x| x.filled? }
   end
   alias filled_parameters filled_params
+
+  # Get list of parameters whose values were set.
+  def set_params
+    params.select{ |x| x.set? }
+  end
+  alias set_parameters set_params
+
+  # Get list of parameters whose values were not set.
+  def unset_params
+    params.select{ |x| x.unset? }
+  end
+  alias unset_parameters unset_params
 
   # Get list of required parameters.
   def required_params
