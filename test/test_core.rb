@@ -782,6 +782,9 @@ describe FormInput do
     names( f.empty_params ).should == [ :age, :rate, :password, :opts, :on ]
     names( f.blank_params ).should == [ :email, :age, :rate, :password, :opts, :on ]
 
+    names( f.set_params ).should == [ :query, :email, :text, :password ]
+    names( f.unset_params ).should == [ :age, :rate, :opts, :on ]
+
     names( f.tagged_params ).should == [ :age, :rate ]
     names( f.untagged_params ).should == [ :query, :email, :text, :password, :opts, :on ]
 
@@ -857,6 +860,8 @@ describe FormInput do
     p.should.not.be.blank
     p.should.not.be.empty
     p.should.be.filled
+    p.should.be.set
+    p.should.not.be.unset
     p.should.be.valid
     p.should.not.be.invalid
     p.should.be.required
@@ -890,6 +895,8 @@ describe FormInput do
     p.should.be.blank
     p.should.not.be.empty
     p.should.be.filled
+    p.should.be.set
+    p.should.not.be.unset
     p.should.not.be.valid
     p.should.be.invalid
     p.should.not.be.required
@@ -914,6 +921,8 @@ describe FormInput do
     p.should.be.blank
     p.should.be.empty
     p.should.not.be.filled
+    p.should.not.be.set
+    p.should.be.unset
     p.should.be.disabled
     p.should.not.be.enabled
     p[ :tag ].should == :mix
@@ -942,6 +951,8 @@ describe FormInput do
     p.should.be.blank
     p.should.be.empty
     p.should.not.be.filled
+    p.should.not.be.set
+    p.should.be.unset
     p.should.be.array
     p.should.not.be.hash
     p.should.not.be.scalar
@@ -953,6 +964,8 @@ describe FormInput do
     p.should.be.blank
     p.should.be.empty
     p.should.not.be.filled
+    p.should.not.be.set
+    p.should.be.unset
     p.should.not.be.array
     p.should.be.hash
     p.should.not.be.scalar
@@ -990,6 +1003,8 @@ describe FormInput do
     f.except( [ :email, :query ] ).url_query.should == "text=foo"
     f.except( [] ).url_query.should == "q=x&email=a%40b&text=foo"
 
+    f.except( :email ).to_data.should == { q: 'x', text: 'foo' }
+
     f.only( :email ).url_query.should == "email=a%40b"
     f.only( :email, :query ).url_query.should == "q=x&email=a%40b"
     f.only().url_query.should == ""
@@ -997,15 +1012,34 @@ describe FormInput do
     f.only( [ :email, :query ] ).url_query.should == "q=x&email=a%40b"
     f.only( [] ).url_query.should == ""
 
+    f.only( :email ).to_data.should == { email: 'a@b' }
+
+    d = f.dup
+    d.unset( :text )
+    d.should.not.be.empty
+    d.url_query.should == "q=x&email=a%40b"
+    d.to_data.should == { q: 'x', email: 'a@b' }
+    d.unset( d.required_params )
+    d.should.not.be.empty
+    d.url_query.should == "email=a%40b"
+    d.to_data.should == { email: 'a@b' }
+    d.unset( [] )
+    d.should.not.be.empty
+    d.url_query.should == "email=a%40b"
+    d.to_data.should == { email: 'a@b' }
+
     f.clear( :text )
     f.should.not.be.empty
     f.url_query.should == "q=x&email=a%40b"
+    f.to_data.should == { q: 'x', email: 'a@b' }
     f.clear( f.required_params )
     f.should.not.be.empty
     f.url_query.should == "email=a%40b"
+    f.to_data.should == { email: 'a@b' }
     f.clear
     f.should.be.empty
     f.url_query.should == ""
+    f.to_data.should == {}
 
     f = TestForm.new( { age: 2, query: "x" }, { rate: 1, query: "y" } )
     f.url_query.should == "q=y&age=2&rate=1"
@@ -1052,6 +1086,8 @@ describe FormInput do
     f.named_params( :typo, :missing ).should == [ nil, nil ]
 
     ->{ f.set( typo: 10 ) }.should.raise( NoMethodError )
+    ->{ f.unset() }.should.raise( ArgumentError )
+    ->{ f.unset( :typo ) }.should.raise( ArgumentError )
     ->{ f.clear( :typo ) }.should.raise( ArgumentError )
     ->{ f.except( :typo ) }.should.raise( ArgumentError )
     ->{ f.except( [ :typo ] ) }.should.raise( ArgumentError )
@@ -1109,6 +1145,7 @@ describe FormInput do
     f = TestForm.new( query: true, age: 3, rate: 0.35, text: false, opts: [], on: {} )
     ->{ f.validate }.should.not.raise
     f.to_hash.should == { query: true, age: 3, rate: 0.35, text: false }
+    f.to_data.should == { q: true, age: 3, rate: 0.35, text: false, opts: [], on: {} }
     f.url_params.should == { q: "true", age: "3", rate: "0.35", text: "false" }
     f.url_query.should == "q=true&age=3&rate=0.35&text=false"
     names( f.incorrect_params ).should == [ :query, :rate, :text ]
@@ -1116,6 +1153,7 @@ describe FormInput do
     f = TestForm.new( opts: 1 )
     ->{ f.validate }.should.not.raise
     f.to_hash.should == { opts: 1 }
+    f.to_data.should == { opts: 1 }
     f.url_params.should == { opts: [ "1" ] }
     f.url_query.should == "opts[]=1"
     names( f.incorrect_params ).should == [ :opts ]
@@ -1123,6 +1161,7 @@ describe FormInput do
     f = TestForm.new( opts: [ 2.5, true ] )
     ->{ f.validate }.should.not.raise
     f.to_hash.should == { opts: [ 2.5, true ] }
+    f.to_data.should == { opts: [ 2.5, true ] }
     f.url_params.should == { opts: [ "2.5", "true" ] }
     f.url_query.should == "opts[]=2.5&opts[]=true"
     names( f.incorrect_params ).should == []
@@ -1130,6 +1169,7 @@ describe FormInput do
     f = TestForm.new( opts: { "foo" => 10, true => false } )
     ->{ f.validate }.should.not.raise
     f.to_hash.should == { opts: { "foo" => 10, true => false } }
+    f.to_data.should == { opts: { "foo" => 10, true => false } }
     f.url_params.should == { opts: [ '["foo", 10]', '[true, false]' ] }
     f.url_query.should == "opts[]=%5B%22foo%22%2C+10%5D&opts[]=%5Btrue%2C+false%5D"
     names( f.incorrect_params ).should == [ :opts ]
@@ -1137,6 +1177,7 @@ describe FormInput do
     f = TestForm.new( on: 1 )
     ->{ f.validate }.should.not.raise
     f.to_hash.should == { on: 1 }
+    f.to_data.should == { on: 1 }
     f.url_params.should == { on: { "1" => "" } }
     f.url_query.should == "on[1]="
     names( f.incorrect_params ).should == [ :on ]
@@ -1144,6 +1185,7 @@ describe FormInput do
     f = TestForm.new( on: { 0 => 1, 2 => 3.4 } )
     ->{ f.validate }.should.not.raise
     f.to_hash.should == { on: { 0 => 1, 2 => 3.4 } }
+    f.to_data.should == { on: { 0 => 1, 2 => 3.4 } }
     f.url_params.should == { on: { "0" => "1", "2" => "3.4" } }
     f.url_query.should == "on[0]=1&on[2]=3.4"
     names( f.incorrect_params ).should == []
@@ -1151,6 +1193,7 @@ describe FormInput do
     f = TestForm.new( on: [ [ 10, 20 ], [ true, false ] ] )
     ->{ f.validate }.should.not.raise
     f.to_hash.should == { on: [ [ 10, 20 ], [ true, false ] ] }
+    f.to_data.should == { on: [ [ 10, 20 ], [ true, false ] ] }
     f.url_params.should == { on: { "10" => "20", "true" => "false" } }
     f.url_query.should == "on[10]=20&on[true]=false"
     names( f.incorrect_params ).should == [ :on ]
@@ -1158,6 +1201,7 @@ describe FormInput do
     f = TestForm.new( on: [ 1, true, false ] )
     ->{ f.validate }.should.not.raise
     f.to_hash.should == { on: [ 1, true, false ] }
+    f.to_data.should == { on: [ 1, true, false ] }
     f.url_params.should == { on: { "1" => "", "true" => "", "false" => "" } }
     f.url_query.should == "on[1]=&on[true]=&on[false]="
     names( f.incorrect_params ).should == [ :on ]
@@ -1172,6 +1216,7 @@ describe FormInput do
     f.error_messages.should == [ "q must use valid encoding" ]
     f.param( :query ).should.not.be.blank
     f.to_hash.should == { query: s }
+    f.to_data.should == { q: s }
     f.url_params.should == { q: s }
     f.url_query.should == "q=%FF"
 
@@ -1181,6 +1226,7 @@ describe FormInput do
     f.error_messages.should == [ "q must use valid encoding" ]
     f.param( :query ).should.not.be.blank
     f.to_hash.should == { query: s.dup.force_encoding( 'BINARY' ) }
+    f.to_data.should == { q: s.dup.force_encoding( 'BINARY' ) }
     f.url_params.should == { q: s.dup.force_encoding( 'BINARY' ) }
     f.url_query.should == "q=%FF"
   end
@@ -1208,10 +1254,11 @@ describe FormInput do
       opts: [],
       on: {},
     }
-    f = TestForm.from_data(data)
+    f = TestForm.from_data( data )
     f.to_data.should == data
 
-    f = TestForm.from_data(data.merge(password: nil))
+    data[ :password ] = nil
+    f = TestForm.from_data( data )
     f.to_data.should == data
 
     f.to_hash.should == {
@@ -1220,8 +1267,6 @@ describe FormInput do
       age: 10,
       rate: 0.5,
     }
-    f.valid?(:age).should.be.true	# has filter and correct class
-    f.valid?(:rate).should.be.false	# has no filter and class
   end
 
   should 'make it easy to create URLs' do
@@ -1370,6 +1415,13 @@ describe FormInput do
     f.dup.validate?.should.be.valid
     f.validate.should.be.valid
     f.validate!.should.be.valid
+
+    f.unset( :query ).should.equal f
+    f.should.be.invalid
+    f.validate?.should.be.invalid
+    f.dup.validate?.should.be.invalid
+    f.validate.should.be.invalid
+    f.validate!.should.be.invalid
   end
 
   should 'support some custom error messages' do

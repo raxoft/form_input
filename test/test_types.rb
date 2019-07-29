@@ -7,41 +7,40 @@ require 'form_input/types'
 require 'rack/test'
 
 class TestBasicTypesForm < FormInput
-
   param :int, INTEGER_ARGS
   param :float, FLOAT_ARGS
   param :bool, BOOL_ARGS
   param :checkbox, CHECKBOX_ARGS
+end
 
+class TestJSONTypesForm < FormInput
+  param :str
+  param :int, INTEGER_ARGS
+  param :float, FLOAT_ARGS
+  param :bool, BOOL_ARGS
 end
 
 class TestAddressTypesForm < FormInput
-
   param :email, EMAIL_ARGS
   param :zip, ZIP_ARGS
   param :phone, PHONE_ARGS
-
 end
 
 class TestTimeTypesForm < FormInput
-
   param :time, TIME_ARGS
   param :us_date, US_DATE_ARGS
   param :uk_date, UK_DATE_ARGS
   param :eu_date, EU_DATE_ARGS
   param :hours, HOURS_ARGS
-
 end
 
 class TestPrunedTypesForm < FormInput
-
   param :str, PRUNED_ARGS
   param :int, INTEGER_ARGS, PRUNED_ARGS
   array :arr, PRUNED_ARGS
   array :int_arr, INTEGER_ARGS, PRUNED_ARGS
   hash :hsh, PRUNED_ARGS
   hash :int_hsh, INTEGER_ARGS, PRUNED_ARGS
-
 end
 
 class Bacon::Context
@@ -129,6 +128,33 @@ describe FormInput do
     f.to_hash.should == { int: "a", float: "b", bool: false, checkbox: true }
     f.url_params.should == { int: "a", float: "b", bool: "false", checkbox: "true" }
     f.url_query.should == "int=a&float=b&bool=false&checkbox=true"
+  end
+
+  should 'provide presets for standard JSON types' do
+    f = TestJSONTypesForm.from_data( {} )
+    f.should.be.valid
+    f.to_data.should == {}
+
+    f = TestJSONTypesForm.from_data( str: "foo", int: "0123", float: "0123.456", bool: "true" )
+    f.should.be.valid
+    f.to_data.should == { str: 'foo', int: 123, float: 123.456, bool: true }
+
+    f = TestJSONTypesForm.from_data( str: nil, int: 123, float: 123.456, bool: true )
+    f.should.be.valid
+    f.to_data.should == { str: nil, int: 123, float: 123.456, bool: true }
+
+    f = TestJSONTypesForm.from_data( bool: "false" )
+    f.should.be.valid
+    f.to_data.should == { bool: false }
+
+    f = TestJSONTypesForm.from_data( bool: false )
+    f.should.be.valid
+    f.to_data.should == { bool: false }
+
+    f = TestJSONTypesForm.from_data( int: "a", float: "b", bool: "c" )
+    f.should.be.invalid
+    names( f.invalid_params ).should == [ :int, :float ]
+    f.to_data.should == { int: "a", float: "b", bool: false }
   end
 
   should 'provide presets for address parameter types' do
