@@ -832,6 +832,14 @@ You can either clear the entire form, named parameters, or parameter subsets (wh
   form.clear( form.disabled_params )
 ```
 
+The `unset` method works the same way, except that it always requires an argument:
+
+``` ruby
+  form.unset( :message )
+  form.unset( :name, :company )
+  form.unset( form.invalid_params )
+```
+
 Alternatively, you can create form copies with just a subset of parameters set:
 
 ``` ruby
@@ -1168,6 +1176,9 @@ In fact, the parameter has a dozen of simple boolean getters like this which you
   p.empty?        # Is the value nil or empty?
   p.filled?       # Is the value neither nil nor empty?
 
+  p.set?          # Was the parameter value set to something?
+  p.unset?        # Was the parameter value not set to anything?
+
   p.required?     # Is the parameter required?
   p.optional?     # Is the parameter not required?
 
@@ -1196,6 +1207,8 @@ The following methods are available:
   form.blank_params       # Parameters with nil, empty, or blank value.
   form.empty_params       # Parameters with nil or empty value.
   form.filled_params      # Parameters with some non-empty value.
+  form.set_params         # Parameters whose value was set to something.
+  form.unset_params       # Parameters whose value was not set to anything.
   form.required_params    # Parameters which are required and have to be filled.
   form.optional_params    # Parameters which are not required and can be nil or empty.
   form.disabled_params    # Parameters which are disabled and shall be rendered as such.
@@ -1352,8 +1365,9 @@ The only difference is that the [input filter](#input-filter) is not run in such
 The [input transform](#input-transform) is run as usual,
 and so are all the [validation methods](#errors-and-validation).
 
-Among other things this means that you can declare a parameter as integer using the `INTEGER_ARGS` macro,
+Among other things this means that you can declare a parameter as integer using the `INTEGER_ARGS` macro
 and pass in the value as either string or integer, and you end up with integer in both cases, which is pretty convenient.
+Of course, this works similarly for `FLOAT_ARGS` and `BOOL_ARGS`, too:
 
 ``` ruby
   class NumericInput < FormInput
@@ -1366,10 +1380,11 @@ and pass in the value as either string or integer, and you end up with integer i
 ```
 
 Another difference when dealing with JSON data is that
-the empty strings have completely different significance than in case of web forms.
-For this reason, the result of the `to_data` method includes even empty strings, arrays, and hashes
+the empty strings have completely different significance than in the case of the web forms.
+For this reason, the result of the `to_data` method includes any set parameters,
+even if the values are empty strings, arrays, or hashes
 (unlike the `to_hash` and `to_params` methods).
-The `nil` values are still filtered out, though.
+Even the `nil` values are included for parameters which were explicitly set to `nil`:
 
 ``` ruby
   class OptionalInput < FormInput
@@ -1379,6 +1394,7 @@ The `nil` values are still filtered out, though.
   end
 
   OptionalInput.from_data( string: '' ).to_data     # { string: '' }
+  OptionalInput.from_data( string: nil ).to_data    # { string: nil }
   OptionalInput.from_data( array: [] ).to_data      # { array: [] }
   OptionalInput.from_data( hash: {} ).to_data       # { hash: {} }
 ```
@@ -1387,6 +1403,7 @@ The whole JSON processing may in the end look something like this:
 
 ``` ruby
   require 'oj'
+
   def json_data
     data = Oj.load( request.body, mode: :strict, symbolize_keys: true )
     halt( 422, 'Invalid data' ) unless Hash === data
