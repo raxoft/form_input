@@ -50,7 +50,7 @@ Using them in your templates is as simple as this:
   .panel-heading
     = @title = "Contact Form"
   .panel-body
-    form *form_attrs
+    form method='post' action=request.path
       fieldset
         == snippet :form_panel, params: @form.params
         button.btn.btn-default type='submit' Send
@@ -1037,7 +1037,7 @@ The `validate!` method on the other hand always invokes the validation,
 wiping any previously reported errors first.
 
 In either case any errors collected will remain stored
-until you change any of the parameter values with `set`, `clear`, or `[]=` methods,
+until you change any of the parameter values with `set`, `unset`, `clear`, or `[]=` methods,
 or you explicitly call `validate!`.
 Copies created with `dup` (but not `clone`), `only`, and `except` methods
 also have any errors reported before cleared.
@@ -1721,11 +1721,8 @@ For [Sinatra], the helper may look like this:
 
 ``` ruby
   # Get hash with default form attributes, optionally overriding them as needed.
-  def form_attrs( *args )
-    opts = args.last.is_a?( Hash ) ? args.pop : {}
-    url = args.shift.to_s unless args.empty?
-    fail( ArgumentError, "Invalid arguments #{args.inspect}" ) unless args.empty?
-    { action: url || request.path, method: :post }.merge( opts )
+  def form_attrs( url = request.path, **opts )
+    { action: url.to_s, method: :post }.merge( opts )
   end
 ```
 
