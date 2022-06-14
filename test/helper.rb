@@ -14,7 +14,9 @@ end unless jruby?
 
 if ENV[ 'COVERAGE' ]
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.start do
+    add_filter 'bundler'
+  end
 end
 
 # EOF #
