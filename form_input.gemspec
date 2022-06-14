@@ -25,9 +25,11 @@ EOT
 
   s.required_ruby_version = '>= 2.0.0'
   s.add_runtime_dependency 'rack', '>= 1.5', '< 3.0'
+  s.add_development_dependency 'rake', '~> 13.0'
   s.add_development_dependency 'bacon', '~> 1.2'
-  s.add_development_dependency 'rack-test', '~> 0.6'
-  s.add_development_dependency 'r18n-core', '~> 2.0'
+  s.add_development_dependency 'simplecov', '~> 0.21'
+  s.add_development_dependency 'rack-test', '~> 1.0'
+  s.add_development_dependency 'r18n-core', '~> 5.0'
 end
 
 # EOF #
