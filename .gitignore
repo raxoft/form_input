@@ -1,5 +1,7 @@
 *~
+Gemfile.lock
 /form_input-*.gem
+/bundler
 /coverage
 /doc
 /.yardoc
