@@ -9,7 +9,6 @@ rvm:
   - 2.3.8
   - 2.2.10
   - 2.1.10
-  - 2.0.0
   - rbx-2
   - jruby-head
 gemfile: .travis.gemfile

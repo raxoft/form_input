@@ -23,7 +23,7 @@ EOT
 
   s.files       = %w[ LICENSE README.md CHANGELOG.md Rakefile .yardopts form_input.gemspec ] + Dir[ '{lib,test,example}/**/*.{rb,yml,txt,slim}' ]
 
-  s.required_ruby_version = '>= 2.0.0'
+  s.required_ruby_version = '>= 2.1.0'
   s.add_runtime_dependency 'rack', '>= 1.5', '< 3.0'
   s.add_development_dependency 'rake', '~> 13.0'
   s.add_development_dependency 'bacon', '~> 1.2'
