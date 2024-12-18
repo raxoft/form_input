@@ -115,7 +115,15 @@ describe FormInput do
     [ 'q is required', q: "\u{0000}" ],  # Because strip strips \0 as well.
     [ 'q may not contain invalid characters', q: "a\u{0000}b" ],
     [ 'q may not contain invalid characters', q: "\u{0001}" ],
-    [ 'q may not contain invalid characters', q: "\u{2029}" ],
+    [ 'q may not contain invalid characters', q: "\u{2029}" ],    # NBSP
+    [ 'q may not contain invalid characters', q: "\u{00AD}" ],    # Soft-hyphen
+    [ 'q may not contain invalid characters', q: "\u{FEFF}" ],    # BOM, ZWNBSP
+    [ 'q may not contain invalid characters', q: "\u{E000}" ],    # Private use
+    [ 'q may not contain invalid characters', q: "\u{F8FF}" ],    # Private use
+    [ 'q may not contain invalid characters', q: "\u{F0000}" ],   # Private use plane 15
+    [ 'q may not contain invalid characters', q: "\u{FFFFD}" ],   # Private use plane 15
+    [ 'q may not contain invalid characters', q: "\u{100000}" ],  # Private use plane 16
+    [ 'q may not contain invalid characters', q: "\u{10FFFD}" ],  # Private use plane 16
     [ 'email address like this is not valid', email: 'abc' ],
     [ 'email address may have at most 255 characters', email: 'a@' + 'a' * 254 ],
     [ 'email address may have at most 255 bytes', email: 'á@' + 'a' * 253 ],

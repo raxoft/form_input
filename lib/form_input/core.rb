@@ -8,8 +8,19 @@ class FormInput
   # Default size limit applied to all input.
   DEFAULT_SIZE_LIMIT = 255
 
-  # Default input filter applied to all input.
+  # Default input filter applied to all input (unless replaced by user's filter).
   DEFAULT_FILTER = ->{ gsub( /\s+/, ' ' ).strip }
+
+  # Default match applied to all input (in addition to user's match(es)).
+  # Note that the Graph property, despite being defined as "Non-blank characters",
+  # currently includes Cf (Other: Format) and Co (Other: Private Use) categories,
+  # which include stuff like BOM or BIDI formatting and other invisible characters,
+  # which you may or may not want. To protect the innocent and prevent nasty surprises,
+  # DEFAULT_REJECT was introduced to avoid these by default, but make it possible to override.
+  DEFAULT_MATCH = /\A(\p{Graph}|[ \t\r\n])*\z/u
+
+  # Default reject applied to all input (in addition to user's reject(s)).
+  DEFAULT_REJECT = /\p{Cf}|\p{Co}/u
 
   # Minimum hash key value we allow by default.
   DEFAULT_MIN_KEY = 0
@@ -563,7 +574,7 @@ class FormInput
         return
       end
 
-      unless value =~ /\A(\p{Graph}|[ \t\r\n])*\z/u
+      unless value =~ DEFAULT_MATCH && value !~ DEFAULT_REJECT
         report( :invalid_characters )
         return
       end
