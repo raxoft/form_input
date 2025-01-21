@@ -1246,6 +1246,37 @@ describe FormInput do
     f.to_data.should == { q: b }
     f.url_params.should == { q: b }
     f.url_query.should == "q=%FF"
+
+    c = Class.new( FormInput )
+    c.hash :hsh, :h, match_key: /\A\w+\z/
+
+    f = c.new( hsh: { s => 1, 2 => s } )
+    ->{ f.validate }.should.not.raise
+    f.should.not.be.valid
+    f.error_messages.should == [ "h contain invalid key" ]
+    p = f.param( :hsh )
+    p.should.not.be.blank
+    p.should.be.invalid
+    p.form_value.should == { '?' => '1', '2' => '?' }
+    p.url_value.should == { s => '1', '2' => s }
+    f.to_hash.should == { hsh: { s => 1, 2 => s } }
+    f.to_data.should == { h: { s => 1, 2 => s } }
+    f.url_params.should == { h: { s => '1', '2' => s } }
+    f.url_query.should == "h[%FF]=1&h[2]=%FF"
+
+    f = c.new( request( "?h[%ff]=1&h[2]=%ff" ) )
+    ->{ f.validate }.should.not.raise
+    f.should.not.be.valid
+    f.error_messages.should == [ "h contain invalid key" ]
+    p = f.param( :hsh )
+    p.should.not.be.blank
+    p.should.be.invalid
+    p.form_value.should == { '?' => '1', '2' => '?' }
+    p.url_value.should == { s => '1', '2' => b }
+    f.to_hash.should == { hsh: { s => '1', 2 => b } }
+    f.to_data.should == { h: { s => '1', 2 => b } }
+    f.url_params.should == { h: { s => '1', '2' => b } }
+    f.url_query.should == "h[%FF]=1&h[2]=%FF"
   end
 
   should 'reject unexpected values in request input' do

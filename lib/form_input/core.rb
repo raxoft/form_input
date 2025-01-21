@@ -129,7 +129,7 @@ class FormInput
       if array?
         [ *value ].map{ |x| format_value( x, replacement ) }
       elsif hash?
-        Hash[ [ *value ].map{ |k, v| [ k.to_s, format_value( v, replacement ) ] } ]
+        Hash[ [ *value ].map{ |k, v| [ replacement ? cleanup_string( k.to_s, replacement ) : k.to_s, format_value( v, replacement ) ] } ]
       else
         format_value( value, replacement )
       end
@@ -485,7 +485,7 @@ class FormInput
       # If there is a key pattern specified, make sure the key matches.
 
       if patterns = self[ :match_key ]
-        unless [ *patterns ].all?{ |x| value.to_s =~ x }
+        unless value.to_s.valid_encoding? and [ *patterns ].all?{ |x| value.to_s =~ x }
           report( :match_key )
           return
         end
