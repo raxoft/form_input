@@ -1217,12 +1217,17 @@ describe FormInput do
 
   should 'handle invalid encoding gracefully' do
     s = 255.chr.force_encoding( 'UTF-8' )
+    b = s.dup.force_encoding( 'BINARY' )
 
     f = TestForm.new( query: s )
     ->{ f.validate }.should.not.raise
     f.should.not.be.valid
     f.error_messages.should == [ "q must use valid encoding" ]
-    f.param( :query ).should.not.be.blank
+    p = f.param( :query )
+    p.should.not.be.blank
+    p.should.be.invalid
+    p.form_value.should == '?'
+    p.url_value.should == s
     f.to_hash.should == { query: s }
     f.to_data.should == { q: s }
     f.url_params.should == { q: s }
@@ -1232,10 +1237,14 @@ describe FormInput do
     ->{ f.validate }.should.not.raise
     f.should.not.be.valid
     f.error_messages.should == [ "q must use valid encoding" ]
-    f.param( :query ).should.not.be.blank
-    f.to_hash.should == { query: s.dup.force_encoding( 'BINARY' ) }
-    f.to_data.should == { q: s.dup.force_encoding( 'BINARY' ) }
-    f.url_params.should == { q: s.dup.force_encoding( 'BINARY' ) }
+    p = f.param( :query )
+    p.should.not.be.blank
+    p.should.be.invalid
+    p.form_value.should == '?'
+    p.url_value.should == b
+    f.to_hash.should == { query: b }
+    f.to_data.should == { q: b }
+    f.url_params.should == { q: b }
     f.url_query.should == "q=%FF"
   end
 

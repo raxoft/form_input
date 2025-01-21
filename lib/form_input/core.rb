@@ -60,6 +60,9 @@ class FormInput
     match_msg: "%p like this is not valid",
   }
 
+  # Character used as default replacement for invalid characters when formatting values.
+  DEFAULT_REPLACEMENT_CHARACTER = '?'
+
   # Parameter options which can be merged together into an array when multiple option hashes are merged.
   MERGEABLE_OPTIONS = [ :check, :test ]
 
@@ -103,8 +106,17 @@ class FormInput
       form ? form[ name ] : nil
     end
 
+    # Make sure given string is in our default encoding and contains only valid characters.
+    def cleanup_string( string, replacement )
+      unless string.valid_encoding? && ( string.encoding == DEFAULT_ENCODING || string.ascii_only? )
+        string = string.dup.force_encoding( DEFAULT_ENCODING ).scrub( replacement )
+      end
+      string
+    end
+
     # Format given value for form/URL output, applying the formatting filter as necessary.
-    def format_value( value )
+    def format_value( value, replacement = DEFAULT_REPLACEMENT_CHARACTER )
+      value = cleanup_string( value, replacement ) if replacement and value.is_a?( String )
       if format.nil? or value.nil? or ( value.is_a?( String ) and type = self[ :class ] and type != String )
         value.to_s
       else
@@ -113,14 +125,24 @@ class FormInput
     end
 
     # Get value of this parameter for use in form/URL, with all scalar values converted to strings.
-    def form_value
+    def formatted_value( replacement = DEFAULT_REPLACEMENT_CHARACTER )
       if array?
-        [ *value ].map{ |x| format_value( x ) }
+        [ *value ].map{ |x| format_value( x, replacement ) }
       elsif hash?
-        Hash[ [ *value ].map{ |k, v| [ k.to_s, format_value( v ) ] } ]
+        Hash[ [ *value ].map{ |k, v| [ k.to_s, format_value( v, replacement ) ] } ]
       else
-        format_value( value )
+        format_value( value, replacement )
       end
+    end
+
+    # Get value of this parameter for use in form, with all scalar values converted to strings.
+    def form_value
+      formatted_value
+    end
+
+    # Get value of this parameter for use in URL, with all scalar values converted to strings.
+    def url_value
+      formatted_value( nil )
     end
 
     # Test if given parameter has value of correct type.
@@ -1124,7 +1146,7 @@ class FormInput
   # Get hash of all non-empty parameters for use in URL.
   def url_params
     result = {}
-    filled_params.each{ |x| result[ x.code ] = x.form_value }
+    filled_params.each{ |x| result[ x.code ] = x.url_value }
     result
   end
   alias url_parameters url_params
