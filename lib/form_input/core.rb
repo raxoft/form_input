@@ -1152,9 +1152,26 @@ class FormInput
   alias url_parameters url_params
   alias to_params url_params
 
+  # Escape given string for use in URL query.
+  def url_escape( string )
+    URI.encode_www_form_component( string )
+  end
+
+  # Build URL query from given URL parameters.
+  def build_url_query( value, prefix = nil )
+    case value
+    when Hash
+      value.map{ |k, v| k = url_escape( k ) ; build_url_query( v, prefix ? "#{prefix}[#{k}]" : k ) }.join( '&' )
+    when Array
+      value.map{ |v| build_url_query( v, "#{prefix}[]" ) }.join( '&' )
+    else
+      "#{prefix}=#{url_escape( value )}"
+    end
+  end
+
   # Create string containing URL query from all current non-empty parameters.
   def url_query
-    Rack::Utils.build_nested_query( url_params )
+    build_url_query( url_params )
   end
 
   # Extend given URL with query created from all current non-empty parameters.
