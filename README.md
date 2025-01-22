@@ -1399,6 +1399,42 @@ Even the `nil` values are included for parameters which were explicitly set to `
   OptionalInput.from_data( hash: {} ).to_data       # { hash: {} }
 ```
 
+With regards to `nil` values, you may want to differentiate
+between which parameters may be set to `nil` and which not
+(in addition to parameters being required or not).
+In such case, you can extend your JSON processing class wrapping `FormInput` like this:
+
+``` ruby
+  # Like param, but the parameter may be nil (and other parameters now can't).
+  def self.param?( name, *args, &block )
+    param( name, *args, allow_nil: true, &block )
+  end
+
+  # Like normal validate, but makes sure the parameters are not nil unless allowed.
+  def validate
+    super
+    set_params.each do |p|
+      unless p[ :allow_nil ]
+        p.report( "%p is nil" ) if p.value.nil?
+      end
+    end
+    self
+  end
+```
+
+This allows you to explicitely distinguish the three most commonly used cases with ease,
+especially when combined with further parameter types and checks:
+
+``` ruby
+  param :a, INTEGER_ARGS    # When set, this must be an integer.
+  param? :b, INTEGER_ARGS   # When set, this must be nil or an integer.
+  param! :c, INTEGER_ARGS   # This must be set to an integer.
+
+  param :s                  # When set, this must be a string, albeit perhaps empty.
+  param? :t                 # When set, this must be nil or a string, including empty.
+  param! :n                 # This must be set to a non-empty string.
+```
+
 The whole JSON processing may in the end look something like this:
 
 ``` ruby
