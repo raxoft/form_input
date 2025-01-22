@@ -1467,6 +1467,19 @@ and keys are passed to `form_name` to create the actual name:
     input type=p.type name=p.form_name( key ) value=value
 ```
 
+Note that for your convenience,
+any strings returned by `form_value` are scrubbed of characters in invalid encoding,
+should there be any,
+which makes them guaranteed to coalesce with the form template without triggering encoding errors.
+Under normal circumstances you would never encounter such invalid inputs,
+but sometimes hackers use them to try to break the applications on purpose.
+The scrubbing thus takes care that you don't have to deal with this in templates specially if it ever happens.
+However,
+if you would for some reason ever need the `form_value` without the scrubbing applied,
+note that you can use the `url_value` method
+(used internally by `url_params` and `url_query`, see [URL Helpers](#url-helpers))
+instead.
+
 For parameters which require additional data,
 like select, multi-select, or multi-checkbox parameters,
 you can ask for the data using the `data` method.
