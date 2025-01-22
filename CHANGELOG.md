@@ -1,3 +1,13 @@
+= 1.4.0
+
+ * Dependencies were updated to support latest gems, in particular both Rack 2.x and 3.x are now supported.
+
+ * The inputs containing characters from Unicode Cf (Format) and Co (Private Use) categories are rejected as was intended.
+
+ * More robust handling of inputs with invalid encoding:
+   * Strings returned by `form_value` are now scrubbed so they don't cause errors when used in templates.
+   * The hash keys with invalid encoding are now handled properly, too.
+
 = 1.3.0
 
  * Further improvements for JSON payloads:
